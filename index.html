@@ -899,6 +899,188 @@
   .squeeze-empty-text { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
   .squeeze-empty-sub  { font-size: 12px; }
 
+
+  /* ─── CALENDAR TAB ─── */
+  @keyframes cal-countdown-pulse {
+    0%,100% { opacity:1; transform:scale(1); }
+    50%      { opacity:0.6; transform:scale(0.97); }
+  }
+  @keyframes thermo-fill {
+    from { height: 0%; }
+  }
+  @keyframes notify-confirm {
+    0%   { transform:scale(1); }
+    40%  { transform:scale(1.08); }
+    100% { transform:scale(1); }
+  }
+
+  .cal-header {
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:12px; padding: 0 2px;
+  }
+  .cal-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; color:var(--muted); }
+  .cal-live   { font-size:10px; color:var(--green); font-weight:600; display:flex; align-items:center; gap:4px; }
+
+  .cal-legend {
+    display:flex; gap:10px; margin-bottom:12px; flex-wrap:wrap;
+  }
+  .cal-leg-item {
+    display:flex; align-items:center; gap:4px;
+    font-size:10px; font-weight:600; color:var(--muted);
+  }
+  .cal-leg-dot {
+    width:8px; height:8px; border-radius:50%;
+  }
+
+  /* Event card */
+  .cal-event {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 8px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .cal-event-header {
+    padding: 12px 14px 10px;
+    display:flex; align-items:flex-start; gap:10px;
+    cursor:pointer;
+  }
+  .cal-impact-dot {
+    width:10px; height:10px; border-radius:50%;
+    flex-shrink:0; margin-top:4px;
+  }
+  .cal-event-main { flex:1; min-width:0; }
+  .cal-event-name { font-size:14px; font-weight:800; margin-bottom:2px; }
+  .cal-event-date { font-size:11px; color:var(--muted); }
+  .cal-event-cat  {
+    font-size:9px; font-weight:700; letter-spacing:0.5px;
+    text-transform:uppercase; padding:2px 6px; border-radius:4px;
+    flex-shrink:0; align-self:flex-start;
+  }
+
+  /* Countdown */
+  .cal-countdown {
+    display:flex; gap:6px; padding:0 14px 10px;
+    justify-content:center;
+  }
+  .cal-cd-unit {
+    background:var(--card2);
+    border:1px solid var(--border2);
+    border-radius:8px;
+    padding:8px 10px;
+    text-align:center;
+    min-width:52px;
+    animation: cal-countdown-pulse 2s ease-in-out infinite;
+  }
+  .cal-cd-num  { font-size:20px; font-weight:900; letter-spacing:-1px; font-variant-numeric:tabular-nums; }
+  .cal-cd-lbl  { font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-top:2px; }
+
+  /* Visualizer panel */
+  .cal-visualizer {
+    display:none;
+    border-top:1px solid var(--border);
+    padding:14px;
+    background:rgba(0,0,0,0.2);
+  }
+  .cal-visualizer.open { display:block; }
+
+  .cal-viz-section { margin-bottom:14px; }
+  .cal-viz-title {
+    font-size:10px; font-weight:700; text-transform:uppercase;
+    letter-spacing:0.5px; color:var(--muted); margin-bottom:8px;
+  }
+
+  /* Historical bar chart */
+  .cal-bars {
+    display:flex; align-items:flex-end; gap:6px;
+    height:80px; padding:0 4px;
+  }
+  .cal-bar-wrap {
+    flex:1; display:flex; flex-direction:column;
+    align-items:center; gap:3px; height:100%;
+    justify-content:flex-end;
+  }
+  .cal-bar-pct {
+    font-size:9px; font-weight:700; font-variant-numeric:tabular-nums;
+  }
+  .cal-bar {
+    width:100%; border-radius:3px 3px 0 0;
+    min-height:4px;
+    transition: height 1s cubic-bezier(0.4,0,0.2,1);
+  }
+  .cal-bar-date {
+    font-size:8px; color:var(--muted); text-align:center;
+    margin-top:3px; white-space:nowrap;
+  }
+  .cal-bar-axis {
+    height:1px; background:var(--border); margin:4px 0;
+    position:relative;
+  }
+
+  /* Volatility thermometer */
+  .cal-thermo-wrap {
+    display:flex; align-items:center; gap:12px;
+  }
+  .cal-thermo {
+    width:24px; height:80px;
+    background:var(--surface);
+    border-radius:12px;
+    overflow:hidden;
+    position:relative;
+    flex-shrink:0;
+    border:1px solid var(--border);
+  }
+  .cal-thermo-fill {
+    position:absolute; bottom:0; left:0; right:0;
+    border-radius:12px;
+    animation: thermo-fill 1.5s cubic-bezier(0.4,0,0.2,1);
+  }
+  .cal-thermo-info { flex:1; }
+  .cal-thermo-level {
+    font-size:20px; font-weight:900; margin-bottom:4px;
+  }
+  .cal-thermo-desc { font-size:11px; color:var(--muted); line-height:1.5; }
+  .cal-thermo-labels {
+    display:flex; flex-direction:column;
+    justify-content:space-between; height:80px;
+    font-size:8px; color:var(--muted); text-align:right;
+    flex-shrink:0;
+  }
+
+  /* Notify button */
+  .cal-notify-btn {
+    width:100%; padding:10px;
+    border:1px solid var(--border2);
+    border-radius:8px;
+    background:rgba(59,130,246,0.1);
+    color:var(--accent);
+    font-size:13px; font-weight:700;
+    cursor:pointer;
+    transition: all 0.2s;
+    display:flex; align-items:center; justify-content:center; gap:6px;
+  }
+  .cal-notify-btn:active { transform:scale(0.97); }
+  .cal-notify-btn.notified {
+    background:rgba(16,185,129,0.15);
+    color:var(--green);
+    border-color:rgba(16,185,129,0.3);
+    animation: notify-confirm 0.4s ease;
+  }
+
+  /* Impact colors */
+  .impact-high   { color:#ff4400; }
+  .impact-med    { color:#ffaa00; }
+  .impact-low    { color:#64748B; }
+  .impact-crypto { color:#8B5CF6; }
+  .bg-impact-high   { background:#ff4400; }
+  .bg-impact-med    { background:#ffaa00; }
+  .bg-impact-low    { background:#64748B; }
+  .bg-impact-crypto { background:#8B5CF6; }
+  .border-impact-high   { border-color:rgba(255,68,0,0.4)!important; }
+  .border-impact-med    { border-color:rgba(255,170,0,0.4)!important; }
+  .border-impact-crypto { border-color:rgba(139,92,246,0.4)!important; }
+
 </style>
 </head>
 <body>
@@ -935,6 +1117,9 @@
     </button>
     <button class="nav-tab" onclick="switchTab('squeeze')">
       <span>⚡</span>Squeeze
+    </button>
+    <button class="nav-tab" onclick="switchTab('calendar')">
+      <span>📅</span>Calendar
     </button>
   </div>
 </div>
@@ -1650,12 +1835,13 @@ function switchTab(tab) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('page-'+tab).classList.add('active');
-  document.querySelectorAll('.nav-tab')[['dashboard','signals','charts','history','squeeze'].indexOf(tab)]
+  document.querySelectorAll('.nav-tab')[['dashboard','signals','charts','history','squeeze','calendar'].indexOf(tab)]
     .classList.add('active');
 
   if (tab === 'charts') renderCharts();
   if (tab === 'history') renderHistory();
   if (tab === 'squeeze') renderSqueeze();
+  if (tab === 'calendar') renderCalendar();
   if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
 }
 
@@ -1889,7 +2075,197 @@ function renderSqueezeWidget() {
   // Auto-refresh на 30 секунди
   refreshInterval = setInterval(refreshData, 30000);
 })();
+
+// ══════════════════════════════════════════════
+//  CALENDAR + IMPACT VISUALIZER
+// ══════════════════════════════════════════════
+
+const CAL_EVENTS = [
+  { id:'etf-rep',  name:'BTC ETF Flow Report',    cat:'CRYPTO', impact:'crypto', date:'2026-07-14T20:00:00Z', desc:'Weekly institutional BTC ETF inflow/outflow data', hist:[5.2,-1.4,7.8,2.1,-3.3], vol:72 },
+  { id:'cpi-jul',  name:'US CPI Report',           cat:'MACRO',  impact:'high',   date:'2026-07-15T12:30:00Z', desc:'Consumer Price Index — key inflation metric', hist:[2.1,-1.8,3.4,-0.9,1.7], vol:85 },
+  { id:'fund-r1',  name:'Funding Rate Reset',      cat:'CRYPTO', impact:'crypto', date:'2026-07-16T00:00:00Z', desc:'8-hour funding rate settlement on major exchanges', hist:[0.4,-0.8,1.2,-0.3,0.6], vol:35 },
+  { id:'jobless',  name:'Jobless Claims',          cat:'MACRO',  impact:'low',    date:'2026-07-17T12:30:00Z', desc:'Weekly unemployment insurance claims', hist:[0.3,-0.5,0.8,-0.2,0.4], vol:25 },
+  { id:'btc-opt',  name:'BTC Options Expiry',      cat:'CRYPTO', impact:'crypto', date:'2026-07-25T08:00:00Z', desc:'Deribit monthly BTC options settlement', hist:[3.8,-2.1,5.4,-1.8,2.2], vol:70 },
+  { id:'eth-opt',  name:'ETH Options Expiry',      cat:'CRYPTO', impact:'crypto', date:'2026-07-25T08:00:00Z', desc:'Deribit monthly ETH options settlement', hist:[4.1,-3.2,6.1,-2.4,3.0], vol:68 },
+  { id:'fund-r2',  name:'Funding Rate Reset',      cat:'CRYPTO', impact:'crypto', date:'2026-07-24T00:00:00Z', desc:'8-hour funding rate settlement', hist:[0.4,-0.8,1.2,-0.3,0.6], vol:35 },
+  { id:'fed-jul',  name:'Fed Rate Decision',       cat:'MACRO',  impact:'high',   date:'2026-07-30T18:00:00Z', desc:'FOMC interest rate decision & press conference', hist:[4.2,-3.1,2.8,-5.4,6.1], vol:92 },
+  { id:'gdp-q2',   name:'US GDP Q2 Release',       cat:'MACRO',  impact:'med',    date:'2026-07-30T12:30:00Z', desc:'Gross Domestic Product growth estimate', hist:[0.8,-0.4,1.2,0.3,-0.7], vol:55 },
+  { id:'pce',      name:'PCE Inflation Index',     cat:'MACRO',  impact:'med',    date:'2026-07-31T12:30:00Z', desc:'Fed preferred inflation gauge', hist:[1.1,-0.9,2.3,0.7,-1.2], vol:60 },
+  { id:'nfp-aug',  name:'Non-Farm Payrolls',       cat:'MACRO',  impact:'high',   date:'2026-08-07T12:30:00Z', desc:'US jobs report — major market mover', hist:[1.9,-2.3,0.8,3.1,-1.4], vol:78 },
+  { id:'cpi-aug',  name:'US CPI Report',           cat:'MACRO',  impact:'high',   date:'2026-08-12T12:30:00Z', desc:'Consumer Price Index — key inflation metric', hist:[2.1,-1.8,3.4,-0.9,1.7], vol:85 },
+  { id:'btc-opt2', name:'BTC Options Expiry',      cat:'CRYPTO', impact:'crypto', date:'2026-08-28T08:00:00Z', desc:'Deribit monthly BTC options settlement', hist:[3.8,-2.1,5.4,-1.8,2.2], vol:70 },
+  { id:'fed-sep',  name:'Fed Rate Decision',       cat:'MACRO',  impact:'high',   date:'2026-09-17T18:00:00Z', desc:'FOMC interest rate decision & press conference', hist:[4.2,-3.1,2.8,-5.4,6.1], vol:92 },
+].sort((a,b) => new Date(a.date) - new Date(b.date));
+
+const notifiedEvents = new Set();
+let calCountdownTimers = {};
+
+function formatCountdown(ms) {
+  if (ms <= 0) return { d:0, h:0, m:0, s:0 };
+  const s = Math.floor(ms/1000);
+  return { d:Math.floor(s/86400), h:Math.floor((s%86400)/3600), m:Math.floor((s%3600)/60), s:s%60 };
+}
+function pad2(n) { return String(n).padStart(2,'0'); }
+function impactColor(impact) {
+  return { high:'#ff4400', med:'#ffaa00', low:'#64748B', crypto:'#8B5CF6' }[impact] || '#64748B';
+}
+function volLabel(v) {
+  if (v < 30) return { text:'Low',      color:'#00ff88', desc:'Small price movement expected. Market likely to absorb calmly.' };
+  if (v < 60) return { text:'Moderate', color:'#ffaa00', desc:'Noticeable volatility possible. Watch key levels.' };
+  if (v < 80) return { text:'High',     color:'#ff4400', desc:'Significant price swings expected. Risk management critical.' };
+  return              { text:'Extreme', color:'#ff0000', desc:'Major market movement likely. Reduce exposure before event.' };
+}
+
+function renderCalendar() {
+  const now    = Date.now();
+  const future = CAL_EVENTS.filter(e => new Date(e.date).getTime() > now - 3600000);
+
+  Object.values(calCountdownTimers).forEach(t => clearInterval(t));
+  calCountdownTimers = {};
+
+  const html = future.map(ev => {
+    const evMs   = new Date(ev.date).getTime();
+    const diff   = evMs - now;
+    const col    = impactColor(ev.impact);
+    const cd     = formatCountdown(diff);
+    const notify = notifiedEvents.has(ev.id);
+    const vl     = volLabel(ev.vol);
+    const borderCls = ev.impact === 'high' ? 'border-impact-high'
+                    : ev.impact === 'med'  ? 'border-impact-med'
+                    : ev.impact === 'crypto' ? 'border-impact-crypto' : '';
+    const evDate  = new Date(ev.date);
+    const dateStr = evDate.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})
+                  + ' · ' + evDate.toLocaleTimeString('en',{hour:'2-digit',minute:'2-digit'}) + ' UTC';
+    const catLbl  = ev.cat === 'MACRO' ? '🏛️ MACRO' : '₿ CRYPTO';
+
+    // Historical bars
+    const maxAbs = Math.max(...ev.hist.map(Math.abs), 0.1);
+    const bars = ev.hist.map((v,i) => {
+      const pct   = Math.round((Math.abs(v)/maxAbs)*100);
+      const color = v >= 0 ? '#10B981' : '#EF4444';
+      const label = (v>=0?'+':'') + v.toFixed(1)+'%';
+      const dAgo  = (5-i)*30;
+      return `<div class="cal-bar-wrap">
+        <span class="cal-bar-pct" style="color:${color}">${label}</span>
+        <div class="cal-bar" style="height:${pct}%;background:${color};box-shadow:0 0 6px ${color}88"></div>
+        <div class="cal-bar-date">${dAgo}d</div>
+      </div>`;
+    }).join('');
+
+    return `<div class="cal-event ${borderCls}" id="cal-ev-${ev.id}">
+      <div class="cal-event-header" onclick="toggleCalEvent('${ev.id}')">
+        <div class="cal-impact-dot" style="background:${col};box-shadow:0 0 6px ${col}88"></div>
+        <div class="cal-event-main">
+          <div class="cal-event-name">${ev.name}</div>
+          <div class="cal-event-date">${dateStr}</div>
+        </div>
+        <span class="cal-event-cat" style="background:${col}22;color:${col};border:1px solid ${col}44">${catLbl}</span>
+      </div>
+      <div class="cal-countdown">
+        <div class="cal-cd-unit" style="border-color:${col}44"><div class="cal-cd-num" style="color:${col}" id="cd-d-${ev.id}">${pad2(cd.d)}</div><div class="cal-cd-lbl">days</div></div>
+        <div class="cal-cd-unit" style="border-color:${col}44"><div class="cal-cd-num" style="color:${col}" id="cd-h-${ev.id}">${pad2(cd.h)}</div><div class="cal-cd-lbl">hrs</div></div>
+        <div class="cal-cd-unit" style="border-color:${col}44"><div class="cal-cd-num" style="color:${col}" id="cd-m-${ev.id}">${pad2(cd.m)}</div><div class="cal-cd-lbl">min</div></div>
+        <div class="cal-cd-unit" style="border-color:${col}44"><div class="cal-cd-num" style="color:${col}" id="cd-s-${ev.id}">${pad2(cd.s)}</div><div class="cal-cd-lbl">sec</div></div>
+      </div>
+      <div class="cal-visualizer" id="viz-${ev.id}">
+        <div class="cal-viz-section">
+          <div class="cal-viz-title">📊 BTC Price Reaction — Last 5 Occurrences</div>
+          <div class="cal-bars">${bars}</div>
+          <div style="height:1px;background:var(--border);margin:4px 0"></div>
+          <div style="font-size:9px;color:var(--muted);text-align:center">Historical % change on event day</div>
+        </div>
+        <div class="cal-viz-section">
+          <div class="cal-viz-title">🌡️ Volatility Thermometer</div>
+          <div class="cal-thermo-wrap">
+            <div class="cal-thermo-labels"><span>MAX</span><span>HIGH</span><span>MED</span><span>LOW</span></div>
+            <div class="cal-thermo">
+              <div class="cal-thermo-fill" style="height:${ev.vol}%;background:linear-gradient(to top,${vl.color}66,${vl.color});box-shadow:0 0 10px ${vl.color}66"></div>
+            </div>
+            <div class="cal-thermo-info">
+              <div class="cal-thermo-level" style="color:${vl.color}">${vl.text}</div>
+              <div style="font-size:18px;font-weight:900;color:${vl.color};margin-bottom:4px">${ev.vol}%</div>
+              <div class="cal-thermo-desc">${vl.desc}</div>
+            </div>
+          </div>
+        </div>
+        <button class="cal-notify-btn ${notify?'notified':''}" id="notify-btn-${ev.id}" onclick="toggleNotify('${ev.id}')">
+          ${notify ? '✅ Notification Set' : '🔔 Notify Me 15 min Before'}
+        </button>
+        ${notify ? `<div style="text-align:center;font-size:10px;color:var(--green);margin-top:6px">You will be notified 15 min before this event.</div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('cal-events-list').innerHTML = html ||
+    '<div style="text-align:center;padding:40px;color:var(--muted)">No upcoming events</div>';
+
+  // Live countdown tickers
+  future.forEach(ev => {
+    const evMs = new Date(ev.date).getTime();
+    calCountdownTimers[ev.id] = setInterval(() => {
+      const diff = evMs - Date.now();
+      if (diff <= 0) { clearInterval(calCountdownTimers[ev.id]); return; }
+      const cd = formatCountdown(diff);
+      const d = document.getElementById('cd-d-'+ev.id);
+      const h = document.getElementById('cd-h-'+ev.id);
+      const m = document.getElementById('cd-m-'+ev.id);
+      const s = document.getElementById('cd-s-'+ev.id);
+      if(d) d.textContent=pad2(cd.d);
+      if(h) h.textContent=pad2(cd.h);
+      if(m) m.textContent=pad2(cd.m);
+      if(s) s.textContent=pad2(cd.s);
+    }, 1000);
+  });
+}
+
+function toggleCalEvent(id) {
+  const viz = document.getElementById('viz-'+id);
+  if (!viz) return;
+  viz.classList.toggle('open');
+  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+}
+
+function toggleNotify(id) {
+  const btn = document.getElementById('notify-btn-'+id);
+  if (!btn) return;
+  if (notifiedEvents.has(id)) {
+    notifiedEvents.delete(id);
+    btn.className = 'cal-notify-btn';
+    btn.textContent = '🔔 Notify Me 15 min Before';
+    btn.nextElementSibling?.remove();
+  } else {
+    notifiedEvents.add(id);
+    btn.className = 'cal-notify-btn notified';
+    btn.textContent = '✅ Notification Set';
+    if (!btn.nextElementSibling) {
+      const msg = document.createElement('div');
+      msg.style.cssText = 'text-align:center;font-size:10px;color:var(--green);margin-top:6px';
+      msg.textContent = 'You will be notified 15 min before this event.';
+      btn.after(msg);
+    }
+    if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+  }
+}
+
 </script>
+
+<!-- ─── CALENDAR ─── -->
+<div class="page" id="page-calendar">
+  <div class="cal-header">
+    <span class="cal-title">📅 Economic Calendar</span>
+    <div class="cal-live"><div class="squeeze-live-dot"></div>Live</div>
+  </div>
+  <div class="cal-legend">
+    <div class="cal-leg-item"><div class="cal-leg-dot bg-impact-high"></div>High Impact</div>
+    <div class="cal-leg-item"><div class="cal-leg-dot bg-impact-med"></div>Medium</div>
+    <div class="cal-leg-item"><div class="cal-leg-dot bg-impact-crypto"></div>Crypto</div>
+    <div class="cal-leg-item"><div class="cal-leg-dot bg-impact-low"></div>Low</div>
+  </div>
+  <div id="cal-events-list">
+    <div style="text-align:center;padding:40px;color:var(--muted)">Loading events...</div>
+  </div>
+</div>
+
 </body>
 </html>
 <!-- THIS MARKER IS NEVER RENDERED — used as anchor -->
