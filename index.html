@@ -900,186 +900,143 @@
   .squeeze-empty-sub  { font-size: 12px; }
 
 
-  /* ─── CALENDAR TAB ─── */
-  @keyframes cal-countdown-pulse {
-    0%,100% { opacity:1; transform:scale(1); }
-    50%      { opacity:0.6; transform:scale(0.97); }
+  /* ─── CALENDAR TAB — 3D FLIP CARDS ─── */
+  @keyframes cal-glow-pulse {
+    0%,100% { opacity:0.6; }
+    50%      { opacity:1; }
   }
-  @keyframes thermo-fill {
-    from { height: 0%; }
+  @keyframes cd-tick {
+    0%   { transform:scaleY(1); }
+    50%  { transform:scaleY(0.85); opacity:0.7; }
+    100% { transform:scaleY(1); }
   }
   @keyframes notify-confirm {
     0%   { transform:scale(1); }
-    40%  { transform:scale(1.08); }
+    40%  { transform:scale(1.06); }
     100% { transform:scale(1); }
   }
+  @keyframes flip-in {
+    from { transform:rotateY(-90deg); opacity:0; }
+    to   { transform:rotateY(0deg);   opacity:1; }
+  }
 
+  /* ── Calendar layout ── */
   .cal-header {
     display:flex; justify-content:space-between; align-items:center;
-    margin-bottom:12px; padding: 0 2px;
+    margin-bottom:10px; padding:0 2px;
   }
   .cal-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; color:var(--muted); }
-  .cal-live   { font-size:10px; color:var(--green); font-weight:600; display:flex; align-items:center; gap:4px; }
+  .cal-live  { font-size:10px; color:var(--green); font-weight:600; display:flex; align-items:center; gap:4px; }
+  .cal-legend { display:flex; gap:10px; margin-bottom:12px; flex-wrap:wrap; }
+  .cal-leg-item { display:flex; align-items:center; gap:4px; font-size:10px; font-weight:600; color:var(--muted); }
+  .cal-leg-dot  { width:8px; height:8px; border-radius:50%; }
 
-  .cal-legend {
-    display:flex; gap:10px; margin-bottom:12px; flex-wrap:wrap;
+  /* ── 3D Flip Card ── */
+  .cal-flip-wrap {
+    perspective: 1000px;
+    margin-bottom: 12px;
+    height: 220px;
   }
-  .cal-leg-item {
-    display:flex; align-items:center; gap:4px;
-    font-size:10px; font-weight:600; color:var(--muted);
+  .cal-flip-inner {
+    position: relative;
+    width: 100%; height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.55s cubic-bezier(0.4,0.2,0.2,1);
+    cursor: pointer;
   }
-  .cal-leg-dot {
-    width:8px; height:8px; border-radius:50%;
-  }
+  .cal-flip-inner.flipped { transform: rotateY(180deg); }
 
-  /* Event card */
-  .cal-event {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    margin-bottom: 8px;
+  .cal-face {
+    position: absolute; inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 14px;
     overflow: hidden;
-    transition: border-color 0.2s;
   }
-  .cal-event-header {
-    padding: 12px 14px 10px;
-    display:flex; align-items:flex-start; gap:10px;
-    cursor:pointer;
+  .cal-face-front {
+    background: var(--card);
+    display: flex; flex-direction: column;
+    padding: 16px;
   }
-  .cal-impact-dot {
-    width:10px; height:10px; border-radius:50%;
-    flex-shrink:0; margin-top:4px;
-  }
-  .cal-event-main { flex:1; min-width:0; }
-  .cal-event-name { font-size:14px; font-weight:800; margin-bottom:2px; }
-  .cal-event-date { font-size:11px; color:var(--muted); }
-  .cal-event-cat  {
-    font-size:9px; font-weight:700; letter-spacing:0.5px;
-    text-transform:uppercase; padding:2px 6px; border-radius:4px;
-    flex-shrink:0; align-self:flex-start;
+  .cal-face-back {
+    background: var(--card2);
+    transform: rotateY(180deg);
+    display: flex; flex-direction: column;
+    padding: 14px;
   }
 
-  /* Countdown */
-  .cal-countdown {
-    display:flex; gap:6px; padding:0 14px 10px;
-    justify-content:center;
+  /* Glowing border */
+  .cal-flip-wrap .cal-glow {
+    position: absolute; inset: -1px;
+    border-radius: 15px;
+    pointer-events: none;
+    z-index: 0;
   }
-  .cal-cd-unit {
-    background:var(--card2);
-    border:1px solid var(--border2);
-    border-radius:8px;
-    padding:8px 10px;
-    text-align:center;
-    min-width:52px;
-    animation: cal-countdown-pulse 2s ease-in-out infinite;
-  }
-  .cal-cd-num  { font-size:20px; font-weight:900; letter-spacing:-1px; font-variant-numeric:tabular-nums; }
-  .cal-cd-lbl  { font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-top:2px; }
+  .cal-face { z-index: 1; }
 
-  /* Visualizer panel */
-  .cal-visualizer {
-    display:none;
-    border-top:1px solid var(--border);
-    padding:14px;
-    background:rgba(0,0,0,0.2);
+  /* Front face */
+  .cal-front-top {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 10px;
   }
-  .cal-visualizer.open { display:block; }
+  .cal-front-name { font-size: 17px; font-weight: 900; letter-spacing: -0.3px; line-height:1.2; flex:1; }
+  .cal-front-cat  {
+    font-size: 9px; font-weight: 700; text-transform: uppercase;
+    padding: 3px 7px; border-radius: 5px; flex-shrink: 0;
+    letter-spacing: 0.4px; margin-left: 8px;
+  }
+  .cal-front-date { font-size: 11px; color: var(--muted); margin-bottom: 14px; }
+  .cal-front-desc { font-size: 11px; color: var(--muted2); line-height: 1.5; margin-bottom: 14px; flex:1; }
 
-  .cal-viz-section { margin-bottom:14px; }
-  .cal-viz-title {
-    font-size:10px; font-weight:700; text-transform:uppercase;
-    letter-spacing:0.5px; color:var(--muted); margin-bottom:8px;
+  /* Countdown on front */
+  .cal-cd-row { display:flex; gap:6px; justify-content:center; margin-bottom:12px; }
+  .cal-cd-box {
+    flex:1; background:rgba(0,0,0,0.3); border-radius:8px;
+    padding:8px 4px; text-align:center;
+    border:1px solid rgba(255,255,255,0.06);
   }
+  .cal-cd-num { font-size:22px; font-weight:900; font-variant-numeric:tabular-nums; line-height:1; }
+  .cal-cd-lbl { font-size:8px; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-top:3px; }
 
-  /* Historical bar chart */
-  .cal-bars {
-    display:flex; align-items:flex-end; gap:6px;
-    height:80px; padding:0 4px;
-  }
-  .cal-bar-wrap {
-    flex:1; display:flex; flex-direction:column;
-    align-items:center; gap:3px; height:100%;
-    justify-content:flex-end;
-  }
-  .cal-bar-pct {
-    font-size:9px; font-weight:700; font-variant-numeric:tabular-nums;
-  }
-  .cal-bar {
-    width:100%; border-radius:3px 3px 0 0;
-    min-height:4px;
-    transition: height 1s cubic-bezier(0.4,0,0.2,1);
-  }
-  .cal-bar-date {
-    font-size:8px; color:var(--muted); text-align:center;
-    margin-top:3px; white-space:nowrap;
-  }
-  .cal-bar-axis {
-    height:1px; background:var(--border); margin:4px 0;
-    position:relative;
+  .cal-flip-hint {
+    text-align:center; font-size:10px; color:var(--muted);
+    display:flex; align-items:center; justify-content:center; gap:4px;
   }
 
-  /* Volatility thermometer */
-  .cal-thermo-wrap {
-    display:flex; align-items:center; gap:12px;
-  }
-  .cal-thermo {
-    width:24px; height:80px;
-    background:var(--surface);
-    border-radius:12px;
-    overflow:hidden;
-    position:relative;
-    flex-shrink:0;
-    border:1px solid var(--border);
-  }
-  .cal-thermo-fill {
-    position:absolute; bottom:0; left:0; right:0;
-    border-radius:12px;
-    animation: thermo-fill 1.5s cubic-bezier(0.4,0,0.2,1);
-  }
-  .cal-thermo-info { flex:1; }
-  .cal-thermo-level {
-    font-size:20px; font-weight:900; margin-bottom:4px;
-  }
-  .cal-thermo-desc { font-size:11px; color:var(--muted); line-height:1.5; }
-  .cal-thermo-labels {
-    display:flex; flex-direction:column;
-    justify-content:space-between; height:80px;
-    font-size:8px; color:var(--muted); text-align:right;
-    flex-shrink:0;
-  }
+  /* Back face */
+  .cal-back-title { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); margin-bottom:8px; }
+  .cal-back-name  { font-size:13px; font-weight:800; margin-bottom:12px; }
+
+  /* Candlestick chart */
+  .cal-candle-chart { flex:1; position:relative; margin-bottom:10px; }
+
+  /* Volatility pill */
+  .cal-vol-row { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+  .cal-vol-label { font-size:10px; color:var(--muted); flex-shrink:0; }
+  .cal-vol-track { flex:1; height:6px; background:var(--surface); border-radius:3px; overflow:hidden; }
+  .cal-vol-fill  { height:100%; border-radius:3px; }
+  .cal-vol-pct   { font-size:11px; font-weight:800; width:36px; text-align:right; }
 
   /* Notify button */
   .cal-notify-btn {
-    width:100%; padding:10px;
-    border:1px solid var(--border2);
-    border-radius:8px;
-    background:rgba(59,130,246,0.1);
-    color:var(--accent);
-    font-size:13px; font-weight:700;
-    cursor:pointer;
-    transition: all 0.2s;
-    display:flex; align-items:center; justify-content:center; gap:6px;
+    width:100%; padding:9px;
+    border-radius:8px; border:none;
+    background:rgba(59,130,246,0.15);
+    color:var(--accent); font-size:12px; font-weight:700;
+    cursor:pointer; transition:all 0.2s;
+    display:flex; align-items:center; justify-content:center; gap:5px;
   }
   .cal-notify-btn:active { transform:scale(0.97); }
   .cal-notify-btn.notified {
-    background:rgba(16,185,129,0.15);
-    color:var(--green);
-    border-color:rgba(16,185,129,0.3);
-    animation: notify-confirm 0.4s ease;
+    background:rgba(16,185,129,0.15); color:var(--green);
+    animation:notify-confirm 0.4s ease;
   }
 
   /* Impact colors */
-  .impact-high   { color:#ff4400; }
-  .impact-med    { color:#ffaa00; }
-  .impact-low    { color:#64748B; }
-  .impact-crypto { color:#8B5CF6; }
   .bg-impact-high   { background:#ff4400; }
   .bg-impact-med    { background:#ffaa00; }
   .bg-impact-low    { background:#64748B; }
   .bg-impact-crypto { background:#8B5CF6; }
-  .border-impact-high   { border-color:rgba(255,68,0,0.4)!important; }
-  .border-impact-med    { border-color:rgba(255,170,0,0.4)!important; }
-  .border-impact-crypto { border-color:rgba(139,92,246,0.4)!important; }
 
 </style>
 </head>
@@ -2123,75 +2080,144 @@ function renderCalendar() {
   Object.values(calCountdownTimers).forEach(t => clearInterval(t));
   calCountdownTimers = {};
 
+  function impactColor(impact) {
+    return { high:'#ff4400', med:'#ffaa00', low:'#64748B', crypto:'#8B5CF6' }[impact] || '#64748B';
+  }
+  function volLabel(v) {
+    if (v < 30) return { text:'Low',      color:'#00ff88' };
+    if (v < 60) return { text:'Moderate', color:'#ffaa00' };
+    if (v < 80) return { text:'High',     color:'#ff4400' };
+    return              { text:'Extreme', color:'#ff0000' };
+  }
+
+  // Build candlestick SVG from hist array
+  function candleSVG(hist, col) {
+    const W = 260, H = 90;
+    const n = hist.length;
+    const barW = Math.floor(W / (n * 2));
+    const maxV = Math.max(...hist.map(Math.abs), 0.5);
+    const mid  = H / 2;
+    const scale = (mid - 8) / maxV;
+
+    let rects = '';
+    hist.forEach((v, i) => {
+      const x    = Math.round(i * (W / n) + (W / n - barW) / 2);
+      const isUp = v >= 0;
+      const c    = isUp ? '#10B981' : '#EF4444';
+      const h    = Math.max(4, Math.abs(v) * scale);
+      const y    = isUp ? mid - h : mid;
+      const wick = Math.max(2, h * 0.3);
+      const wx   = x + barW / 2;
+      // Wick
+      rects += `<line x1="${wx}" y1="${isUp ? y - wick : y + h}" x2="${wx}" y2="${isUp ? y : y + h + wick}" stroke="${c}" stroke-width="1.5" opacity="0.6"/>`;
+      // Body
+      rects += `<rect x="${x}" y="${y}" width="${barW}" height="${h}" rx="2" fill="${c}" opacity="0.9"/>`;
+      // Label
+      const lbl = (v >= 0 ? '+' : '') + v.toFixed(1) + '%';
+      const ly  = isUp ? y - wick - 10 : y + h + wick + 10;
+      rects += `<text x="${wx}" y="${ly}" text-anchor="middle" font-size="8" fill="${c}" font-weight="700">${lbl}</text>`;
+    });
+    // Zero line
+    rects += `<line x1="0" y1="${mid}" x2="${W}" y2="${mid}" stroke="rgba(255,255,255,0.12)" stroke-width="1" stroke-dasharray="3,3"/>`;
+
+    return `<svg viewBox="0 0 ${W} ${H}" width="100%" height="90" style="overflow:visible">
+      <defs><filter id="cglow-${col.replace('#','')}"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+      ${rects}
+    </svg>`;
+  }
+
   const html = future.map(ev => {
     const evMs   = new Date(ev.date).getTime();
     const diff   = evMs - now;
     const col    = impactColor(ev.impact);
     const cd     = formatCountdown(diff);
-    const notify = notifiedEvents.has(ev.id);
     const vl     = volLabel(ev.vol);
-    const borderCls = ev.impact === 'high' ? 'border-impact-high'
-                    : ev.impact === 'med'  ? 'border-impact-med'
-                    : ev.impact === 'crypto' ? 'border-impact-crypto' : '';
+    const notify = notifiedEvents.has(ev.id);
+    const catLbl = ev.cat === 'MACRO' ? '🏛️ MACRO' : '₿ CRYPTO';
+    const catBg  = ev.cat === 'MACRO' ? 'rgba(255,68,0,0.15)' : 'rgba(139,92,246,0.15)';
+
     const evDate  = new Date(ev.date);
-    const dateStr = evDate.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})
+    const dateStr = evDate.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})
                   + ' · ' + evDate.toLocaleTimeString('en',{hour:'2-digit',minute:'2-digit'}) + ' UTC';
-    const catLbl  = ev.cat === 'MACRO' ? '🏛️ MACRO' : '₿ CRYPTO';
 
-    // Historical bars
-    const maxAbs = Math.max(...ev.hist.map(Math.abs), 0.1);
-    const bars = ev.hist.map((v,i) => {
-      const pct   = Math.round((Math.abs(v)/maxAbs)*100);
-      const color = v >= 0 ? '#10B981' : '#EF4444';
-      const label = (v>=0?'+':'') + v.toFixed(1)+'%';
-      const dAgo  = (5-i)*30;
-      return `<div class="cal-bar-wrap">
-        <span class="cal-bar-pct" style="color:${color}">${label}</span>
-        <div class="cal-bar" style="height:${pct}%;background:${color};box-shadow:0 0 6px ${color}88"></div>
-        <div class="cal-bar-date">${dAgo}d</div>
-      </div>`;
-    }).join('');
+    const avgPct = (ev.hist.reduce((a,b)=>a+b,0)/ev.hist.length);
+    const avgLbl = (avgPct>=0?'+':'') + avgPct.toFixed(1) + '%';
+    const avgCol = avgPct>=0 ? '#10B981' : '#EF4444';
 
-    return `<div class="cal-event ${borderCls}" id="cal-ev-${ev.id}">
-      <div class="cal-event-header" onclick="toggleCalEvent('${ev.id}')">
-        <div class="cal-impact-dot" style="background:${col};box-shadow:0 0 6px ${col}88"></div>
-        <div class="cal-event-main">
-          <div class="cal-event-name">${ev.name}</div>
-          <div class="cal-event-date">${dateStr}</div>
-        </div>
-        <span class="cal-event-cat" style="background:${col}22;color:${col};border:1px solid ${col}44">${catLbl}</span>
-      </div>
-      <div class="cal-countdown">
-        <div class="cal-cd-unit" style="border-color:${col}44"><div class="cal-cd-num" style="color:${col}" id="cd-d-${ev.id}">${pad2(cd.d)}</div><div class="cal-cd-lbl">days</div></div>
-        <div class="cal-cd-unit" style="border-color:${col}44"><div class="cal-cd-num" style="color:${col}" id="cd-h-${ev.id}">${pad2(cd.h)}</div><div class="cal-cd-lbl">hrs</div></div>
-        <div class="cal-cd-unit" style="border-color:${col}44"><div class="cal-cd-num" style="color:${col}" id="cd-m-${ev.id}">${pad2(cd.m)}</div><div class="cal-cd-lbl">min</div></div>
-        <div class="cal-cd-unit" style="border-color:${col}44"><div class="cal-cd-num" style="color:${col}" id="cd-s-${ev.id}">${pad2(cd.s)}</div><div class="cal-cd-lbl">sec</div></div>
-      </div>
-      <div class="cal-visualizer" id="viz-${ev.id}">
-        <div class="cal-viz-section">
-          <div class="cal-viz-title">📊 BTC Price Reaction — Last 5 Occurrences</div>
-          <div class="cal-bars">${bars}</div>
-          <div style="height:1px;background:var(--border);margin:4px 0"></div>
-          <div style="font-size:9px;color:var(--muted);text-align:center">Historical % change on event day</div>
-        </div>
-        <div class="cal-viz-section">
-          <div class="cal-viz-title">🌡️ Volatility Thermometer</div>
-          <div class="cal-thermo-wrap">
-            <div class="cal-thermo-labels"><span>MAX</span><span>HIGH</span><span>MED</span><span>LOW</span></div>
-            <div class="cal-thermo">
-              <div class="cal-thermo-fill" style="height:${ev.vol}%;background:linear-gradient(to top,${vl.color}66,${vl.color});box-shadow:0 0 10px ${vl.color}66"></div>
+    return `
+    <div class="cal-flip-wrap" id="flip-wrap-${ev.id}">
+      <!-- Glowing border -->
+      <div class="cal-glow" style="border:1.5px solid ${col};box-shadow:0 0 16px ${col}44,inset 0 0 16px ${col}11;border-radius:15px;animation:cal-glow-pulse 2.5s ease-in-out infinite"></div>
+
+      <div class="cal-flip-inner" id="flip-${ev.id}" onclick="flipCard('${ev.id}')">
+
+        <!-- ── FRONT ── -->
+        <div class="cal-face cal-face-front">
+          <div class="cal-front-top">
+            <div class="cal-front-name">${ev.name}</div>
+            <span class="cal-front-cat" style="background:${catBg};color:${col}">${catLbl}</span>
+          </div>
+          <div class="cal-front-date">📅 ${dateStr}</div>
+          <div class="cal-front-desc">${ev.desc}</div>
+
+          <!-- Countdown -->
+          <div class="cal-cd-row">
+            <div class="cal-cd-box">
+              <div class="cal-cd-num" style="color:${col}" id="cd-d-${ev.id}">${pad2(cd.d)}</div>
+              <div class="cal-cd-lbl">days</div>
             </div>
-            <div class="cal-thermo-info">
-              <div class="cal-thermo-level" style="color:${vl.color}">${vl.text}</div>
-              <div style="font-size:18px;font-weight:900;color:${vl.color};margin-bottom:4px">${ev.vol}%</div>
-              <div class="cal-thermo-desc">${vl.desc}</div>
+            <div class="cal-cd-box">
+              <div class="cal-cd-num" style="color:${col}" id="cd-h-${ev.id}">${pad2(cd.h)}</div>
+              <div class="cal-cd-lbl">hrs</div>
+            </div>
+            <div class="cal-cd-box">
+              <div class="cal-cd-num" style="color:${col}" id="cd-m-${ev.id}">${pad2(cd.m)}</div>
+              <div class="cal-cd-lbl">min</div>
+            </div>
+            <div class="cal-cd-box">
+              <div class="cal-cd-num" style="color:${col}" id="cd-s-${ev.id}">${pad2(cd.s)}</div>
+              <div class="cal-cd-lbl">sec</div>
             </div>
           </div>
+
+          <div class="cal-flip-hint">
+            <span style="font-size:14px">↩️</span> Tap to see BTC reaction chart
+          </div>
         </div>
-        <button class="cal-notify-btn ${notify?'notified':''}" id="notify-btn-${ev.id}" onclick="toggleNotify('${ev.id}')">
-          ${notify ? '✅ Notification Set' : '🔔 Notify Me 15 min Before'}
-        </button>
-        ${notify ? `<div style="text-align:center;font-size:10px;color:var(--green);margin-top:6px">You will be notified 15 min before this event.</div>` : ''}
+
+        <!-- ── BACK ── -->
+        <div class="cal-face cal-face-back">
+          <div class="cal-back-name">${ev.name}</div>
+          <div class="cal-back-title">📊 BTC Reaction — Last ${ev.hist.length} Occurrences</div>
+
+          <!-- Candlestick chart -->
+          <div class="cal-candle-chart">
+            ${candleSVG(ev.hist, col)}
+          </div>
+
+          <!-- Avg reaction -->
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <span style="font-size:10px;color:var(--muted)">Avg BTC Move</span>
+            <span style="font-size:14px;font-weight:800;color:${avgCol}">${avgLbl}</span>
+          </div>
+
+          <!-- Volatility bar -->
+          <div class="cal-vol-row">
+            <span class="cal-vol-label">🌡️ Volatility</span>
+            <div class="cal-vol-track">
+              <div class="cal-vol-fill" style="width:${ev.vol}%;background:linear-gradient(90deg,${vl.color}88,${vl.color});box-shadow:0 0 6px ${vl.color}66"></div>
+            </div>
+            <span class="cal-vol-pct" style="color:${vl.color}">${vl.text}</span>
+          </div>
+
+          <!-- Notify -->
+          <button class="cal-notify-btn ${notify?'notified':''}"
+            id="notify-btn-${ev.id}"
+            onclick="event.stopPropagation();toggleNotify('${ev.id}')">
+            ${notify ? '✅ Notification Set' : '🔔 Notify Me 15 min Before'}
+          </button>
+        </div>
+
       </div>
     </div>`;
   }).join('');
@@ -2218,11 +2244,12 @@ function renderCalendar() {
   });
 }
 
-function toggleCalEvent(id) {
-  const viz = document.getElementById('viz-'+id);
-  if (!viz) return;
-  viz.classList.toggle('open');
-  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+
+function flipCard(id) {
+  const inner = document.getElementById('flip-'+id);
+  if (!inner) return;
+  inner.classList.toggle('flipped');
+  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
 }
 
 function toggleNotify(id) {
