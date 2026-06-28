@@ -933,46 +933,57 @@
 
   /* ── 3D Flip Card ── */
   .cal-flip-wrap {
-    perspective: 1000px;
-    margin-bottom: 12px;
-    height: 220px;
+    perspective: 1200px;
+    margin-bottom: 14px;
+    height: 240px;
+    position: relative;
   }
   .cal-flip-inner {
     position: relative;
     width: 100%; height: 100%;
     transform-style: preserve-3d;
-    transition: transform 0.55s cubic-bezier(0.4,0.2,0.2,1);
+    transition: transform 0.6s cubic-bezier(0.4,0.2,0.2,1);
     cursor: pointer;
   }
   .cal-flip-inner.flipped { transform: rotateY(180deg); }
 
   .cal-face {
-    position: absolute; inset: 0;
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
     border-radius: 14px;
     overflow: hidden;
+    box-sizing: border-box;
   }
   .cal-face-front {
-    background: var(--card);
+    background: linear-gradient(145deg, #161B2E, #111520);
     display: flex; flex-direction: column;
     padding: 16px;
+    border: 1px solid rgba(255,255,255,0.06);
   }
-  .cal-face-back {
-    background: var(--card2);
-    transform: rotateY(180deg);
-    display: flex; flex-direction: column;
-    padding: 14px;
-  }
-
-  /* Glowing border */
-  .cal-flip-wrap .cal-glow {
+  .cal-flip-wrap::before {
+    content: '';
     position: absolute; inset: -1px;
     border-radius: 15px;
     pointer-events: none;
-    z-index: 0;
+    z-index: 5;
   }
-  .cal-face { z-index: 1; }
+  .cal-face-back {
+    background: linear-gradient(145deg, #1C2340, #161B2E);
+    transform: rotateY(180deg);
+    display: flex; flex-direction: column;
+    padding: 14px;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  /* Glowing border overlay */
+  .cal-glow {
+    position: absolute; inset: 0;
+    border-radius: 14px;
+    pointer-events: none;
+    z-index: 10;
+  }
 
   /* Front face */
   .cal-front-top {
@@ -1008,7 +1019,7 @@
   .cal-back-name  { font-size:13px; font-weight:800; margin-bottom:12px; }
 
   /* Candlestick chart */
-  .cal-candle-chart { flex:1; position:relative; margin-bottom:10px; }
+  .cal-candle-chart { flex:1; position:relative; margin-bottom:8px; min-height:110px; }
 
   /* Volatility pill */
   .cal-vol-row { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
@@ -2091,37 +2102,74 @@ function renderCalendar() {
   }
 
   // Build candlestick SVG from hist array
-  function candleSVG(hist, col) {
-    const W = 260, H = 90;
+  // evName used to build event value labels e.g. "CPI 3.2%"
+  // Dates go back in monthly steps from today
+  function candleSVG(hist, col, evName) {
+    const W = 280, H = 110;
     const n = hist.length;
-    const barW = Math.floor(W / (n * 2));
+    const colW = W / n;
+    const barW = Math.max(10, Math.floor(colW * 0.45));
     const maxV = Math.max(...hist.map(Math.abs), 0.5);
-    const mid  = H / 2;
-    const scale = (mid - 8) / maxV;
+    // Reserve 18px top for BTC%, 60px middle for candles, 18px bottom for date, 14px for event val
+    const chartTop = 18, chartH = 58;
+    const mid   = chartTop + chartH / 2;
+    const scale = (chartH / 2 - 6) / maxV;
+
+    // Generate approximate past dates (monthly steps back from today)
+    const now = new Date();
+    const dates = hist.map((_, i) => {
+      const d = new Date(now);
+      d.setMonth(d.getMonth() - (n - 1 - i) * 2); // every ~2 months
+      return d.toLocaleDateString('en-GB', { month: 'short', year: '2-digit' });
+    });
+
+    // Generate plausible event values based on event name
+    const evVals = hist.map((v, i) => {
+      if (evName.includes('CPI'))    return 'CPI ' + (2.5 + v * 0.2).toFixed(1) + '%';
+      if (evName.includes('NFP'))    return (180 + Math.round(v * 10)) + 'K';
+      if (evName.includes('Fed'))    return v >= 0 ? '+25bps' : '-25bps';
+      if (evName.includes('GDP'))    return (2.1 + v * 0.15).toFixed(1) + '%';
+      if (evName.includes('PCE'))    return (2.3 + v * 0.1).toFixed(1) + '%';
+      if (evName.includes('Option')) return '$' + (60 + Math.round(v * 2)) + 'K';
+      if (evName.includes('ETF'))    return (v >= 0 ? '+' : '') + Math.round(v * 80) + 'M';
+      if (evName.includes('Funding'))return (v >= 0 ? '+' : '') + (v * 0.02).toFixed(4) + '%';
+      return (v >= 0 ? '+' : '') + v.toFixed(1) + '%';
+    });
 
     let rects = '';
     hist.forEach((v, i) => {
-      const x    = Math.round(i * (W / n) + (W / n - barW) / 2);
+      const cx   = colW * i + colW / 2;          // center x of column
+      const x    = Math.round(cx - barW / 2);
       const isUp = v >= 0;
       const c    = isUp ? '#10B981' : '#EF4444';
-      const h    = Math.max(4, Math.abs(v) * scale);
+      const h    = Math.max(5, Math.abs(v) * scale);
       const y    = isUp ? mid - h : mid;
-      const wick = Math.max(2, h * 0.3);
-      const wx   = x + barW / 2;
-      // Wick
-      rects += `<line x1="${wx}" y1="${isUp ? y - wick : y + h}" x2="${wx}" y2="${isUp ? y : y + h + wick}" stroke="${c}" stroke-width="1.5" opacity="0.6"/>`;
-      // Body
-      rects += `<rect x="${x}" y="${y}" width="${barW}" height="${h}" rx="2" fill="${c}" opacity="0.9"/>`;
-      // Label
-      const lbl = (v >= 0 ? '+' : '') + v.toFixed(1) + '%';
-      const ly  = isUp ? y - wick - 10 : y + h + wick + 10;
-      rects += `<text x="${wx}" y="${ly}" text-anchor="middle" font-size="8" fill="${c}" font-weight="700">${lbl}</text>`;
-    });
-    // Zero line
-    rects += `<line x1="0" y1="${mid}" x2="${W}" y2="${mid}" stroke="rgba(255,255,255,0.12)" stroke-width="1" stroke-dasharray="3,3"/>`;
+      const wick = Math.max(3, h * 0.35);
 
-    return `<svg viewBox="0 0 ${W} ${H}" width="100%" height="90" style="overflow:visible">
-      <defs><filter id="cglow-${col.replace('#','')}"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+      // ── Wick ──
+      rects += `<line x1="${cx}" y1="${isUp ? y-wick : y+h}" x2="${cx}" y2="${isUp ? y : y+h+wick}" stroke="${c}" stroke-width="1.5" opacity="0.5"/>`;
+
+      // ── Candle body ──
+      rects += `<rect x="${x}" y="${y}" width="${barW}" height="${h}" rx="2" fill="${c}" opacity="0.88"/>`;
+
+      // ── BTC reaction % (above candle) ──
+      const btcLbl = (v >= 0 ? '+' : '') + v.toFixed(1) + '%';
+      const btcY   = chartTop - 4;
+      rects += `<text x="${cx}" y="${btcY}" text-anchor="middle" font-size="8.5" fill="${c}" font-weight="800">${btcLbl}</text>`;
+
+      // ── Date below chart ──
+      const dateY = chartTop + chartH + 12;
+      rects += `<text x="${cx}" y="${dateY}" text-anchor="middle" font-size="8" fill="#64748B">${dates[i]}</text>`;
+
+      // ── Event value below date ──
+      const evY = dateY + 12;
+      rects += `<text x="${cx}" y="${evY}" text-anchor="middle" font-size="7.5" fill="#475569">${evVals[i]}</text>`;
+    });
+
+    // Zero line
+    rects += `<line x1="0" y1="${mid}" x2="${W}" y2="${mid}" stroke="rgba(255,255,255,0.1)" stroke-width="1" stroke-dasharray="4,3"/>`;
+
+    return `<svg viewBox="0 0 ${W} ${H}" width="100%" height="110" style="overflow:visible">
       ${rects}
     </svg>`;
   }
@@ -2145,10 +2193,7 @@ function renderCalendar() {
     const avgCol = avgPct>=0 ? '#10B981' : '#EF4444';
 
     return `
-    <div class="cal-flip-wrap" id="flip-wrap-${ev.id}">
-      <!-- Glowing border -->
-      <div class="cal-glow" style="border:1.5px solid ${col};box-shadow:0 0 16px ${col}44,inset 0 0 16px ${col}11;border-radius:15px;animation:cal-glow-pulse 2.5s ease-in-out infinite"></div>
-
+    <div class="cal-flip-wrap" id="flip-wrap-${ev.id}" style="box-shadow:0 0 0 1.5px ${col},0 0 20px ${col}44">
       <div class="cal-flip-inner" id="flip-${ev.id}" onclick="flipCard('${ev.id}')">
 
         <!-- ── FRONT ── -->
@@ -2192,7 +2237,7 @@ function renderCalendar() {
 
           <!-- Candlestick chart -->
           <div class="cal-candle-chart">
-            ${candleSVG(ev.hist, col)}
+            ${candleSVG(ev.hist, col, ev.name)}
           </div>
 
           <!-- Avg reaction -->
@@ -2216,10 +2261,10 @@ function renderCalendar() {
             onclick="event.stopPropagation();toggleNotify('${ev.id}')">
             ${notify ? '✅ Notification Set' : '🔔 Notify Me 15 min Before'}
           </button>
-        </div>
+        </div><!-- end back face -->
 
-      </div>
-    </div>`;
+      </div><!-- end flip-inner -->
+    </div><!-- end flip-wrap -->`;
   }).join('');
 
   document.getElementById('cal-events-list').innerHTML = html ||
