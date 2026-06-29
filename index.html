@@ -1313,13 +1313,9 @@ let refreshInterval = null;
 //  Read by Mini App via public raw URL (no CORS)
 // ══════════════════════════════════════════════
 
-// Gist URL with CORS proxies
-const GIST_RAW = 'https://gist.githubusercontent.com/howhaber/0962a350f90d410227a5af2991b5141e/raw/signalcore-data.json';
-const GIST_URLS = [
-  'https://api.allorigins.win/raw?url=' + encodeURIComponent(GIST_RAW),
-  'https://corsproxy.io/?' + encodeURIComponent(GIST_RAW),
-  GIST_RAW,
-];
+// Same-domain URL — zero CORS issues
+// Data written by marketMonitor.js bot via GitHub API
+const DATA_URL = '/signalcore/data.json';
 
 // Map Bybit coin names to our COINS sym
 const COIN_NAME_MAP = {
@@ -1334,15 +1330,10 @@ const COIN_NAME_MAP = {
 
 async function generateMarketData() {
   try {
-    // Try multiple sources
-    let json = null;
-    for (const url of GIST_URLS) {
-      try {
-        const res = await fetch(url + '?t=' + Date.now());
-        if (res.ok) { json = await res.json(); break; }
-      } catch(e) { continue; }
-    }
-    if (!json) throw new Error('All sources failed');
+    // Fetch from same domain — no CORS
+    const res = await fetch(DATA_URL + '?t=' + Date.now());
+    if (!res.ok) throw new Error('data.json fetch failed: ' + res.status);
+    const json = await res.json();
 
     if (!json.coins || Object.keys(json.coins).length === 0) {
       throw new Error('No coin data in Gist');
