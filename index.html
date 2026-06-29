@@ -1313,7 +1313,13 @@ let refreshInterval = null;
 //  Read by Mini App via public raw URL (no CORS)
 // ══════════════════════════════════════════════
 
-const GIST_RAW_URL = 'https://gist.githubusercontent.com/howhaber/0962a350f90d410227a5af2991b5141e/raw/signalcore-data.json';
+// Gist URL with CORS proxies
+const GIST_RAW = 'https://gist.githubusercontent.com/howhaber/0962a350f90d410227a5af2991b5141e/raw/signalcore-data.json';
+const GIST_URLS = [
+  'https://api.allorigins.win/raw?url=' + encodeURIComponent(GIST_RAW),
+  'https://corsproxy.io/?' + encodeURIComponent(GIST_RAW),
+  GIST_RAW,
+];
 
 // Map Bybit coin names to our COINS sym
 const COIN_NAME_MAP = {
@@ -1328,10 +1334,15 @@ const COIN_NAME_MAP = {
 
 async function generateMarketData() {
   try {
-    // Fetch from GitHub Gist — no CORS, public raw URL
-    const res = await fetch(GIST_RAW_URL + '?t=' + Date.now());
-    if (!res.ok) throw new Error('Gist fetch failed: ' + res.status);
-    const json = await res.json();
+    // Try multiple sources
+    let json = null;
+    for (const url of GIST_URLS) {
+      try {
+        const res = await fetch(url + '?t=' + Date.now());
+        if (res.ok) { json = await res.json(); break; }
+      } catch(e) { continue; }
+    }
+    if (!json) throw new Error('All sources failed');
 
     if (!json.coins || Object.keys(json.coins).length === 0) {
       throw new Error('No coin data in Gist');
@@ -1357,7 +1368,13 @@ async function generateMarketData() {
       };
     });
 
-    console.log('[✅ Gist] Loaded', Object.keys(data).length, 'coins, updated:', json.timestamp);
+    // Store calendar data for Calendar tab
+    if (json.calendar && json.calendar.length > 0) {
+      window._gistCalendar = json.calendar;
+      console.log('[✅ Gist] Loaded', Object.keys(data).length, 'coins +', json.calendar.length, 'calendar events');
+    } else {
+      console.log('[✅ Gist] Loaded', Object.keys(data).length, 'coins (no calendar yet)');
+    }
     return data;
 
   } catch (err) {
@@ -2122,8 +2139,19 @@ function volLabel(v) {
 }
 
 function renderCalendar() {
+  // Use Gist calendar data if available, fallback to hardcoded
+  const gistCal = window._gistCalendar;
+
+  if (gistCal && gistCal.length > 0) {
+    renderCalendarFromGist(gistCal);
+  } else {
+    renderCalendarHardcoded();
+  }
+}
+
+function renderCalendarFromGist(events) {
   const now    = Date.now();
-  const future = CAL_EVENTS.filter(e => new Date(e.date).getTime() > now - 3600000);
+  const future = events.filter(e => new Date(e.date).getTime() > now - 3600000);
 
   Object.values(calCountdownTimers).forEach(t => clearInterval(t));
   calCountdownTimers = {};
@@ -2131,15 +2159,20 @@ function renderCalendar() {
   function impactColor(impact) {
     return { high:'#ff4400', med:'#ffaa00', low:'#64748B', crypto:'#8B5CF6' }[impact] || '#64748B';
   }
-  
+  function volLabel(v) {
+    if (!v || v < 30) return { text:'Low',      color:'#00ff88' };
+    if (v < 60)       return { text:'Moderate', color:'#ffaa00' };
+    if (v < 80)       return { text:'High',     color:'#ff4400' };
+    return                   { text:'Extreme',  color:'#ff0000' };
+  }
 
-  const html = future.map(ev => {
+  const html = future.slice(0, 20).map(ev => {
     const evMs   = new Date(ev.date).getTime();
     const diff   = evMs - now;
     const col    = impactColor(ev.impact);
     const cd     = formatCountdown(diff);
-    const vl     = { text:'High', color:'#ff4400' }; // placeholder until real volatility data
     const notify = notifiedEvents.has(ev.id);
+    const vl     = volLabel(ev.vol);
     const catLbl = ev.cat === 'MACRO' ? '🏛️ MACRO' : '₿ CRYPTO';
     const catBg  = ev.cat === 'MACRO' ? 'rgba(255,68,0,0.15)' : 'rgba(139,92,246,0.15)';
 
@@ -2147,51 +2180,31 @@ function renderCalendar() {
     const dateStr = evDate.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})
                   + ' · ' + evDate.toLocaleTimeString('en',{hour:'2-digit',minute:'2-digit'}) + ' UTC';
 
-
+    const sourceTag = ev.fredId ? `<span style="font-size:9px;color:#00ff88;background:rgba(0,255,136,0.1);padding:2px 5px;border-radius:3px;border:1px solid rgba(0,255,136,0.2)">✅ FRED API</span>` : '';
 
     return `
     <div class="cal-flip-wrap" id="flip-wrap-${ev.id}" style="box-shadow:0 0 0 1.5px ${col},0 0 20px ${col}44">
       <div class="cal-flip-inner" id="flip-${ev.id}" onclick="flipCard('${ev.id}')">
-
-        <!-- ── FRONT ── -->
+        <!-- FRONT -->
         <div class="cal-face cal-face-front">
           <div class="cal-front-top">
             <div class="cal-front-name">${ev.name}</div>
             <span class="cal-front-cat" style="background:${catBg};color:${col}">${catLbl}</span>
           </div>
           <div class="cal-front-date">📅 ${dateStr}</div>
-          <div class="cal-front-desc">${ev.desc}</div>
-
-          <!-- Countdown -->
+          <div style="margin-bottom:6px">${sourceTag}</div>
+          <div class="cal-front-desc">${ev.desc || ''}</div>
           <div class="cal-cd-row">
-            <div class="cal-cd-box">
-              <div class="cal-cd-num" style="color:${col}" id="cd-d-${ev.id}">${pad2(cd.d)}</div>
-              <div class="cal-cd-lbl">days</div>
-            </div>
-            <div class="cal-cd-box">
-              <div class="cal-cd-num" style="color:${col}" id="cd-h-${ev.id}">${pad2(cd.h)}</div>
-              <div class="cal-cd-lbl">hrs</div>
-            </div>
-            <div class="cal-cd-box">
-              <div class="cal-cd-num" style="color:${col}" id="cd-m-${ev.id}">${pad2(cd.m)}</div>
-              <div class="cal-cd-lbl">min</div>
-            </div>
-            <div class="cal-cd-box">
-              <div class="cal-cd-num" style="color:${col}" id="cd-s-${ev.id}">${pad2(cd.s)}</div>
-              <div class="cal-cd-lbl">sec</div>
-            </div>
+            <div class="cal-cd-box"><div class="cal-cd-num" style="color:${col}" id="cd-d-${ev.id}">${pad2(cd.d)}</div><div class="cal-cd-lbl">days</div></div>
+            <div class="cal-cd-box"><div class="cal-cd-num" style="color:${col}" id="cd-h-${ev.id}">${pad2(cd.h)}</div><div class="cal-cd-lbl">hrs</div></div>
+            <div class="cal-cd-box"><div class="cal-cd-num" style="color:${col}" id="cd-m-${ev.id}">${pad2(cd.m)}</div><div class="cal-cd-lbl">min</div></div>
+            <div class="cal-cd-box"><div class="cal-cd-num" style="color:${col}" id="cd-s-${ev.id}">${pad2(cd.s)}</div><div class="cal-cd-lbl">sec</div></div>
           </div>
-
-          <div class="cal-flip-hint">
-            <span style="font-size:14px">↩️</span> Tap to see BTC reaction chart
-          </div>
+          <div class="cal-flip-hint"><span style="font-size:14px">↩️</span> Tap to flip</div>
         </div>
-
-        <!-- ── BACK ── -->
+        <!-- BACK -->
         <div class="cal-face cal-face-back">
           <div class="cal-back-name">${ev.name}</div>
-
-          <!-- Coming Soon placeholder -->
           <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:10px 6px;gap:10px">
             <div style="font-size:28px">📡</div>
             <div style="font-size:13px;font-weight:800;color:var(--text)">Real Data Coming Soon</div>
@@ -2203,24 +2216,18 @@ function renderCalendar() {
               No simulated or fake data will ever be shown
             </div>
           </div>
-
-          <!-- Notify -->
-          <button class="cal-notify-btn ${notify?'notified':''}"
-            id="notify-btn-${ev.id}"
-            onclick="event.stopPropagation();toggleNotify('${ev.id}')">
+          <button class="cal-notify-btn ${notify?'notified':''}" id="notify-btn-${ev.id}" onclick="event.stopPropagation();toggleNotify('${ev.id}')">
             ${notify ? '✅ Notification Set' : '🔔 Notify Me 15 min Before'}
           </button>
-        </div><!-- end back face -->
-
-      </div><!-- end flip-inner -->
-    </div><!-- end flip-wrap -->`;
+        </div>
+      </div>
+    </div>`;
   }).join('');
 
   document.getElementById('cal-events-list').innerHTML = html ||
     '<div style="text-align:center;padding:40px;color:var(--muted)">No upcoming events</div>';
 
-  // Live countdown tickers
-  future.forEach(ev => {
+  future.slice(0, 20).forEach(ev => {
     const evMs = new Date(ev.date).getTime();
     calCountdownTimers[ev.id] = setInterval(() => {
       const diff = evMs - Date.now();
@@ -2238,6 +2245,11 @@ function renderCalendar() {
   });
 }
 
+function renderCalendarHardcoded() {
+  // Fallback hardcoded events while Gist loads
+  document.getElementById('cal-events-list').innerHTML =
+    '<div style="text-align:center;padding:40px;color:var(--muted)">Loading real calendar data...</div>';
+}
 
 function flipCard(id) {
   const inner = document.getElementById('flip-'+id);
