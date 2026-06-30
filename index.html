@@ -2194,7 +2194,7 @@ function renderCalendarFromGist(events) {
 
   // Real candlestick SVG built from actual FRED release dates + actual
   // Bybit BTC close-price reactions. No randomness, no simulation.
-  function realCandleSVG(hist, col) {
+  function realCandleSVG(hist, col, calcMode) {
     const W = 280, H = 110;
     const n = hist.length;
     const colW = W / n;
@@ -2225,8 +2225,12 @@ function renderCalendarFromGist(events) {
       const dateY = chartTop + chartH + 12;
       rects += `<text x="${cx}" y="${dateY}" text-anchor="middle" font-size="9.5" fill="#94A3B8" font-weight="600">${dateLbl}</text>`;
 
-      const valLbl = parseFloat(h.value).toFixed(1) + (h.value < 1 ? '' : '');
-      rects += `<text x="${cx}" y="${dateY + 12}" text-anchor="middle" font-size="9" fill="#7C88A8" font-weight="600">${h.value}</text>`;
+      // Value shown in the SAME unit as the headline reading (% or K jobs),
+      // never the raw FRED index number.
+      const unit = (calcMode === 'diffK') ? 'K' : '%';
+      const vNum = typeof h.value === 'number' ? h.value : parseFloat(h.value);
+      const valLbl = (vNum >= 0 ? '+' : '') + vNum.toFixed(unit === 'K' ? 0 : 1) + unit;
+      rects += `<text x="${cx}" y="${dateY + 12}" text-anchor="middle" font-size="9" fill="#7C88A8" font-weight="600">${valLbl}</text>`;
     });
 
     rects += `<line x1="0" y1="${mid}" x2="${W}" y2="${mid}" stroke="rgba(255,255,255,0.1)" stroke-width="1" stroke-dasharray="4,3"/>`;
@@ -2249,6 +2253,46 @@ function renderCalendarFromGist(events) {
 
     const sourceTag = ev.fredId ? `<span style="font-size:9px;color:#00ff88;background:rgba(0,255,136,0.1);padding:2px 5px;border-radius:3px;border:1px solid rgba(0,255,136,0.2)">✅ FRED API</span>` : '';
 
+    // ── Actual vs Previous + real Trend indicator ──
+    // No "Forecast" column — FRED publishes no consensus forecasts, so we
+    // don't fake one. Trend is computed from the last 3 REAL published
+    // readings (rising/falling/flat), not a prediction of anything future.
+    function fmtReading(val, calcMode) {
+      if (val === null || val === undefined) return '—';
+      if (calcMode === 'diffK') return (val >= 0 ? '+' : '') + val + 'K';
+      return (val >= 0 ? '+' : '') + val.toFixed(1) + '%';
+    }
+    let readingRow = '';
+    if (ev.reading) {
+      const actualStr   = fmtReading(ev.reading.actual, ev.calcMode);
+      const previousStr = fmtReading(ev.reading.previous, ev.calcMode);
+      const actualCol   = ev.reading.actual === null ? 'var(--muted)'
+                         : ev.reading.actual >= (ev.reading.previous ?? ev.reading.actual) ? '#10B981' : '#EF4444';
+
+      const trend    = ev.reading.trend;
+      const trendCol = !trend ? 'var(--muted)'
+                      : trend.direction === 'rising'  ? '#EF4444'  // rising inflation/jobs growth = often hawkish/risk-off cue
+                      : trend.direction === 'falling' ? '#10B981'
+                      : 'var(--muted)';
+      const trendLbl = trend ? trend.label : '➡️ N/A';
+
+      readingRow = `
+        <div style="display:flex;gap:6px;margin-bottom:8px">
+          <div style="flex:1;background:rgba(0,0,0,0.25);border-radius:6px;padding:6px 8px;text-align:center">
+            <div style="font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:0.4px">Actual</div>
+            <div style="font-size:13px;font-weight:800;color:${actualCol}">${actualStr}</div>
+          </div>
+          <div style="flex:1;background:rgba(0,0,0,0.25);border-radius:6px;padding:6px 8px;text-align:center">
+            <div style="font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:0.4px">Previous</div>
+            <div style="font-size:13px;font-weight:800;color:var(--text)">${previousStr}</div>
+          </div>
+        </div>
+        <div style="background:rgba(0,0,0,0.2);border-radius:6px;padding:5px 8px;text-align:center;margin-bottom:10px">
+          <span style="font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:0.4px;margin-right:6px">Trend</span>
+          <span style="font-size:11px;font-weight:700;color:${trendCol}">${trendLbl}</span>
+        </div>`;
+    }
+
     // Decide back-face content: real chart if we have hist[], honest
     // "no data source" message otherwise (e.g. BTC ETF Flow, Funding Rate,
     // Options Expiry — these have no FRED equivalent, would need CoinGlass/Bybit).
@@ -2257,10 +2301,11 @@ function renderCalendarFromGist(events) {
     if (hasRealHist) {
       const avgChange = ev.hist.reduce((s,h)=>s+h.btcChange,0) / ev.hist.length;
       const avgCol    = avgChange >= 0 ? '#10B981' : '#EF4444';
+      const unitLbl   = ev.calcMode === 'diffK' ? 'K jobs' : '%';
       backContent = `
         <div class="cal-back-name">${ev.name}</div>
-        <div style="font-size:9px;color:#00ff88;text-align:center;margin-bottom:6px">✅ Real historical data — FRED + Bybit</div>
-        <div class="cal-candle-chart">${realCandleSVG(ev.hist, col)}</div>
+        <div style="font-size:9px;color:#00ff88;text-align:center;margin-bottom:6px">✅ Real historical data — FRED + Bybit · values in ${unitLbl}</div>
+        <div class="cal-candle-chart">${realCandleSVG(ev.hist, col, ev.calcMode)}</div>
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding:0 2px">
           <span style="font-size:10px;color:var(--muted)">Avg BTC Reaction (24h)</span>
           <span style="font-size:13px;font-weight:800;color:${avgCol}">${avgChange>=0?'+':''}${avgChange.toFixed(2)}%</span>
@@ -2292,7 +2337,7 @@ function renderCalendarFromGist(events) {
           </div>
           <div class="cal-front-date">📅 ${dateStr}</div>
           <div style="margin-bottom:6px">${sourceTag}</div>
-          <div class="cal-front-desc">${ev.desc || ''}</div>
+          ${readingRow}
           <div class="cal-cd-row">
             <div class="cal-cd-box"><div class="cal-cd-num" style="color:${col}" id="cd-d-${ev.id}">${pad2(cd.d)}</div><div class="cal-cd-lbl">days</div></div>
             <div class="cal-cd-box"><div class="cal-cd-num" style="color:${col}" id="cd-h-${ev.id}">${pad2(cd.h)}</div><div class="cal-cd-lbl">hrs</div></div>
