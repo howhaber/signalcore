@@ -1,32 +1,22 @@
 {
-  "timestamp": "2026-06-30T18:16:00.011Z",
+  "timestamp": "2026-06-30T18:18:00.015Z",
   "coins": {
-    "XRP": {
-      "price": 1.0412,
-      "change": -2.4819,
+    "HYPE": {
+      "price": 64.806,
+      "change": -1.7063,
       "fr": 0.01,
-      "ls": 3.9212598425196847,
-      "oi": 210.69598755776,
-      "oiChg": 0.2930356186010026,
-      "longs": 79.67999999999999,
-      "shorts": 20.32
-    },
-    "BTC": {
-      "price": 58451.8,
-      "change": -3.3033,
-      "fr": 0.01,
-      "ls": 1.955956251847473,
-      "oi": 3705.3233729138,
-      "oiChg": 0.37876139142362364,
-      "longs": 66.17,
-      "shorts": 33.83
+      "ls": 1.5759917568263782,
+      "oi": 218.98008771282,
+      "oiChg": 0.5632529332528239,
+      "longs": 61.18,
+      "shorts": 38.82
     },
     "DOGE": {
-      "price": 0.07151,
-      "change": -3.2994999999999997,
-      "fr": 0.002119,
+      "price": 0.07217,
+      "change": -2.3145,
+      "fr": 0.002592,
       "ls": 3.280821917808219,
-      "oi": 84.38975477240001,
+      "oi": 85.16862819079999,
       "oiChg": 0.015327175359895596,
       "longs": 76.64,
       "shorts": 23.36
@@ -41,55 +31,15 @@
       "longs": 50,
       "shorts": 50
     },
-    "LINK": {
-      "price": 7.19,
-      "change": -3.6451,
-      "fr": 0.004314,
-      "ls": 3.0683482506102524,
-      "oi": 46.483821664,
-      "oiChg": 0.9043403159676814,
-      "longs": 75.42,
-      "shorts": 24.58
-    },
-    "SOL": {
-      "price": 73.27,
-      "change": -3.082,
-      "fr": 0.01,
-      "ls": 2.483106931382793,
-      "oi": 552.081698034,
-      "oiChg": -0.3306252204149323,
-      "longs": 71.28999999999999,
-      "shorts": 28.71
-    },
-    "ZEC": {
-      "price": 398.23,
-      "change": -1.7080000000000002,
-      "fr": 0.01,
-      "ls": 1.3057412958266084,
-      "oi": 47.95115306100001,
-      "oiChg": -0.1313272461985237,
-      "longs": 56.63,
-      "shorts": 43.37
-    },
-    "ETH": {
-      "price": 1572.39,
-      "change": -3.3112999999999997,
-      "fr": 0.008399,
-      "ls": 2.9016777214202114,
-      "oi": 1125.4557218202,
-      "oiChg": -0.6394540787231305,
-      "longs": 74.37,
-      "shorts": 25.629999999999995
-    },
-    "SUI": {
-      "price": 0.6945,
-      "change": -1.2793,
-      "fr": 0.01,
-      "ls": 3.083299305839118,
-      "oi": 53.34692019,
-      "oiChg": -0.6558157280410758,
-      "longs": 75.51,
-      "shorts": 24.490000000000002
+    "BNB": {
+      "price": 547.1,
+      "change": -2.5298000000000003,
+      "fr": 0.008867,
+      "ls": 2.3795201081446433,
+      "oi": 71.28767710000001,
+      "oiChg": 0.3890179417604809,
+      "longs": 70.41,
+      "shorts": 29.59
     },
     "FET": {
       "price": 0,
@@ -101,76 +51,6 @@
       "longs": 50,
       "shorts": 50
     },
-    "WIF": {
-      "price": 0.16812,
-      "change": -7.8591999999999995,
-      "fr": 0.005,
-      "ls": 2.9292730844793717,
-      "oi": 11.487785191919999,
-      "oiChg": 0.7577244643673415,
-      "longs": 74.55000000000001,
-      "shorts": 25.45
-    },
-    "ENA": {
-      "price": 0.07088,
-      "change": -10.4145,
-      "fr": -0.033053,
-      "ls": 3.4682752457551387,
-      "oi": 40.70296134656,
-      "oiChg": 1.811153409897031,
-      "longs": 77.62,
-      "shorts": 22.38
-    },
-    "ONDO": {
-      "price": 0.309,
-      "change": -3.888,
-      "fr": 0.005,
-      "ls": 3.7303689687795645,
-      "oi": 23.953656825,
-      "oiChg": -0.20922741656810087,
-      "longs": 78.86,
-      "shorts": 21.14
-    },
-    "NEAR": {
-      "price": 1.8002,
-      "change": -5.6053,
-      "fr": 0.01,
-      "ls": 1.6917900403768504,
-      "oi": 61.20529521282,
-      "oiChg": -0.34840373533144464,
-      "longs": 62.849999999999994,
-      "shorts": 37.15
-    },
-    "BNB": {
-      "price": 546.4,
-      "change": -2.7411000000000003,
-      "fr": 0.008908,
-      "ls": 2.3795201081446433,
-      "oi": 71.19646639999999,
-      "oiChg": 0.3890179417604809,
-      "longs": 70.41,
-      "shorts": 29.59
-    },
-    "TAO": {
-      "price": 203.18,
-      "change": -3.0027999999999997,
-      "fr": 0.005,
-      "ls": 2.6390101892285296,
-      "oi": 26.48622743284,
-      "oiChg": 0.27528958336794623,
-      "longs": 72.52,
-      "shorts": 27.48
-    },
-    "HYPE": {
-      "price": 64.695,
-      "change": -1.9861,
-      "fr": 0.01,
-      "ls": 1.5759917568263782,
-      "oi": 218.60501766165,
-      "oiChg": 0.5632529332528239,
-      "longs": 61.18,
-      "shorts": 38.82
-    },
     "PUMP": {
       "price": 0,
       "change": 0,
@@ -180,6 +60,126 @@
       "oiChg": 0,
       "longs": 50,
       "shorts": 50
+    },
+    "BTC": {
+      "price": 58508.9,
+      "change": -3.1008999999999998,
+      "fr": 0.01,
+      "ls": 1.955956251847473,
+      "oi": 3708.9430042098998,
+      "oiChg": 0.37876139142362364,
+      "longs": 66.17,
+      "shorts": 33.83
+    },
+    "NEAR": {
+      "price": 1.8019,
+      "change": -5.2927,
+      "fr": 0.01,
+      "ls": 1.6917900403768504,
+      "oi": 61.26309379179,
+      "oiChg": -0.34840373533144464,
+      "longs": 62.849999999999994,
+      "shorts": 37.15
+    },
+    "WIF": {
+      "price": 0.16834,
+      "change": -7.6779,
+      "fr": 0.005,
+      "ls": 2.9292730844793717,
+      "oi": 11.502817982439998,
+      "oiChg": 0.7577244643673415,
+      "longs": 74.55000000000001,
+      "shorts": 25.45
+    },
+    "ZEC": {
+      "price": 399.05,
+      "change": -1.542,
+      "fr": 0.01,
+      "ls": 1.3057412958266084,
+      "oi": 48.049889835,
+      "oiChg": -0.1313272461985237,
+      "longs": 56.63,
+      "shorts": 43.37
+    },
+    "XRP": {
+      "price": 1.0439,
+      "change": -2.1099,
+      "fr": 0.01,
+      "ls": 3.9212598425196847,
+      "oi": 211.24235633072004,
+      "oiChg": 0.2930356186010026,
+      "longs": 79.67999999999999,
+      "shorts": 20.32
+    },
+    "ETH": {
+      "price": 1574.33,
+      "change": -3.0561000000000003,
+      "fr": 0.008532,
+      "ls": 2.9016777214202114,
+      "oi": 1126.8442985094002,
+      "oiChg": -0.6394540787231305,
+      "longs": 74.37,
+      "shorts": 25.629999999999995
+    },
+    "ENA": {
+      "price": 0.07089,
+      "change": -10.2317,
+      "fr": -0.033118,
+      "ls": 3.4682752457551387,
+      "oi": 40.70870386368,
+      "oiChg": 1.811153409897031,
+      "longs": 77.62,
+      "shorts": 22.38
+    },
+    "ONDO": {
+      "price": 0.3097,
+      "change": -3.7002,
+      "fr": 0.005,
+      "ls": 3.7303689687795645,
+      "oi": 24.007920772499997,
+      "oiChg": -0.20922741656810087,
+      "longs": 78.86,
+      "shorts": 21.14
+    },
+    "LINK": {
+      "price": 7.202,
+      "change": -3.3936,
+      "fr": 0.004986,
+      "ls": 3.0683482506102524,
+      "oi": 46.561402451199996,
+      "oiChg": 0.9043403159676814,
+      "longs": 75.42,
+      "shorts": 24.58
+    },
+    "TAO": {
+      "price": 203.42,
+      "change": -2.8186,
+      "fr": 0.005,
+      "ls": 2.6390101892285296,
+      "oi": 26.51751345796,
+      "oiChg": 0.27528958336794623,
+      "longs": 72.52,
+      "shorts": 27.48
+    },
+    "SUI": {
+      "price": 0.6962,
+      "change": -0.9391,
+      "fr": 0.01,
+      "ls": 3.083299305839118,
+      "oi": 53.477503004,
+      "oiChg": -0.6558157280410758,
+      "longs": 75.51,
+      "shorts": 24.490000000000002
+    },
+    "SOL": {
+      "price": 73.46,
+      "change": -2.5082,
+      "fr": 0.01,
+      "ls": 2.483106931382793,
+      "oi": 553.5133279319999,
+      "oiChg": -0.3306252204149323,
+      "longs": 71.28999999999999,
+      "shorts": 28.71
     }
   },
   "calendar": [
@@ -288,110 +288,6 @@
       ]
     },
     {
-      "id": "fred-CES0500000003-2026-07-02",
-      "name": "Avg Hourly Earnings m/m",
-      "cat": "MACRO",
-      "impact": "med",
-      "date": "2026-07-02T13:30:00Z",
-      "desc": "Avg Hourly Earnings m/m — FRED API (Average Hourly Earnings of All Employees, Total Private)",
-      "fredId": "CES0500000003",
-      "calcMode": "mom",
-      "hasHistory": true,
-      "reading": {
-        "actual": 0.32,
-        "previous": 0.16,
-        "trend": {
-          "direction": "rising",
-          "label": "📈 Rising",
-          "months": 1
-        }
-      },
-      "hist": [
-        {
-          "date": "2026-01-01",
-          "value": 0.35,
-          "calcMode": "mom",
-          "btcChange": 2.02
-        },
-        {
-          "date": "2026-02-01",
-          "value": 0.32,
-          "calcMode": "mom",
-          "btcChange": -1.58
-        },
-        {
-          "date": "2026-03-01",
-          "value": 0.21,
-          "calcMode": "mom",
-          "btcChange": 3.88
-        },
-        {
-          "date": "2026-04-01",
-          "value": 0.16,
-          "calcMode": "mom",
-          "btcChange": -1.69
-        },
-        {
-          "date": "2026-05-01",
-          "value": 0.32,
-          "calcMode": "mom",
-          "btcChange": 0.44
-        }
-      ]
-    },
-    {
-      "id": "fred-PAYEMS-2026-07-02",
-      "name": "Non-Farm Payrolls",
-      "cat": "MACRO",
-      "impact": "high",
-      "date": "2026-07-02T13:30:00Z",
-      "desc": "Non-Farm Payrolls — FRED API (All Employees, Total Nonfarm)",
-      "fredId": "PAYEMS",
-      "calcMode": "diffK",
-      "hasHistory": true,
-      "reading": {
-        "actual": 172,
-        "previous": 179,
-        "trend": {
-          "direction": "falling",
-          "label": "📉 Falling 2nd month",
-          "months": 2
-        }
-      },
-      "hist": [
-        {
-          "date": "2026-01-01",
-          "value": 160,
-          "calcMode": "diffK",
-          "btcChange": 2.02
-        },
-        {
-          "date": "2026-02-01",
-          "value": -156,
-          "calcMode": "diffK",
-          "btcChange": -1.58
-        },
-        {
-          "date": "2026-03-01",
-          "value": 214,
-          "calcMode": "diffK",
-          "btcChange": 3.88
-        },
-        {
-          "date": "2026-04-01",
-          "value": 179,
-          "calcMode": "diffK",
-          "btcChange": -1.69
-        },
-        {
-          "date": "2026-05-01",
-          "value": 172,
-          "calcMode": "diffK",
-          "btcChange": 0.44
-        }
-      ]
-    },
-    {
       "id": "fred-UNRATE-2026-07-02",
       "name": "Unemployment Rate",
       "cat": "MACRO",
@@ -444,6 +340,58 @@
       ]
     },
     {
+      "id": "fred-CES0500000003-2026-07-02",
+      "name": "Avg Hourly Earnings m/m",
+      "cat": "MACRO",
+      "impact": "med",
+      "date": "2026-07-02T13:30:00Z",
+      "desc": "Avg Hourly Earnings m/m — FRED API (Average Hourly Earnings of All Employees, Total Private)",
+      "fredId": "CES0500000003",
+      "calcMode": "mom",
+      "hasHistory": true,
+      "reading": {
+        "actual": 0.32,
+        "previous": 0.16,
+        "trend": {
+          "direction": "rising",
+          "label": "📈 Rising",
+          "months": 1
+        }
+      },
+      "hist": [
+        {
+          "date": "2026-01-01",
+          "value": 0.35,
+          "calcMode": "mom",
+          "btcChange": 2.02
+        },
+        {
+          "date": "2026-02-01",
+          "value": 0.32,
+          "calcMode": "mom",
+          "btcChange": -1.58
+        },
+        {
+          "date": "2026-03-01",
+          "value": 0.21,
+          "calcMode": "mom",
+          "btcChange": 3.88
+        },
+        {
+          "date": "2026-04-01",
+          "value": 0.16,
+          "calcMode": "mom",
+          "btcChange": -1.69
+        },
+        {
+          "date": "2026-05-01",
+          "value": 0.32,
+          "calcMode": "mom",
+          "btcChange": 0.44
+        }
+      ]
+    },
+    {
       "id": "fred-FEDFUNDS-2026-07-02",
       "name": "Fed Rate Decision",
       "cat": "MACRO",
@@ -491,6 +439,58 @@
           "date": "2026-05-01",
           "value": 3.63,
           "calcMode": "level",
+          "btcChange": 0.44
+        }
+      ]
+    },
+    {
+      "id": "fred-PAYEMS-2026-07-02",
+      "name": "Non-Farm Payrolls",
+      "cat": "MACRO",
+      "impact": "high",
+      "date": "2026-07-02T13:30:00Z",
+      "desc": "Non-Farm Payrolls — FRED API (All Employees, Total Nonfarm)",
+      "fredId": "PAYEMS",
+      "calcMode": "diffK",
+      "hasHistory": true,
+      "reading": {
+        "actual": 172,
+        "previous": 179,
+        "trend": {
+          "direction": "falling",
+          "label": "📉 Falling 2nd month",
+          "months": 2
+        }
+      },
+      "hist": [
+        {
+          "date": "2026-01-01",
+          "value": 160,
+          "calcMode": "diffK",
+          "btcChange": 2.02
+        },
+        {
+          "date": "2026-02-01",
+          "value": -156,
+          "calcMode": "diffK",
+          "btcChange": -1.58
+        },
+        {
+          "date": "2026-03-01",
+          "value": 214,
+          "calcMode": "diffK",
+          "btcChange": 3.88
+        },
+        {
+          "date": "2026-04-01",
+          "value": 179,
+          "calcMode": "diffK",
+          "btcChange": -1.69
+        },
+        {
+          "date": "2026-05-01",
+          "value": 172,
+          "calcMode": "diffK",
           "btcChange": 0.44
         }
       ]
@@ -600,110 +600,6 @@
       ]
     },
     {
-      "id": "fred-CPIAUCSL_YOY-2026-07-14",
-      "name": "US CPI y/y",
-      "cat": "MACRO",
-      "impact": "high",
-      "date": "2026-07-14T13:30:00Z",
-      "desc": "US CPI y/y — FRED API (Consumer Price Index for All Urban Consumers: All Items in U.S. City Average)",
-      "fredId": "CPIAUCSL",
-      "calcMode": "yoy",
-      "hasHistory": true,
-      "reading": {
-        "actual": 4.27,
-        "previous": 3.95,
-        "trend": {
-          "direction": "rising",
-          "label": "📈 Rising 2nd month",
-          "months": 2
-        }
-      },
-      "hist": [
-        {
-          "date": "2026-01-01",
-          "value": 2.83,
-          "calcMode": "yoy",
-          "btcChange": 2.02
-        },
-        {
-          "date": "2026-02-01",
-          "value": 2.66,
-          "calcMode": "yoy",
-          "btcChange": -1.58
-        },
-        {
-          "date": "2026-03-01",
-          "value": 3.32,
-          "calcMode": "yoy",
-          "btcChange": 3.88
-        },
-        {
-          "date": "2026-04-01",
-          "value": 3.95,
-          "calcMode": "yoy",
-          "btcChange": -1.69
-        },
-        {
-          "date": "2026-05-01",
-          "value": 4.27,
-          "calcMode": "yoy",
-          "btcChange": 0.44
-        }
-      ]
-    },
-    {
-      "id": "fred-CPILFESL-2026-07-14",
-      "name": "US Core CPI m/m",
-      "cat": "MACRO",
-      "impact": "high",
-      "date": "2026-07-14T13:30:00Z",
-      "desc": "US Core CPI m/m — FRED API (Consumer Price Index for All Urban Consumers: All Items Less Food and Energy in U.S. City Average)",
-      "fredId": "CPILFESL",
-      "calcMode": "mom",
-      "hasHistory": true,
-      "reading": {
-        "actual": 0.21,
-        "previous": 0.38,
-        "trend": {
-          "direction": "falling",
-          "label": "📉 Falling",
-          "months": 1
-        }
-      },
-      "hist": [
-        {
-          "date": "2026-01-01",
-          "value": 0.3,
-          "calcMode": "mom",
-          "btcChange": 2.02
-        },
-        {
-          "date": "2026-02-01",
-          "value": 0.22,
-          "calcMode": "mom",
-          "btcChange": -1.58
-        },
-        {
-          "date": "2026-03-01",
-          "value": 0.2,
-          "calcMode": "mom",
-          "btcChange": 3.88
-        },
-        {
-          "date": "2026-04-01",
-          "value": 0.38,
-          "calcMode": "mom",
-          "btcChange": -1.69
-        },
-        {
-          "date": "2026-05-01",
-          "value": 0.21,
-          "calcMode": "mom",
-          "btcChange": 0.44
-        }
-      ]
-    },
-    {
       "id": "fred-CPILFESL_YOY-2026-07-14",
       "name": "US Core CPI y/y",
       "cat": "MACRO",
@@ -808,6 +704,110 @@
       ]
     },
     {
+      "id": "fred-CPILFESL-2026-07-14",
+      "name": "US Core CPI m/m",
+      "cat": "MACRO",
+      "impact": "high",
+      "date": "2026-07-14T13:30:00Z",
+      "desc": "US Core CPI m/m — FRED API (Consumer Price Index for All Urban Consumers: All Items Less Food and Energy in U.S. City Average)",
+      "fredId": "CPILFESL",
+      "calcMode": "mom",
+      "hasHistory": true,
+      "reading": {
+        "actual": 0.21,
+        "previous": 0.38,
+        "trend": {
+          "direction": "falling",
+          "label": "📉 Falling",
+          "months": 1
+        }
+      },
+      "hist": [
+        {
+          "date": "2026-01-01",
+          "value": 0.3,
+          "calcMode": "mom",
+          "btcChange": 2.02
+        },
+        {
+          "date": "2026-02-01",
+          "value": 0.22,
+          "calcMode": "mom",
+          "btcChange": -1.58
+        },
+        {
+          "date": "2026-03-01",
+          "value": 0.2,
+          "calcMode": "mom",
+          "btcChange": 3.88
+        },
+        {
+          "date": "2026-04-01",
+          "value": 0.38,
+          "calcMode": "mom",
+          "btcChange": -1.69
+        },
+        {
+          "date": "2026-05-01",
+          "value": 0.21,
+          "calcMode": "mom",
+          "btcChange": 0.44
+        }
+      ]
+    },
+    {
+      "id": "fred-CPIAUCSL_YOY-2026-07-14",
+      "name": "US CPI y/y",
+      "cat": "MACRO",
+      "impact": "high",
+      "date": "2026-07-14T13:30:00Z",
+      "desc": "US CPI y/y — FRED API (Consumer Price Index for All Urban Consumers: All Items in U.S. City Average)",
+      "fredId": "CPIAUCSL",
+      "calcMode": "yoy",
+      "hasHistory": true,
+      "reading": {
+        "actual": 4.27,
+        "previous": 3.95,
+        "trend": {
+          "direction": "rising",
+          "label": "📈 Rising 2nd month",
+          "months": 2
+        }
+      },
+      "hist": [
+        {
+          "date": "2026-01-01",
+          "value": 2.83,
+          "calcMode": "yoy",
+          "btcChange": 2.02
+        },
+        {
+          "date": "2026-02-01",
+          "value": 2.66,
+          "calcMode": "yoy",
+          "btcChange": -1.58
+        },
+        {
+          "date": "2026-03-01",
+          "value": 3.32,
+          "calcMode": "yoy",
+          "btcChange": 3.88
+        },
+        {
+          "date": "2026-04-01",
+          "value": 3.95,
+          "calcMode": "yoy",
+          "btcChange": -1.69
+        },
+        {
+          "date": "2026-05-01",
+          "value": 4.27,
+          "calcMode": "yoy",
+          "btcChange": 0.44
+        }
+      ]
+    },
+    {
       "id": "fred-GDP-2026-07-30",
       "name": "US GDP Release",
       "cat": "MACRO",
@@ -856,6 +856,58 @@
           "value": 1.41,
           "calcMode": "qoq",
           "btcChange": 2.02
+        }
+      ]
+    },
+    {
+      "id": "fred-UNRATE-2026-08-07",
+      "name": "Unemployment Rate",
+      "cat": "MACRO",
+      "impact": "high",
+      "date": "2026-08-07T13:30:00Z",
+      "desc": "Unemployment Rate — FRED API (Unemployment Rate)",
+      "fredId": "UNRATE",
+      "calcMode": "level",
+      "hasHistory": true,
+      "reading": {
+        "actual": 4.3,
+        "previous": 4.3,
+        "trend": {
+          "direction": "flat",
+          "label": "➡️ Flat",
+          "months": 1
+        }
+      },
+      "hist": [
+        {
+          "date": "2026-01-01",
+          "value": 4.3,
+          "calcMode": "level",
+          "btcChange": 2.02
+        },
+        {
+          "date": "2026-02-01",
+          "value": 4.4,
+          "calcMode": "level",
+          "btcChange": -1.58
+        },
+        {
+          "date": "2026-03-01",
+          "value": 4.3,
+          "calcMode": "level",
+          "btcChange": 3.88
+        },
+        {
+          "date": "2026-04-01",
+          "value": 4.3,
+          "calcMode": "level",
+          "btcChange": -1.69
+        },
+        {
+          "date": "2026-05-01",
+          "value": 4.3,
+          "calcMode": "level",
+          "btcChange": 0.44
         }
       ]
     },
@@ -959,162 +1011,6 @@
           "date": "2026-05-01",
           "value": 172,
           "calcMode": "diffK",
-          "btcChange": 0.44
-        }
-      ]
-    },
-    {
-      "id": "fred-UNRATE-2026-08-07",
-      "name": "Unemployment Rate",
-      "cat": "MACRO",
-      "impact": "high",
-      "date": "2026-08-07T13:30:00Z",
-      "desc": "Unemployment Rate — FRED API (Unemployment Rate)",
-      "fredId": "UNRATE",
-      "calcMode": "level",
-      "hasHistory": true,
-      "reading": {
-        "actual": 4.3,
-        "previous": 4.3,
-        "trend": {
-          "direction": "flat",
-          "label": "➡️ Flat",
-          "months": 1
-        }
-      },
-      "hist": [
-        {
-          "date": "2026-01-01",
-          "value": 4.3,
-          "calcMode": "level",
-          "btcChange": 2.02
-        },
-        {
-          "date": "2026-02-01",
-          "value": 4.4,
-          "calcMode": "level",
-          "btcChange": -1.58
-        },
-        {
-          "date": "2026-03-01",
-          "value": 4.3,
-          "calcMode": "level",
-          "btcChange": 3.88
-        },
-        {
-          "date": "2026-04-01",
-          "value": 4.3,
-          "calcMode": "level",
-          "btcChange": -1.69
-        },
-        {
-          "date": "2026-05-01",
-          "value": 4.3,
-          "calcMode": "level",
-          "btcChange": 0.44
-        }
-      ]
-    },
-    {
-      "id": "fred-CPIAUCSL_YOY-2026-08-12",
-      "name": "US CPI y/y",
-      "cat": "MACRO",
-      "impact": "high",
-      "date": "2026-08-12T13:30:00Z",
-      "desc": "US CPI y/y — FRED API (Consumer Price Index for All Urban Consumers: All Items in U.S. City Average)",
-      "fredId": "CPIAUCSL",
-      "calcMode": "yoy",
-      "hasHistory": true,
-      "reading": {
-        "actual": 4.27,
-        "previous": 3.95,
-        "trend": {
-          "direction": "rising",
-          "label": "📈 Rising 2nd month",
-          "months": 2
-        }
-      },
-      "hist": [
-        {
-          "date": "2026-01-01",
-          "value": 2.83,
-          "calcMode": "yoy",
-          "btcChange": 2.02
-        },
-        {
-          "date": "2026-02-01",
-          "value": 2.66,
-          "calcMode": "yoy",
-          "btcChange": -1.58
-        },
-        {
-          "date": "2026-03-01",
-          "value": 3.32,
-          "calcMode": "yoy",
-          "btcChange": 3.88
-        },
-        {
-          "date": "2026-04-01",
-          "value": 3.95,
-          "calcMode": "yoy",
-          "btcChange": -1.69
-        },
-        {
-          "date": "2026-05-01",
-          "value": 4.27,
-          "calcMode": "yoy",
-          "btcChange": 0.44
-        }
-      ]
-    },
-    {
-      "id": "fred-CPILFESL-2026-08-12",
-      "name": "US Core CPI m/m",
-      "cat": "MACRO",
-      "impact": "high",
-      "date": "2026-08-12T13:30:00Z",
-      "desc": "US Core CPI m/m — FRED API (Consumer Price Index for All Urban Consumers: All Items Less Food and Energy in U.S. City Average)",
-      "fredId": "CPILFESL",
-      "calcMode": "mom",
-      "hasHistory": true,
-      "reading": {
-        "actual": 0.21,
-        "previous": 0.38,
-        "trend": {
-          "direction": "falling",
-          "label": "📉 Falling",
-          "months": 1
-        }
-      },
-      "hist": [
-        {
-          "date": "2026-01-01",
-          "value": 0.3,
-          "calcMode": "mom",
-          "btcChange": 2.02
-        },
-        {
-          "date": "2026-02-01",
-          "value": 0.22,
-          "calcMode": "mom",
-          "btcChange": -1.58
-        },
-        {
-          "date": "2026-03-01",
-          "value": 0.2,
-          "calcMode": "mom",
-          "btcChange": 3.88
-        },
-        {
-          "date": "2026-04-01",
-          "value": 0.38,
-          "calcMode": "mom",
-          "btcChange": -1.69
-        },
-        {
-          "date": "2026-05-01",
-          "value": 0.21,
-          "calcMode": "mom",
           "btcChange": 0.44
         }
       ]
@@ -1224,6 +1120,110 @@
       ]
     },
     {
+      "id": "fred-CPILFESL-2026-08-12",
+      "name": "US Core CPI m/m",
+      "cat": "MACRO",
+      "impact": "high",
+      "date": "2026-08-12T13:30:00Z",
+      "desc": "US Core CPI m/m — FRED API (Consumer Price Index for All Urban Consumers: All Items Less Food and Energy in U.S. City Average)",
+      "fredId": "CPILFESL",
+      "calcMode": "mom",
+      "hasHistory": true,
+      "reading": {
+        "actual": 0.21,
+        "previous": 0.38,
+        "trend": {
+          "direction": "falling",
+          "label": "📉 Falling",
+          "months": 1
+        }
+      },
+      "hist": [
+        {
+          "date": "2026-01-01",
+          "value": 0.3,
+          "calcMode": "mom",
+          "btcChange": 2.02
+        },
+        {
+          "date": "2026-02-01",
+          "value": 0.22,
+          "calcMode": "mom",
+          "btcChange": -1.58
+        },
+        {
+          "date": "2026-03-01",
+          "value": 0.2,
+          "calcMode": "mom",
+          "btcChange": 3.88
+        },
+        {
+          "date": "2026-04-01",
+          "value": 0.38,
+          "calcMode": "mom",
+          "btcChange": -1.69
+        },
+        {
+          "date": "2026-05-01",
+          "value": 0.21,
+          "calcMode": "mom",
+          "btcChange": 0.44
+        }
+      ]
+    },
+    {
+      "id": "fred-CPIAUCSL_YOY-2026-08-12",
+      "name": "US CPI y/y",
+      "cat": "MACRO",
+      "impact": "high",
+      "date": "2026-08-12T13:30:00Z",
+      "desc": "US CPI y/y — FRED API (Consumer Price Index for All Urban Consumers: All Items in U.S. City Average)",
+      "fredId": "CPIAUCSL",
+      "calcMode": "yoy",
+      "hasHistory": true,
+      "reading": {
+        "actual": 4.27,
+        "previous": 3.95,
+        "trend": {
+          "direction": "rising",
+          "label": "📈 Rising 2nd month",
+          "months": 2
+        }
+      },
+      "hist": [
+        {
+          "date": "2026-01-01",
+          "value": 2.83,
+          "calcMode": "yoy",
+          "btcChange": 2.02
+        },
+        {
+          "date": "2026-02-01",
+          "value": 2.66,
+          "calcMode": "yoy",
+          "btcChange": -1.58
+        },
+        {
+          "date": "2026-03-01",
+          "value": 3.32,
+          "calcMode": "yoy",
+          "btcChange": 3.88
+        },
+        {
+          "date": "2026-04-01",
+          "value": 3.95,
+          "calcMode": "yoy",
+          "btcChange": -1.69
+        },
+        {
+          "date": "2026-05-01",
+          "value": 4.27,
+          "calcMode": "yoy",
+          "btcChange": 0.44
+        }
+      ]
+    },
+    {
       "id": "fred-GDP-2026-08-26",
       "name": "US GDP Release",
       "cat": "MACRO",
@@ -1272,6 +1272,58 @@
           "value": 1.41,
           "calcMode": "qoq",
           "btcChange": 2.02
+        }
+      ]
+    },
+    {
+      "id": "fred-UNRATE-2026-09-04",
+      "name": "Unemployment Rate",
+      "cat": "MACRO",
+      "impact": "high",
+      "date": "2026-09-04T13:30:00Z",
+      "desc": "Unemployment Rate — FRED API (Unemployment Rate)",
+      "fredId": "UNRATE",
+      "calcMode": "level",
+      "hasHistory": true,
+      "reading": {
+        "actual": 4.3,
+        "previous": 4.3,
+        "trend": {
+          "direction": "flat",
+          "label": "➡️ Flat",
+          "months": 1
+        }
+      },
+      "hist": [
+        {
+          "date": "2026-01-01",
+          "value": 4.3,
+          "calcMode": "level",
+          "btcChange": 2.02
+        },
+        {
+          "date": "2026-02-01",
+          "value": 4.4,
+          "calcMode": "level",
+          "btcChange": -1.58
+        },
+        {
+          "date": "2026-03-01",
+          "value": 4.3,
+          "calcMode": "level",
+          "btcChange": 3.88
+        },
+        {
+          "date": "2026-04-01",
+          "value": 4.3,
+          "calcMode": "level",
+          "btcChange": -1.69
+        },
+        {
+          "date": "2026-05-01",
+          "value": 4.3,
+          "calcMode": "level",
+          "btcChange": 0.44
         }
       ]
     },
@@ -1380,162 +1432,6 @@
       ]
     },
     {
-      "id": "fred-UNRATE-2026-09-04",
-      "name": "Unemployment Rate",
-      "cat": "MACRO",
-      "impact": "high",
-      "date": "2026-09-04T13:30:00Z",
-      "desc": "Unemployment Rate — FRED API (Unemployment Rate)",
-      "fredId": "UNRATE",
-      "calcMode": "level",
-      "hasHistory": true,
-      "reading": {
-        "actual": 4.3,
-        "previous": 4.3,
-        "trend": {
-          "direction": "flat",
-          "label": "➡️ Flat",
-          "months": 1
-        }
-      },
-      "hist": [
-        {
-          "date": "2026-01-01",
-          "value": 4.3,
-          "calcMode": "level",
-          "btcChange": 2.02
-        },
-        {
-          "date": "2026-02-01",
-          "value": 4.4,
-          "calcMode": "level",
-          "btcChange": -1.58
-        },
-        {
-          "date": "2026-03-01",
-          "value": 4.3,
-          "calcMode": "level",
-          "btcChange": 3.88
-        },
-        {
-          "date": "2026-04-01",
-          "value": 4.3,
-          "calcMode": "level",
-          "btcChange": -1.69
-        },
-        {
-          "date": "2026-05-01",
-          "value": 4.3,
-          "calcMode": "level",
-          "btcChange": 0.44
-        }
-      ]
-    },
-    {
-      "id": "fred-CPIAUCSL_YOY-2026-09-11",
-      "name": "US CPI y/y",
-      "cat": "MACRO",
-      "impact": "high",
-      "date": "2026-09-11T13:30:00Z",
-      "desc": "US CPI y/y — FRED API (Consumer Price Index for All Urban Consumers: All Items in U.S. City Average)",
-      "fredId": "CPIAUCSL",
-      "calcMode": "yoy",
-      "hasHistory": true,
-      "reading": {
-        "actual": 4.27,
-        "previous": 3.95,
-        "trend": {
-          "direction": "rising",
-          "label": "📈 Rising 2nd month",
-          "months": 2
-        }
-      },
-      "hist": [
-        {
-          "date": "2026-01-01",
-          "value": 2.83,
-          "calcMode": "yoy",
-          "btcChange": 2.02
-        },
-        {
-          "date": "2026-02-01",
-          "value": 2.66,
-          "calcMode": "yoy",
-          "btcChange": -1.58
-        },
-        {
-          "date": "2026-03-01",
-          "value": 3.32,
-          "calcMode": "yoy",
-          "btcChange": 3.88
-        },
-        {
-          "date": "2026-04-01",
-          "value": 3.95,
-          "calcMode": "yoy",
-          "btcChange": -1.69
-        },
-        {
-          "date": "2026-05-01",
-          "value": 4.27,
-          "calcMode": "yoy",
-          "btcChange": 0.44
-        }
-      ]
-    },
-    {
-      "id": "fred-CPILFESL-2026-09-11",
-      "name": "US Core CPI m/m",
-      "cat": "MACRO",
-      "impact": "high",
-      "date": "2026-09-11T13:30:00Z",
-      "desc": "US Core CPI m/m — FRED API (Consumer Price Index for All Urban Consumers: All Items Less Food and Energy in U.S. City Average)",
-      "fredId": "CPILFESL",
-      "calcMode": "mom",
-      "hasHistory": true,
-      "reading": {
-        "actual": 0.21,
-        "previous": 0.38,
-        "trend": {
-          "direction": "falling",
-          "label": "📉 Falling",
-          "months": 1
-        }
-      },
-      "hist": [
-        {
-          "date": "2026-01-01",
-          "value": 0.3,
-          "calcMode": "mom",
-          "btcChange": 2.02
-        },
-        {
-          "date": "2026-02-01",
-          "value": 0.22,
-          "calcMode": "mom",
-          "btcChange": -1.58
-        },
-        {
-          "date": "2026-03-01",
-          "value": 0.2,
-          "calcMode": "mom",
-          "btcChange": 3.88
-        },
-        {
-          "date": "2026-04-01",
-          "value": 0.38,
-          "calcMode": "mom",
-          "btcChange": -1.69
-        },
-        {
-          "date": "2026-05-01",
-          "value": 0.21,
-          "calcMode": "mom",
-          "btcChange": 0.44
-        }
-      ]
-    },
-    {
       "id": "fred-CPILFESL_YOY-2026-09-11",
       "name": "US Core CPI y/y",
       "cat": "MACRO",
@@ -1635,6 +1531,110 @@
           "date": "2026-05-01",
           "value": 0.47,
           "calcMode": "mom",
+          "btcChange": 0.44
+        }
+      ]
+    },
+    {
+      "id": "fred-CPILFESL-2026-09-11",
+      "name": "US Core CPI m/m",
+      "cat": "MACRO",
+      "impact": "high",
+      "date": "2026-09-11T13:30:00Z",
+      "desc": "US Core CPI m/m — FRED API (Consumer Price Index for All Urban Consumers: All Items Less Food and Energy in U.S. City Average)",
+      "fredId": "CPILFESL",
+      "calcMode": "mom",
+      "hasHistory": true,
+      "reading": {
+        "actual": 0.21,
+        "previous": 0.38,
+        "trend": {
+          "direction": "falling",
+          "label": "📉 Falling",
+          "months": 1
+        }
+      },
+      "hist": [
+        {
+          "date": "2026-01-01",
+          "value": 0.3,
+          "calcMode": "mom",
+          "btcChange": 2.02
+        },
+        {
+          "date": "2026-02-01",
+          "value": 0.22,
+          "calcMode": "mom",
+          "btcChange": -1.58
+        },
+        {
+          "date": "2026-03-01",
+          "value": 0.2,
+          "calcMode": "mom",
+          "btcChange": 3.88
+        },
+        {
+          "date": "2026-04-01",
+          "value": 0.38,
+          "calcMode": "mom",
+          "btcChange": -1.69
+        },
+        {
+          "date": "2026-05-01",
+          "value": 0.21,
+          "calcMode": "mom",
+          "btcChange": 0.44
+        }
+      ]
+    },
+    {
+      "id": "fred-CPIAUCSL_YOY-2026-09-11",
+      "name": "US CPI y/y",
+      "cat": "MACRO",
+      "impact": "high",
+      "date": "2026-09-11T13:30:00Z",
+      "desc": "US CPI y/y — FRED API (Consumer Price Index for All Urban Consumers: All Items in U.S. City Average)",
+      "fredId": "CPIAUCSL",
+      "calcMode": "yoy",
+      "hasHistory": true,
+      "reading": {
+        "actual": 4.27,
+        "previous": 3.95,
+        "trend": {
+          "direction": "rising",
+          "label": "📈 Rising 2nd month",
+          "months": 2
+        }
+      },
+      "hist": [
+        {
+          "date": "2026-01-01",
+          "value": 2.83,
+          "calcMode": "yoy",
+          "btcChange": 2.02
+        },
+        {
+          "date": "2026-02-01",
+          "value": 2.66,
+          "calcMode": "yoy",
+          "btcChange": -1.58
+        },
+        {
+          "date": "2026-03-01",
+          "value": 3.32,
+          "calcMode": "yoy",
+          "btcChange": 3.88
+        },
+        {
+          "date": "2026-04-01",
+          "value": 3.95,
+          "calcMode": "yoy",
+          "btcChange": -1.69
+        },
+        {
+          "date": "2026-05-01",
+          "value": 4.27,
+          "calcMode": "yoy",
           "btcChange": 0.44
         }
       ]
