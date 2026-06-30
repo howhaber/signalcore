@@ -131,7 +131,26 @@
     color: var(--text);
     box-shadow: 0 1px 4px rgba(0,0,0,0.4);
   }
-  .nav-tab span { display: block; font-size: 15px; margin-bottom: 1px; }
+  .nav-tab svg {
+    display: block;
+    margin: 0 auto 2px;
+    width: 17px;
+    height: 17px;
+    stroke: var(--muted);
+    transition: stroke 0.2s;
+  }
+  .nav-tab.active svg { stroke: var(--text); }
+
+  /* Subtle muted brand-color tint per inactive icon — still clearly dimmer
+     than the active tab, but no longer flat gray. Each icon gets a faded
+     version of a color that fits its meaning (dashboard=blue, signals=amber,
+     charts=green, history=purple, squeeze=cyan, calendar=red). */
+  .nav-tab:nth-child(1):not(.active) svg { stroke: #3B82F680; }
+  .nav-tab:nth-child(2):not(.active) svg { stroke: #F59E0B80; }
+  .nav-tab:nth-child(3):not(.active) svg { stroke: #10B98180; }
+  .nav-tab:nth-child(4):not(.active) svg { stroke: #8B5CF680; }
+  .nav-tab:nth-child(5):not(.active) svg { stroke: #06B6D480; }
+  .nav-tab:nth-child(6):not(.active) svg { stroke: #EF444480; }
 
   /* ─── PAGE SECTIONS ─── */
   .page { display: none; padding: 12px 12px 0; }
@@ -1072,22 +1091,22 @@
   </div>
   <div class="nav-tabs">
     <button class="nav-tab active" onclick="switchTab('dashboard')">
-      <span>📊</span>Dashboard
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>Dashboard
     </button>
     <button class="nav-tab" onclick="switchTab('signals')">
-      <span>⚡</span>Сигнали
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>Signals
     </button>
     <button class="nav-tab" onclick="switchTab('charts')">
-      <span>📈</span>Charts
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>Charts
     </button>
     <button class="nav-tab" onclick="switchTab('history')">
-      <span>📋</span>История
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 2.64-6.36L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>History
     </button>
     <button class="nav-tab" onclick="switchTab('squeeze')">
-      <span>⚡</span>Squeeze
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>Squeeze
     </button>
     <button class="nav-tab" onclick="switchTab('calendar')">
-      <span>📅</span>Calendar
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Calendar
     </button>
   </div>
 </div>
@@ -1556,10 +1575,13 @@ function renderFearGreed(fg) {
   const arc = document.getElementById('fg-arc');
   const upd = document.getElementById('fg-update');
 
+  // Dynamic color scale matching the 5 F&G zones:
+  // 0-25 Extreme Fear → red, 25-45 Fear → orange, 45-55 Neutral → yellow,
+  // 55-75 Greed → light green, 75-100 Extreme Greed → bright green
   const colors = val < 25  ? '#EF4444' :
-                 val < 45  ? '#F59E0B' :
-                 val < 55  ? '#94A3B8' :
-                 val < 75  ? '#10B981' : '#059669';
+                 val < 45  ? '#F97316' :
+                 val < 55  ? '#EAB308' :
+                 val < 75  ? '#84CC16' : '#22C55E';
 
   el.textContent = val;
   el.style.color = colors;
