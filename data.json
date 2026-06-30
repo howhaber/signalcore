@@ -1,136 +1,6 @@
 {
-  "timestamp": "2026-06-30T07:28:00.014Z",
+  "timestamp": "2026-06-30T07:30:00.017Z",
   "coins": {
-    "HYPE": {
-      "price": 65.498,
-      "change": 4.5542,
-      "fr": -0.000444,
-      "ls": 1.387774594078319,
-      "oi": 219.95420463600001,
-      "oiChg": 0.1358535515639111,
-      "longs": 58.120000000000005,
-      "shorts": 41.88
-    },
-    "PEPE": {
-      "price": 0,
-      "change": 0,
-      "fr": 0,
-      "ls": 1,
-      "oi": 0,
-      "oiChg": 0,
-      "longs": 50,
-      "shorts": 50
-    },
-    "SOL": {
-      "price": 73.88,
-      "change": 2.1853000000000002,
-      "fr": -0.007056,
-      "ls": 2.361344537815126,
-      "oi": 557.3783880599999,
-      "oiChg": 0.3233098602093811,
-      "longs": 70.25,
-      "shorts": 29.75
-    },
-    "XRP": {
-      "price": 1.0466,
-      "change": -0.1907,
-      "fr": -0.013116000000000001,
-      "ls": 3.7641734159123392,
-      "oi": 195.20560242748002,
-      "oiChg": 0.4257550392914769,
-      "longs": 79.01,
-      "shorts": 20.990000000000002
-    },
-    "BTC": {
-      "price": 59422.4,
-      "change": -1.0047000000000001,
-      "fr": -0.001491,
-      "ls": 1.8169014084507042,
-      "oi": 3442.4323309439997,
-      "oiChg": 0.013141369438424656,
-      "longs": 64.5,
-      "shorts": 35.5
-    },
-    "NEAR": {
-      "price": 1.849,
-      "change": -1.0965,
-      "fr": 0.005248,
-      "ls": 1.7329871549603715,
-      "oi": 61.9558162523,
-      "oiChg": -0.11851285208107509,
-      "longs": 63.41,
-      "shorts": 36.59
-    },
-    "SUI": {
-      "price": 0.6952,
-      "change": 0.5932,
-      "fr": 0.003074,
-      "ls": 3.3440486533449176,
-      "oi": 53.65376324,
-      "oiChg": -1.108662593339952,
-      "longs": 76.98,
-      "shorts": 23.02
-    },
-    "TAO": {
-      "price": 205.88,
-      "change": -0.541,
-      "fr": 0.005,
-      "ls": 2.6523009495982466,
-      "oi": 26.28892919872,
-      "oiChg": 0.33482332019660976,
-      "longs": 72.61999999999999,
-      "shorts": 27.38
-    },
-    "ONDO": {
-      "price": 0.315,
-      "change": 1.0587,
-      "fr": 0.005,
-      "ls": 3.8100048100048105,
-      "oi": 24.942853215,
-      "oiChg": -0.23893547493646228,
-      "longs": 79.21000000000001,
-      "shorts": 20.79
-    },
-    "ZEC": {
-      "price": 398.71,
-      "change": 3.6741,
-      "fr": 0.002095,
-      "ls": 1.312673450508788,
-      "oi": 47.652866283099996,
-      "oiChg": 1.1240289187338937,
-      "longs": 56.76,
-      "shorts": 43.24
-    },
-    "LINK": {
-      "price": 7.3,
-      "change": -0.1094,
-      "fr": 0.01,
-      "ls": 3.100041000410004,
-      "oi": 46.76150926,
-      "oiChg": 0.7683594126316978,
-      "longs": 75.61,
-      "shorts": 24.39
-    },
-    "ENA": {
-      "price": 0.0753,
-      "change": -4.3566,
-      "fr": -0.01464,
-      "ls": 3.336513443191674,
-      "oi": 35.642616456,
-      "oiChg": 1.5355644257969263,
-      "longs": 76.94,
-      "shorts": 23.06
-    },
-    "DOGE": {
-      "price": 0.07231,
-      "change": -1.0807,
-      "fr": -0.003721,
-      "ls": 3.3159257660768238,
-      "oi": 85.72461929709999,
-      "oiChg": 0.2129850323408501,
-      "longs": 76.83,
-      "shorts": 23.169999999999998
-    },
     "PUMP": {
       "price": 0,
       "change": 0,
@@ -141,15 +11,65 @@
       "longs": 50,
       "shorts": 50
     },
-    "WIF": {
-      "price": 0.17484,
-      "change": -4.469399999999999,
-      "fr": 0.005,
-      "ls": 2.979307600477517,
-      "oi": 11.93813744304,
-      "oiChg": -0.4100058426408702,
-      "longs": 74.87,
-      "shorts": 25.130000000000003
+    "SOL": {
+      "price": 73.87,
+      "change": 2.0162,
+      "fr": -0.007174,
+      "ls": 2.361344537815126,
+      "oi": 557.3029443150001,
+      "oiChg": 0.3233098602093811,
+      "longs": 70.25,
+      "shorts": 29.75
+    },
+    "ENA": {
+      "price": 0.07525,
+      "change": -4.5171,
+      "fr": -0.013412,
+      "ls": 3.336513443191674,
+      "oi": 35.61894938,
+      "oiChg": 1.5355644257969263,
+      "longs": 76.94,
+      "shorts": 23.06
+    },
+    "SUI": {
+      "price": 0.6951,
+      "change": 0.4624,
+      "fr": 0.003074,
+      "ls": 3.3440486533449176,
+      "oi": 53.646045495,
+      "oiChg": -1.108662593339952,
+      "longs": 76.98,
+      "shorts": 23.02
+    },
+    "ZEC": {
+      "price": 398.55,
+      "change": 3.6648,
+      "fr": 0.001999,
+      "ls": 1.312673450508788,
+      "oi": 47.633743465500004,
+      "oiChg": 1.1240289187338937,
+      "longs": 56.76,
+      "shorts": 43.24
+    },
+    "NEAR": {
+      "price": 1.849,
+      "change": -1.1916,
+      "fr": 0.005229,
+      "ls": 1.7329871549603715,
+      "oi": 61.9558162523,
+      "oiChg": -0.11851285208107509,
+      "longs": 63.41,
+      "shorts": 36.59
+    },
+    "ETH": {
+      "price": 1590.58,
+      "change": 0.6384,
+      "fr": -0.003928,
+      "ls": 2.8986354775828462,
+      "oi": 1132.391799112,
+      "oiChg": 0.5877192955190117,
+      "longs": 74.35000000000001,
+      "shorts": 25.650000000000002
     },
     "FET": {
       "price": 0,
@@ -161,9 +81,49 @@
       "longs": 50,
       "shorts": 50
     },
+    "WIF": {
+      "price": 0.17481,
+      "change": -4.3918,
+      "fr": 0.005,
+      "ls": 2.979307600477517,
+      "oi": 11.936089032359998,
+      "oiChg": -0.4100058426408702,
+      "longs": 74.87,
+      "shorts": 25.130000000000003
+    },
+    "XRP": {
+      "price": 1.0468,
+      "change": -0.2857,
+      "fr": -0.013066,
+      "ls": 3.7641734159123392,
+      "oi": 195.24290523704002,
+      "oiChg": 0.4257550392914769,
+      "longs": 79.01,
+      "shorts": 20.990000000000002
+    },
+    "PEPE": {
+      "price": 0,
+      "change": 0,
+      "fr": 0,
+      "ls": 1,
+      "oi": 0,
+      "oiChg": 0,
+      "longs": 50,
+      "shorts": 50
+    },
+    "BTC": {
+      "price": 59448,
+      "change": -1.0434999999999999,
+      "fr": -0.001491,
+      "ls": 1.8169014084507042,
+      "oi": 3443.9153788799995,
+      "oiChg": 0.013141369438424656,
+      "longs": 64.5,
+      "shorts": 35.5
+    },
     "BNB": {
       "price": 551.8,
-      "change": -0.3251,
+      "change": -0.3431,
       "fr": 0.01,
       "ls": 2.381805884342239,
       "oi": 69.89363664,
@@ -171,15 +131,55 @@
       "longs": 70.43,
       "shorts": 29.57
     },
-    "ETH": {
-      "price": 1590.4,
-      "change": 0.69,
-      "fr": -0.004049,
-      "ls": 2.8986354775828462,
-      "oi": 1132.26365056,
-      "oiChg": 0.5877192955190117,
-      "longs": 74.35000000000001,
-      "shorts": 25.650000000000002
+    "ONDO": {
+      "price": 0.3149,
+      "change": 0.9618,
+      "fr": 0.005,
+      "ls": 3.8100048100048105,
+      "oi": 24.934934848900003,
+      "oiChg": -0.23893547493646228,
+      "longs": 79.21000000000001,
+      "shorts": 20.79
+    },
+    "HYPE": {
+      "price": 65.489,
+      "change": 4.4698,
+      "fr": -0.00040500000000000003,
+      "ls": 1.387774594078319,
+      "oi": 219.92398099800002,
+      "oiChg": 0.1358535515639111,
+      "longs": 58.120000000000005,
+      "shorts": 41.88
+    },
+    "TAO": {
+      "price": 205.82,
+      "change": -0.6899,
+      "fr": 0.005,
+      "ls": 2.6523009495982466,
+      "oi": 26.28126776608,
+      "oiChg": 0.33482332019660976,
+      "longs": 72.61999999999999,
+      "shorts": 27.38
+    },
+    "DOGE": {
+      "price": 0.07231,
+      "change": -1.1618,
+      "fr": -0.003879,
+      "ls": 3.3159257660768238,
+      "oi": 85.72461929709999,
+      "oiChg": 0.2129850323408501,
+      "longs": 76.83,
+      "shorts": 23.169999999999998
+    },
+    "LINK": {
+      "price": 7.299,
+      "change": -0.2323,
+      "fr": 0.01,
+      "ls": 3.100041000410004,
+      "oi": 46.75510357380001,
+      "oiChg": 0.7683594126316978,
+      "longs": 75.61,
+      "shorts": 24.39
     }
   },
   "calendar": [
@@ -202,13 +202,13 @@
       "fredId": "FEDFUNDS"
     },
     {
-      "id": "fred-FEDFUNDS-2026-07-02",
-      "name": "Fed Rate Decision",
+      "id": "fred-PAYEMS-2026-07-02",
+      "name": "Non-Farm Payrolls",
       "cat": "MACRO",
       "impact": "high",
       "date": "2026-07-02T13:30:00Z",
-      "desc": "Fed Rate Decision — FRED API (Federal Funds Effective Rate)",
-      "fredId": "FEDFUNDS"
+      "desc": "Non-Farm Payrolls — FRED API (All Employees, Total Nonfarm)",
+      "fredId": "PAYEMS"
     },
     {
       "id": "fred-UNRATE-2026-07-02",
@@ -220,15 +220,6 @@
       "fredId": "UNRATE"
     },
     {
-      "id": "fred-PAYEMS-2026-07-02",
-      "name": "Non-Farm Payrolls",
-      "cat": "MACRO",
-      "impact": "high",
-      "date": "2026-07-02T13:30:00Z",
-      "desc": "Non-Farm Payrolls — FRED API (All Employees, Total Nonfarm)",
-      "fredId": "PAYEMS"
-    },
-    {
       "id": "fred-IC4WSA-2026-07-02",
       "name": "Jobless Claims",
       "cat": "MACRO",
@@ -236,6 +227,15 @@
       "date": "2026-07-02T13:30:00Z",
       "desc": "Jobless Claims — FRED API (4-Week Moving Average of Initial Claims)",
       "fredId": "IC4WSA"
+    },
+    {
+      "id": "fred-FEDFUNDS-2026-07-02",
+      "name": "Fed Rate Decision",
+      "cat": "MACRO",
+      "impact": "high",
+      "date": "2026-07-02T13:30:00Z",
+      "desc": "Fed Rate Decision — FRED API (Federal Funds Effective Rate)",
+      "fredId": "FEDFUNDS"
     },
     {
       "id": "fred-FEDFUNDS-2026-07-06",
@@ -292,15 +292,6 @@
       "fredId": "IC4WSA"
     },
     {
-      "id": "fred-PCE-2026-07-30",
-      "name": "PCE Inflation Index",
-      "cat": "MACRO",
-      "impact": "med",
-      "date": "2026-07-30T13:30:00Z",
-      "desc": "PCE Inflation Index — FRED API (Personal Consumption Expenditures)",
-      "fredId": "PCE"
-    },
-    {
       "id": "fred-GDP-2026-07-30",
       "name": "US GDP Release",
       "cat": "MACRO",
@@ -319,13 +310,13 @@
       "fredId": "IC4WSA"
     },
     {
-      "id": "fred-UNRATE-2026-08-07",
-      "name": "Unemployment Rate",
+      "id": "fred-PCE-2026-07-30",
+      "name": "PCE Inflation Index",
       "cat": "MACRO",
-      "impact": "high",
-      "date": "2026-08-07T13:30:00Z",
-      "desc": "Unemployment Rate — FRED API (Unemployment Rate)",
-      "fredId": "UNRATE"
+      "impact": "med",
+      "date": "2026-07-30T13:30:00Z",
+      "desc": "PCE Inflation Index — FRED API (Personal Consumption Expenditures)",
+      "fredId": "PCE"
     },
     {
       "id": "fred-PAYEMS-2026-08-07",
@@ -337,6 +328,15 @@
       "fredId": "PAYEMS"
     },
     {
+      "id": "fred-UNRATE-2026-08-07",
+      "name": "Unemployment Rate",
+      "cat": "MACRO",
+      "impact": "high",
+      "date": "2026-08-07T13:30:00Z",
+      "desc": "Unemployment Rate — FRED API (Unemployment Rate)",
+      "fredId": "UNRATE"
+    },
+    {
       "id": "fred-CPIAUCSL-2026-08-12",
       "name": "US CPI Report",
       "cat": "MACRO",
@@ -344,15 +344,6 @@
       "date": "2026-08-12T13:30:00Z",
       "desc": "US CPI Report — FRED API (Consumer Price Index for All Urban Consumers: All Items in U.S. City Average)",
       "fredId": "CPIAUCSL"
-    },
-    {
-      "id": "fred-PCE-2026-08-26",
-      "name": "PCE Inflation Index",
-      "cat": "MACRO",
-      "impact": "med",
-      "date": "2026-08-26T13:30:00Z",
-      "desc": "PCE Inflation Index — FRED API (Personal Consumption Expenditures)",
-      "fredId": "PCE"
     },
     {
       "id": "fred-GDP-2026-08-26",
@@ -364,13 +355,13 @@
       "fredId": "GDP"
     },
     {
-      "id": "fred-UNRATE-2026-09-04",
-      "name": "Unemployment Rate",
+      "id": "fred-PCE-2026-08-26",
+      "name": "PCE Inflation Index",
       "cat": "MACRO",
-      "impact": "high",
-      "date": "2026-09-04T13:30:00Z",
-      "desc": "Unemployment Rate — FRED API (Unemployment Rate)",
-      "fredId": "UNRATE"
+      "impact": "med",
+      "date": "2026-08-26T13:30:00Z",
+      "desc": "PCE Inflation Index — FRED API (Personal Consumption Expenditures)",
+      "fredId": "PCE"
     },
     {
       "id": "fred-PAYEMS-2026-09-04",
@@ -380,6 +371,15 @@
       "date": "2026-09-04T13:30:00Z",
       "desc": "Non-Farm Payrolls — FRED API (All Employees, Total Nonfarm)",
       "fredId": "PAYEMS"
+    },
+    {
+      "id": "fred-UNRATE-2026-09-04",
+      "name": "Unemployment Rate",
+      "cat": "MACRO",
+      "impact": "high",
+      "date": "2026-09-04T13:30:00Z",
+      "desc": "Unemployment Rate — FRED API (Unemployment Rate)",
+      "fredId": "UNRATE"
     },
     {
       "id": "fred-CPIAUCSL-2026-09-11",
