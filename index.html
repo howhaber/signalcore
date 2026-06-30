@@ -453,8 +453,17 @@
   .tv-price  { font-size: 14px; font-weight: 700; color: var(--green); }
 
   .chart-selector {
-    display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px;
+    display: flex;
+    gap: 6px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    margin-bottom: 10px;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
   }
+  .chart-selector::-webkit-scrollbar { display: none; }
   .chart-selector button {
     padding: 5px 10px;
     border: 1px solid var(--border);
@@ -464,6 +473,8 @@
     font-size: 12px; font-weight: 600;
     cursor: pointer;
     transition: all 0.15s;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
   .chart-selector button.active {
     border-color: var(--accent);
@@ -1724,15 +1735,16 @@ function renderSignals(signals) {
 }
 
 function renderCharts() {
-  // Coin selector buttons
-  const btns = COINS.slice(0,9).map(c =>
+  // All 53 coin selector buttons — horizontally scrollable
+  const btns = COINS.map(c =>
     `<button class="${c.sym===selectedCoin?'active':''}" onclick="selectChart('${c.sym}')">${c.sym}</button>`
   ).join('');
   document.getElementById('chart-selector').innerHTML = btns;
 
-  // TradingView lite embed
-  const coin = COINS.find(c=>c.sym===selectedCoin);
-  const tvSrc = `https://s.tradingview.com/widgetembed/?frameElementId=tradingview_widget&amp;symbol=${coin?.tv||'BYBIT:BTCUSDT.P'}&interval=15&hidesidetoolbar=1&hidetoptoolbar=1&symboledit=1&saveimage=0&toolbarbg=1C2340&theme=dark&style=1&timezone=Europe%2FSofia&withdateranges=0&hide_legend=0&hide_volume=0`;
+  // TradingView widget — always uses Bybit perpetual format BYBIT:XXXUSDT.P
+  const coin = COINS.find(c => c.sym === selectedCoin);
+  const tvSymbol = coin?.tv || 'BYBIT:BTCUSDT.P';
+  const tvSrc = `https://s.tradingview.com/widgetembed/?frameElementId=tradingview_widget&symbol=${encodeURIComponent(tvSymbol)}&interval=15&hidesidetoolbar=1&hidetoptoolbar=1&symboledit=1&saveimage=0&toolbarbg=1C2340&theme=dark&style=1&timezone=Europe%2FSofia&withdateranges=0&hide_legend=0&hide_volume=0`;
   document.getElementById('tv-frame').src = tvSrc;
 
   const d = marketData[selectedCoin];
