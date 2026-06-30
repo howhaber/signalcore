@@ -1170,15 +1170,6 @@
 <!-- ─── SIGNALS ─── -->
 <div class="page" id="page-signals">
 
-  <!-- Whale Feed -->
-  <div class="whale-feed" id="whale-feed">
-    <div class="whale-header">
-      <span class="whale-title">🐋 Whale Alerts</span>
-      <span class="whale-badge">Live Feed</span>
-    </div>
-    <div id="whale-items"></div>
-  </div>
-
   <div class="section-title">⚡ Активни сигнали</div>
   <div class="signals-list" id="signals-list"></div>
 </div>
@@ -1198,11 +1189,9 @@
   <div class="section-title">📊 Long / Short Ratio</div>
   <div class="ls-grid" id="ls-grid"></div>
 
-  <!-- Liquidation Heatmap -->
-  <div class="liq-heatmap">
-    <div class="liq-title">🔥 Liquidation Levels</div>
-    <div class="liq-bars" id="liq-bars"></div>
-  </div>
+  <!-- Liquidation Heatmap: hidden until a real liquidation data source
+       (Bybit liquidation stream or CoinGlass) is wired up. We do not show
+       fabricated $0M bars. -->
 </div>
 
 <!-- ─── SQUEEZE METER ─── -->
@@ -1381,8 +1370,6 @@ async function generateMarketData() {
         ls:       d.ls       || 1,
         oi:       d.oi       || 0,
         oiChg:    d.oiChg    || 0,
-        liqLong:  0,
-        liqShort: 0,
       };
     });
 
@@ -1476,9 +1463,15 @@ function computeSignals(data, fg) {
       rr: rr.toFixed(1), reasons,
       fr: d.fr, ls: d.ls, oi: d.oi, oiChg: d.oiChg,
       time: new Date(),
-      tf: ['4h','1h','15m'][Math.floor(Math.random()*3)],
+      // NOTE: tf (timeframe) and lev (leverage) are NOT available here —
+      // this function computes signals client-side from live Bybit market
+      // data only; it has no connection to the bot's webhook (index.js)
+      // which is where real timeframe/leverage decisions are made. We do
+      // NOT fabricate these values. Until data.json carries real signal
+      // payloads from the bot, tf/lev are explicitly marked unavailable.
+      tf: null,
       status: 'open',
-      lev: 5 + Math.floor(Math.random()*16),
+      lev: null,
     });
   });
   return signals;
@@ -1635,7 +1628,6 @@ function renderSignals(signals) {
       <div class="signal-header">
         <span class="signal-type ${isBuy?'buy-type':'sell-type'}">${s.type}</span>
         <span class="signal-pair">${s.sym}/USDT</span>
-        <span class="signal-tf">${s.tf}</span>
         <div class="signal-strength">${dots}</div>
         <span class="signal-time">${timeAgo(s.time)}</span>
       </div>
@@ -1672,7 +1664,6 @@ function renderSignals(signals) {
       </div>
       <div class="signal-footer">
         <span class="sig-tag">🎯 R/R ${s.rr}:1</span>
-        <span class="sig-tag">⚡ ${s.lev}x</span>
         <span class="sig-tag">FR ${fmtPct(s.fr,4)}</span>
         <span class="sig-tag">L/S ${s.ls.toFixed(2)}</span>
         <span class="signal-result res-open">🔵 OPEN</span>
@@ -1681,24 +1672,6 @@ function renderSignals(signals) {
   }).join('');
 
   document.getElementById('signals-list').innerHTML = html;
-}
-
-function renderWhales() {
-  const whaleData = [
-    { icon:'🐋', amount:'$47.2M', detail:'BTC перемещено на Binance — 694 BTC', time:'2m' },
-    { icon:'🦈', amount:'$12.8M', detail:'ETH ликвидирани позиции — Short squeeze', time:'8m' },
-    { icon:'🐳', amount:'$88.5M', detail:'USDT mint на Tether Treasury', time:'15m' },
-    { icon:'🐋', amount:'$31.0M', detail:'SOL изтеглено от Coinbase', time:'22m' },
-  ];
-  document.getElementById('whale-items').innerHTML = whaleData.map(w =>
-    `<div class="whale-item">
-      <div class="whale-icon">${w.icon}</div>
-      <div class="whale-text">
-        <div class="whale-amount">${w.amount}</div>
-        <div class="whale-detail">${w.detail}</div>
-      </div>
-      <div class="whale-time">${w.time} ago</div>
-    </div>`).join('');
 }
 
 function renderCharts() {
@@ -1742,61 +1715,22 @@ function renderCharts() {
     </div>`;
   }).join('');
   document.getElementById('ls-grid').innerHTML = lsHTML;
-
-  // Liquidation heatmap
-  const liqHTML = COINS.slice(0,6).map(c => {
-    const d = marketData[c.sym];
-    if (!d) return '';
-    const maxL = Math.max(d.liqLong, d.liqShort, 1);
-    return `<div class="liq-row">
-      <span class="liq-label">${c.sym}</span>
-      <div style="flex:1;display:flex;flex-direction:column;gap:2px">
-        <div class="liq-track"><div class="liq-bar long"  style="width:${(d.liqLong/maxL)*100}%"></div></div>
-        <div class="liq-track"><div class="liq-bar short" style="width:${(d.liqShort/maxL)*100}%"></div></div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:2px;align-items:flex-end">
-        <span class="liq-value" style="color:var(--green)">$${d.liqLong.toFixed(0)}M</span>
-        <span class="liq-value" style="color:var(--red)">$${d.liqShort.toFixed(0)}M</span>
-      </div>
-    </div>`;
-  }).join('');
-  document.getElementById('liq-bars').innerHTML = liqHTML;
 }
 
 function renderHistory() {
-  const history = [
-    { sym:'BTC', type:'BUY',  entry:66800, exit:69200, pnl:'+$1,840', pct:'+3.6%', tf:'4h', status:'win',  date:'24 Юни' },
-    { sym:'ETH', type:'SELL', entry:3420,  exit:3210,  pnl:'+$630',   pct:'+6.1%', tf:'1h', status:'win',  date:'23 Юни' },
-    { sym:'SOL', type:'BUY',  entry:142,   exit:138,   pnl:'-$240',   pct:'-2.8%', tf:'15m',status:'loss', date:'22 Юни' },
-    { sym:'BNB', type:'BUY',  entry:605,   exit:638,   pnl:'+$495',   pct:'+5.5%', tf:'4h', status:'win',  date:'21 Юни' },
-    { sym:'XRP', type:'SELL', entry:0.617, exit:0.581, pnl:'+$180',   pct:'+5.8%', tf:'1h', status:'win',  date:'20 Юни' },
-    { sym:'LINK',type:'BUY',  entry:18.4,  exit:17.8,  pnl:'-$120',   pct:'-3.3%', tf:'4h', status:'loss', date:'19 Юни' },
-    { sym:'ARB', type:'BUY',  entry:1.14,  exit:1.22,  pnl:'+$320',   pct:'+7.0%', tf:'1h', status:'win',  date:'18 Юни' },
-    { sym:'AVAX',type:'SELL', entry:38.2,  exit:35.6,  pnl:'+$520',   pct:'+6.8%', tf:'4h', status:'win',  date:'17 Юни' },
-  ];
+  // No real trade history data source exists yet. We do not fabricate
+  // wins/losses/P&L — show an honest empty state instead.
+  document.getElementById('stat-win').textContent  = '0';
+  document.getElementById('stat-loss').textContent = '0';
+  document.getElementById('stat-rate').textContent = '—%';
+  document.getElementById('stat-pnl').textContent  = '$0';
 
-  const wins   = history.filter(h=>h.status==='win').length;
-  const losses = history.filter(h=>h.status==='loss').length;
-  document.getElementById('stat-win').textContent  = wins;
-  document.getElementById('stat-loss').textContent = losses;
-  document.getElementById('stat-rate').textContent = Math.round((wins/(wins+losses))*100)+'%';
-  document.getElementById('stat-pnl').textContent  = '+$3,625';
-
-  document.getElementById('history-list').innerHTML = history.map(h => {
-    const isWin = h.status === 'win';
-    const typeCls = h.type==='BUY' ? 'buy-type' : 'sell-type';
-    return `<div class="hist-item">
-      <span class="hist-badge ${typeCls}">${h.type}</span>
-      <div class="hist-info">
-        <div class="hist-pair">${h.sym}/USDT · ${h.tf}</div>
-        <div class="hist-meta">${h.date} · ${h.entry} → ${h.exit}</div>
-      </div>
-      <div>
-        <div class="hist-pnl ${isWin?'pos':'neg'}">${h.pnl}</div>
-        <div style="font-size:10px;color:var(--muted);text-align:right">${h.pct}</div>
-      </div>
+  document.getElementById('history-list').innerHTML =
+    `<div style="text-align:center;padding:40px 20px;color:var(--muted)">
+      <div style="font-size:32px;margin-bottom:10px">📋</div>
+      <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px">No Trade History Yet</div>
+      <div style="font-size:12px;line-height:1.5">Closed signal tracking isn't connected to a real data source yet.<br>No simulated trades will ever be shown.</div>
     </div>`;
-  }).join('');
 }
 
 // ══════════════════════════════════════════════
@@ -1833,22 +1767,12 @@ function openCoinModal(sym) {
       <div class="detail-val">$${fmtM(d.oi)}</div>
       <div class="detail-sub">${fmtPct(d.oiChg)} промяна</div>
     </div>
-    <div class="detail-item">
-      <div class="detail-lbl">Liq. Longs</div>
-      <div class="detail-val" style="color:var(--green)">$${d.liqLong.toFixed(0)}M</div>
-      <div class="detail-sub">потенциал</div>
-    </div>
-    <div class="detail-item">
-      <div class="detail-lbl">Liq. Shorts</div>
-      <div class="detail-val" style="color:var(--red)">$${d.liqShort.toFixed(0)}M</div>
-      <div class="detail-sub">потенциал</div>
-    </div>
   `;
 
   document.getElementById('modal-signal-info').innerHTML = sig ?
     `<div style="background:var(--card);border:1px solid ${sig.type==='BUY'?'rgba(16,185,129,0.4)':'rgba(239,68,68,0.4)'};border-radius:10px;padding:12px;margin-top:8px">
       <div style="font-size:12px;font-weight:700;color:${sig.type==='BUY'?'var(--green)':'var(--red)'};margin-bottom:8px">
-        ⚡ АКТИВЕН СИГНАЛ: ${sig.type} · ${sig.lev}x Leverage
+        ⚡ АКТИВЕН СИГНАЛ: ${sig.type}
       </div>
       <div style="font-size:11px;color:var(--muted)">Entry: ${fmtPrice(sig.entry)} | SL: ${fmtPrice(sig.sl)} | TP1: ${fmtPrice(sig.tp1)} | TP2: ${fmtPrice(sig.tp2)}</div>
       <div style="margin-top:6px;font-size:10px;color:var(--muted2)">Причини: ${sig.reasons.join(', ')}</div>
@@ -1927,7 +1851,6 @@ async function refreshData() {
   renderFearGreed(fg);
   renderSentiment(fg, marketData);
   renderSignals(signalsData);
-  renderWhales();
 
   // Update charts if on that tab
   if (document.getElementById('page-charts').classList.contains('active')) {
@@ -2130,27 +2053,6 @@ function renderSqueezeWidget() {
 //  CALENDAR + IMPACT VISUALIZER
 // ══════════════════════════════════════════════
 
-
-
-// ── CALENDAR EVENTS — Dates are real scheduled dates ──
-// Historical BTC reaction data: pending FRED API + CoinGlass + Bybit integration
-const CAL_EVENTS = [
-  { id:'etf-rep',  name:'BTC ETF Flow Report',    cat:'CRYPTO', impact:'crypto', date:'2026-07-14T20:00:00Z', desc:'Weekly institutional BTC ETF inflow/outflow data — source: CoinGlass API (pending)' },
-  { id:'cpi-jul',  name:'US CPI Report',           cat:'MACRO',  impact:'high',   date:'2026-07-15T12:30:00Z', desc:'Consumer Price Index — source: FRED API (pending)' },
-  { id:'fund-r1',  name:'Funding Rate Reset',      cat:'CRYPTO', impact:'crypto', date:'2026-07-16T00:00:00Z', desc:'8-hour funding rate settlement — source: Bybit API (pending)' },
-  { id:'jobless',  name:'Jobless Claims',          cat:'MACRO',  impact:'low',    date:'2026-07-17T12:30:00Z', desc:'Weekly unemployment insurance claims — source: FRED API (pending)' },
-  { id:'fund-r2',  name:'Funding Rate Reset',      cat:'CRYPTO', impact:'crypto', date:'2026-07-24T00:00:00Z', desc:'8-hour funding rate settlement — source: Bybit API (pending)' },
-  { id:'btc-opt',  name:'BTC Options Expiry',      cat:'CRYPTO', impact:'crypto', date:'2026-07-25T08:00:00Z', desc:'Deribit monthly BTC options settlement — source: CoinGlass API (pending)' },
-  { id:'eth-opt',  name:'ETH Options Expiry',      cat:'CRYPTO', impact:'crypto', date:'2026-07-25T08:00:00Z', desc:'Deribit monthly ETH options settlement — source: CoinGlass API (pending)' },
-  { id:'fed-jul',  name:'Fed Rate Decision',       cat:'MACRO',  impact:'high',   date:'2026-07-30T18:00:00Z', desc:'FOMC interest rate decision and press conference — source: FRED API (pending)' },
-  { id:'gdp-q2',   name:'US GDP Q2 Release',       cat:'MACRO',  impact:'med',    date:'2026-07-30T12:30:00Z', desc:'Gross Domestic Product growth estimate — source: FRED API (pending)' },
-  { id:'pce',      name:'PCE Inflation Index',     cat:'MACRO',  impact:'med',    date:'2026-07-31T12:30:00Z', desc:'Fed preferred inflation gauge — source: FRED API (pending)' },
-  { id:'nfp-aug',  name:'Non-Farm Payrolls',       cat:'MACRO',  impact:'high',   date:'2026-08-07T12:30:00Z', desc:'US jobs report — source: FRED API (pending)' },
-  { id:'cpi-aug',  name:'US CPI Report',           cat:'MACRO',  impact:'high',   date:'2026-08-12T12:30:00Z', desc:'Consumer Price Index — source: FRED API (pending)' },
-  { id:'btc-opt2', name:'BTC Options Expiry',      cat:'CRYPTO', impact:'crypto', date:'2026-08-28T08:00:00Z', desc:'Deribit monthly BTC options settlement — source: CoinGlass API (pending)' },
-  { id:'fed-sep',  name:'Fed Rate Decision',       cat:'MACRO',  impact:'high',   date:'2026-09-17T18:00:00Z', desc:'FOMC interest rate decision and press conference — source: FRED API (pending)' },
-].sort((a,b) => new Date(a.date) - new Date(b.date));
-
 const notifiedEvents = new Set();
 let calCountdownTimers = {};
 
@@ -2163,27 +2065,40 @@ function pad2(n) { return String(n).padStart(2,'0'); }
 function impactColor(impact) {
   return { high:'#ff4400', med:'#ffaa00', low:'#64748B', crypto:'#8B5CF6' }[impact] || '#64748B';
 }
-function volLabel(v) {
-  if (v < 30) return { text:'Low',      color:'#00ff88', desc:'Small price movement expected. Market likely to absorb calmly.' };
-  if (v < 60) return { text:'Moderate', color:'#ffaa00', desc:'Noticeable volatility possible. Watch key levels.' };
-  if (v < 80) return { text:'High',     color:'#ff4400', desc:'Significant price swings expected. Risk management critical.' };
-  return              { text:'Extreme', color:'#ff0000', desc:'Major market movement likely. Reduce exposure before event.' };
-}
 
 function renderCalendar() {
-  // Use Gist calendar data if available, fallback to hardcoded
+  // Calendar data ONLY comes from the bot's real FRED fetch (window._gistCalendar).
+  // There is no hardcoded fallback — if real data hasn't loaded yet, we show
+  // an honest loading state, never fabricated events.
   const gistCal = window._gistCalendar;
 
   if (gistCal && gistCal.length > 0) {
     renderCalendarFromGist(gistCal);
   } else {
-    renderCalendarHardcoded();
+    document.getElementById('cal-events-list').innerHTML =
+      '<div style="text-align:center;padding:40px;color:var(--muted)">Loading real calendar data from FRED API...</div>';
   }
 }
 
 function renderCalendarFromGist(events) {
-  const now    = Date.now();
-  const future = events.filter(e => new Date(e.date).getTime() > now - 3600000);
+  const now = Date.now();
+
+  // ── Frontend dedup safety net ──
+  // The bot (gist-update.js) already dedupes by event id before writing
+  // data.json, but we dedupe again here defensively — each event.id
+  // ("fred-{seriesId}-{date}") should appear exactly once. We do NOT
+  // re-sort: the bot's CPI-priority order (CPI m/m → CPI y/y → Core CPI
+  // m/m → Core CPI y/y → other MACRO by date → CRYPTO by date) must be
+  // preserved exactly as received.
+  const seenIds = new Set();
+  const deduped = [];
+  for (const e of events) {
+    if (seenIds.has(e.id)) continue;
+    seenIds.add(e.id);
+    deduped.push(e);
+  }
+
+  const future = deduped.filter(e => new Date(e.date).getTime() > now - 3600000);
 
   Object.values(calCountdownTimers).forEach(t => clearInterval(t));
   calCountdownTimers = {};
@@ -2376,12 +2291,6 @@ function renderCalendarFromGist(events) {
       if(s) s.textContent=pad2(cd.s);
     }, 1000);
   });
-}
-
-function renderCalendarHardcoded() {
-  // Fallback hardcoded events while Gist loads
-  document.getElementById('cal-events-list').innerHTML =
-    '<div style="text-align:center;padding:40px;color:var(--muted)">Loading real calendar data...</div>';
 }
 
 function flipCard(id) {
