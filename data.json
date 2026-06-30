@@ -1,135 +1,105 @@
 {
-  "timestamp": "2026-06-30T01:12:00.015Z",
+  "timestamp": "2026-06-30T01:14:00.013Z",
   "coins": {
     "BTC": {
-      "price": 59791.3,
-      "change": 0.5106,
-      "fr": -0.002928,
+      "price": 59756.7,
+      "change": 0.5365,
+      "fr": -0.002767,
       "ls": 1.7027027027027026,
-      "oi": 3463.0166690852,
+      "oi": 3461.0126923068,
       "oiChg": 1.0574350249701006,
       "longs": 63,
       "shorts": 37
     },
-    "XRP": {
-      "price": 1.0476,
-      "change": 0.28709999999999997,
-      "fr": -0.012114,
-      "ls": 3.7348484848484844,
-      "oi": 191.31080620608003,
-      "oiChg": 0.5177028106838476,
-      "longs": 78.88,
-      "shorts": 21.12
-    },
-    "HYPE": {
-      "price": 65.721,
-      "change": 6.3842,
-      "fr": 0.005179,
-      "ls": 1.3685457129322596,
-      "oi": 221.0484627933,
-      "oiChg": -1.206958596367183,
-      "longs": 57.78,
-      "shorts": 42.22
-    },
-    "ZEC": {
-      "price": 399.89,
-      "change": 6.546399999999999,
-      "fr": 0.006604,
-      "ls": 1.2722108611679164,
-      "oi": 47.7288149654,
-      "oiChg": -0.5669825511532276,
-      "longs": 55.989999999999995,
-      "shorts": 44.01
-    },
-    "NEAR": {
-      "price": 1.8293,
-      "change": -0.1092,
-      "fr": 0.01,
-      "ls": 1.7739251040221915,
-      "oi": 61.75780587691,
-      "oiChg": -0.021556740738651443,
-      "longs": 63.949999999999996,
-      "shorts": 36.05
-    },
-    "SUI": {
-      "price": 0.6908,
-      "change": 1.4687999999999999,
-      "fr": 0.01,
-      "ls": 3.262574595055413,
-      "oi": 53.148480264,
-      "oiChg": -0.3831884933914066,
-      "longs": 76.53999999999999,
-      "shorts": 23.46
-    },
-    "WIF": {
-      "price": 0.17237,
-      "change": -1.1809,
-      "fr": 0.005,
-      "ls": 2.9246467817896384,
-      "oi": 11.717416123600001,
-      "oiChg": -0.9314732015696362,
-      "longs": 74.52,
-      "shorts": 25.480000000000004
-    },
-    "LINK": {
-      "price": 7.279,
-      "change": 0.2755,
-      "fr": 0.01,
-      "ls": 3.048582995951417,
-      "oi": 45.18241261199999,
-      "oiChg": 0.4206608850736084,
-      "longs": 75.3,
-      "shorts": 24.7
-    },
     "DOGE": {
-      "price": 0.07228,
-      "change": -0.7824,
-      "fr": -0.007742,
+      "price": 0.07225,
+      "change": -0.7554,
+      "fr": -0.007877,
       "ls": 3.2992261392949263,
-      "oi": 78.75162319336,
+      "oi": 78.7189371295,
       "oiChg": 0.008898528774067084,
       "longs": 76.74,
       "shorts": 23.26
     },
-    "TAO": {
-      "price": 205.28,
-      "change": -0.34459999999999996,
+    "SOL": {
+      "price": 74.09,
+      "change": 3.8838999999999997,
+      "fr": 0.007914000000000001,
+      "ls": 2.2637075718015667,
+      "oi": 566.826678577,
+      "oiChg": 0.12211981967872074,
+      "longs": 69.36,
+      "shorts": 30.64
+    },
+    "HYPE": {
+      "price": 65.632,
+      "change": 6.4624,
+      "fr": 0.005749,
+      "ls": 1.3685457129322596,
+      "oi": 220.7491168736,
+      "oiChg": -1.206958596367183,
+      "longs": 57.78,
+      "shorts": 42.22
+    },
+    "NEAR": {
+      "price": 1.8278,
+      "change": -0.0437,
+      "fr": 0.00978,
+      "ls": 1.7739251040221915,
+      "oi": 61.707165353860006,
+      "oiChg": -0.021556740738651443,
+      "longs": 63.949999999999996,
+      "shorts": 36.05
+    },
+    "LINK": {
+      "price": 7.288,
+      "change": 0.48250000000000004,
+      "fr": 0.01,
+      "ls": 3.048582995951417,
+      "oi": 45.238277664,
+      "oiChg": 0.4206608850736084,
+      "longs": 75.3,
+      "shorts": 24.7
+    },
+    "ENA": {
+      "price": 0.07726,
+      "change": 0.7695,
+      "fr": 0.003179,
+      "ls": 3.29000429000429,
+      "oi": 35.84472237718,
+      "oiChg": -5.976999472678003,
+      "longs": 76.69,
+      "shorts": 23.31
+    },
+    "WIF": {
+      "price": 0.17188,
+      "change": -1.0933,
       "fr": 0.005,
-      "ls": 2.6523009495982466,
-      "oi": 25.74696605088,
-      "oiChg": 0.5262156365545738,
-      "longs": 72.61999999999999,
-      "shorts": 27.38
-    },
-    "PUMP": {
-      "price": 0,
-      "change": 0,
-      "fr": 0,
-      "ls": 1,
-      "oi": 0,
-      "oiChg": 0,
-      "longs": 50,
-      "shorts": 50
-    },
-    "FET": {
-      "price": 0,
-      "change": 0,
-      "fr": 0,
-      "ls": 1,
-      "oi": 0,
-      "oiChg": 0,
-      "longs": 50,
-      "shorts": 50
+      "ls": 2.9246467817896384,
+      "oi": 11.6841067664,
+      "oiChg": -0.9314732015696362,
+      "longs": 74.52,
+      "shorts": 25.480000000000004
     },
     "BNB": {
-      "price": 555.1,
-      "change": 0.6891999999999999,
+      "price": 554.7,
+      "change": 0.6532,
       "fr": 0.01,
       "ls": 2.3806626098715347,
-      "oi": 70.67865704900001,
+      "oi": 70.62772665300001,
       "oiChg": 0.31712018003917164,
       "longs": 70.42,
       "shorts": 29.580000000000002
+    },
+    "SUI": {
+      "price": 0.691,
+      "change": 1.6176,
+      "fr": 0.01,
+      "ls": 3.262574595055413,
+      "oi": 53.16386778,
+      "oiChg": -0.3831884933914066,
+      "longs": 76.53999999999999,
+      "shorts": 23.46
     },
     "PEPE": {
       "price": 0,
@@ -141,45 +111,75 @@
       "longs": 50,
       "shorts": 50
     },
-    "SOL": {
-      "price": 74.09,
-      "change": 3.7529,
-      "fr": 0.007669,
-      "ls": 2.2637075718015667,
-      "oi": 566.826678577,
-      "oiChg": 0.12211981967872074,
-      "longs": 69.36,
-      "shorts": 30.64
+    "ZEC": {
+      "price": 399.18,
+      "change": 6.5502,
+      "fr": 0.0054870000000000006,
+      "ls": 1.2722108611679164,
+      "oi": 47.64407301480001,
+      "oiChg": -0.5669825511532276,
+      "longs": 55.989999999999995,
+      "shorts": 44.01
     },
-    "ETH": {
-      "price": 1590.95,
-      "change": 1.5128000000000001,
-      "fr": -0.002064,
-      "ls": 2.785011355034065,
-      "oi": 1107.7474932940002,
-      "oiChg": -2.1984529112548246,
-      "longs": 73.58,
-      "shorts": 26.419999999999998
+    "TAO": {
+      "price": 205.19,
+      "change": -0.306,
+      "fr": 0.005,
+      "ls": 2.6523009495982466,
+      "oi": 25.73567792274,
+      "oiChg": 0.5262156365545738,
+      "longs": 72.61999999999999,
+      "shorts": 27.38
     },
     "ONDO": {
-      "price": 0.3117,
-      "change": 0.7433000000000001,
-      "fr": 0.002996,
+      "price": 0.3116,
+      "change": 0.8413999999999999,
+      "fr": 0.001694,
       "ls": 3.885197850512946,
-      "oi": 24.2520747174,
+      "oi": 24.244294135199997,
       "oiChg": -0.46178183464172795,
       "longs": 79.53,
       "shorts": 20.47
     },
-    "ENA": {
-      "price": 0.07733,
-      "change": 0.5198999999999999,
-      "fr": 0.001782,
-      "ls": 3.29000429000429,
-      "oi": 35.877198827689995,
-      "oiChg": -5.976999472678003,
-      "longs": 76.69,
-      "shorts": 23.31
+    "FET": {
+      "price": 0,
+      "change": 0,
+      "fr": 0,
+      "ls": 1,
+      "oi": 0,
+      "oiChg": 0,
+      "longs": 50,
+      "shorts": 50
+    },
+    "PUMP": {
+      "price": 0,
+      "change": 0,
+      "fr": 0,
+      "ls": 1,
+      "oi": 0,
+      "oiChg": 0,
+      "longs": 50,
+      "shorts": 50
+    },
+    "ETH": {
+      "price": 1590.44,
+      "change": 1.5399,
+      "fr": -0.001815,
+      "ls": 2.785011355034065,
+      "oi": 1107.3923902288,
+      "oiChg": -2.1984529112548246,
+      "longs": 73.58,
+      "shorts": 26.419999999999998
+    },
+    "XRP": {
+      "price": 1.0478,
+      "change": 0.44089999999999996,
+      "fr": -0.01252,
+      "ls": 3.7348484848484844,
+      "oi": 191.34732984224004,
+      "oiChg": 0.5177028106838476,
+      "longs": 78.88,
+      "shorts": 21.12
     }
   },
   "calendar": [
@@ -200,6 +200,15 @@
       "date": "2026-07-01T13:30:00Z",
       "desc": "Fed Rate Decision — FRED API (Federal Funds Effective Rate)",
       "fredId": "FEDFUNDS"
+    },
+    {
+      "id": "fred-IC4WSA-2026-07-02",
+      "name": "Jobless Claims",
+      "cat": "MACRO",
+      "impact": "low",
+      "date": "2026-07-02T13:30:00Z",
+      "desc": "Jobless Claims — FRED API (4-Week Moving Average of Initial Claims)",
+      "fredId": "IC4WSA"
     },
     {
       "id": "fred-PAYEMS-2026-07-02",
@@ -227,15 +236,6 @@
       "date": "2026-07-02T13:30:00Z",
       "desc": "Fed Rate Decision — FRED API (Federal Funds Effective Rate)",
       "fredId": "FEDFUNDS"
-    },
-    {
-      "id": "fred-IC4WSA-2026-07-02",
-      "name": "Jobless Claims",
-      "cat": "MACRO",
-      "impact": "low",
-      "date": "2026-07-02T13:30:00Z",
-      "desc": "Jobless Claims — FRED API (4-Week Moving Average of Initial Claims)",
-      "fredId": "IC4WSA"
     },
     {
       "id": "fred-FEDFUNDS-2026-07-06",
@@ -292,13 +292,13 @@
       "fredId": "IC4WSA"
     },
     {
-      "id": "fred-PCE-2026-07-30",
-      "name": "PCE Inflation Index",
+      "id": "fred-IC4WSA-2026-07-30",
+      "name": "Jobless Claims",
       "cat": "MACRO",
-      "impact": "med",
+      "impact": "low",
       "date": "2026-07-30T13:30:00Z",
-      "desc": "PCE Inflation Index — FRED API (Personal Consumption Expenditures)",
-      "fredId": "PCE"
+      "desc": "Jobless Claims — FRED API (4-Week Moving Average of Initial Claims)",
+      "fredId": "IC4WSA"
     },
     {
       "id": "fred-GDP-2026-07-30",
@@ -310,13 +310,13 @@
       "fredId": "GDP"
     },
     {
-      "id": "fred-IC4WSA-2026-07-30",
-      "name": "Jobless Claims",
+      "id": "fred-PCE-2026-07-30",
+      "name": "PCE Inflation Index",
       "cat": "MACRO",
-      "impact": "low",
+      "impact": "med",
       "date": "2026-07-30T13:30:00Z",
-      "desc": "Jobless Claims — FRED API (4-Week Moving Average of Initial Claims)",
-      "fredId": "IC4WSA"
+      "desc": "PCE Inflation Index — FRED API (Personal Consumption Expenditures)",
+      "fredId": "PCE"
     },
     {
       "id": "fred-PAYEMS-2026-08-07",
@@ -346,15 +346,6 @@
       "fredId": "CPIAUCSL"
     },
     {
-      "id": "fred-PCE-2026-08-26",
-      "name": "PCE Inflation Index",
-      "cat": "MACRO",
-      "impact": "med",
-      "date": "2026-08-26T13:30:00Z",
-      "desc": "PCE Inflation Index — FRED API (Personal Consumption Expenditures)",
-      "fredId": "PCE"
-    },
-    {
       "id": "fred-GDP-2026-08-26",
       "name": "US GDP Release",
       "cat": "MACRO",
@@ -362,6 +353,15 @@
       "date": "2026-08-26T13:30:00Z",
       "desc": "US GDP Release — FRED API (Gross Domestic Product)",
       "fredId": "GDP"
+    },
+    {
+      "id": "fred-PCE-2026-08-26",
+      "name": "PCE Inflation Index",
+      "cat": "MACRO",
+      "impact": "med",
+      "date": "2026-08-26T13:30:00Z",
+      "desc": "PCE Inflation Index — FRED API (Personal Consumption Expenditures)",
+      "fredId": "PCE"
     },
     {
       "id": "fred-PAYEMS-2026-09-04",
