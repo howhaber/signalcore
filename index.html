@@ -1315,7 +1315,7 @@ let refreshInterval = null;
 
 // Same-domain URL — zero CORS issues
 // Data written by marketMonitor.js bot via GitHub API
-const DATA_URL = '/signalcore/data.json';
+const DATA_URL = 'https://howhaber.github.io/signalcore/data.json';
 
 // Map Bybit coin names to our COINS sym
 const COIN_NAME_MAP = {
@@ -1328,11 +1328,38 @@ const COIN_NAME_MAP = {
   ARB:'ARB', OP:'OP', TIA:'TIA', WLD:'WLD'
 };
 
+// Retry fetch with delay — handles GitHub Pages CDN propagation lag
+// Always uses FULL absolute URL + cache-busting + no-store to avoid
+// Telegram WebView serving stale/cached responses
+async function fetchWithRetry(url, maxRetries = 3, delayMs = 1000) {
+  let lastErr = null;
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    const fullUrl = url + '?t=' + Date.now();
+    console.log(`[Fetch attempt ${attempt}/${maxRetries}] Requesting:`, fullUrl);
+    try {
+      const res = await fetch(fullUrl, { cache: 'no-store' });
+      if (res.ok) {
+        console.log(`[Fetch attempt ${attempt}/${maxRetries}] SUCCESS:`, fullUrl);
+        return res;
+      }
+      lastErr = new Error('HTTP ' + res.status);
+      console.warn(`[Fetch attempt ${attempt}/${maxRetries}] FAILED with status ${res.status}:`, fullUrl);
+    } catch (e) {
+      lastErr = e;
+      console.warn(`[Fetch attempt ${attempt}/${maxRetries}] ERROR:`, e.message, '—', fullUrl);
+    }
+    if (attempt < maxRetries) {
+      console.warn(`[Retry] Waiting ${delayMs}ms before attempt ${attempt + 1}...`);
+      await new Promise(r => setTimeout(r, delayMs));
+    }
+  }
+  throw lastErr;
+}
+
 async function generateMarketData() {
   try {
-    // Fetch from same domain — no CORS
-    const res = await fetch(DATA_URL + '?t=' + Date.now());
-    if (!res.ok) throw new Error('data.json fetch failed: ' + res.status);
+    // Fetch from same domain — no CORS, with retry for CDN propagation lag
+    const res = await fetchWithRetry(DATA_URL, 3, 2000);
     const json = await res.json();
 
     if (!json.coins || Object.keys(json.coins).length === 0) {
@@ -1840,7 +1867,7 @@ function closeModal(e) {
 // ══════════════════════════════════════════════
 //  TAB NAVIGATION
 // ══════════════════════════════════════════════
-function switchTab(tab) {
+async function switchTab(tab) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('page-'+tab).classList.add('active');
@@ -1850,8 +1877,22 @@ function switchTab(tab) {
   if (tab === 'charts') renderCharts();
   if (tab === 'history') renderHistory();
   if (tab === 'squeeze') renderSqueeze();
-  if (tab === 'calendar') renderCalendar();
-  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+  if (tab === 'calendar') {
+    // If calendar data not loaded yet, fetch it directly before rendering
+    if (!window._gistCalendar || window._gistCalendar.length === 0) {
+      document.getElementById('cal-events-list').innerHTML =
+        '<div style="text-align:center;padding:40px;color:var(--muted)">Loading real calendar data...</div>';
+      try {
+        const res = await fetchWithRetry(DATA_URL, 3, 1500);
+        const json = await res.json();
+        if (json.calendar && json.calendar.length > 0) {
+          window._gistCalendar = json.calendar;
+        }
+      } catch(e) { console.error('[Calendar fetch]', e.message); }
+    }
+    renderCalendar();
+  }
+  if (tg?.HapticFeedback) { try { tg.HapticFeedback.impactOccurred('light'); } catch(e) {} }
 }
 
 function selectChart(sym) {
