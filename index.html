@@ -1266,11 +1266,11 @@
 // ══════════════════════════════════════════════
 const tg = window.Telegram?.WebApp;
 if (tg) {
-  tg.ready();
-  tg.expand();
-  tg.setHeaderColor('#0A0C14');
-  tg.setBackgroundColor('#0A0C14');
-  if (tg.requestFullscreen) tg.requestFullscreen();
+  try { tg.ready(); } catch(e) {}
+  try { tg.expand(); } catch(e) {}
+  try { tg.setHeaderColor('#0A0C14'); } catch(e) {}
+  try { tg.setBackgroundColor('#0A0C14'); } catch(e) {}
+  try { if (tg.requestFullscreen) tg.requestFullscreen(); } catch(e) {}
 }
 
 // ══════════════════════════════════════════════
