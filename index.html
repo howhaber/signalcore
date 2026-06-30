@@ -1181,7 +1181,7 @@
   </div>
 
   <!-- Coin List -->
-  <div class="section-title" id="coins-section-title">📊 Market Overview — loading...</div>
+  <div class="section-title" id="coins-section-title">📊 Market Overview — 53 coins</div>
   <div class="coins-list" id="coins-list">
     <!-- populated by JS -->
   </div>
@@ -1285,147 +1285,63 @@ if (tg) {
 // ══════════════════════════════════════════════
 //  CONFIG — 18 МОНЕТИ
 // ══════════════════════════════════════════════
-// ── Full coin metadata registry ──────────────────────────────
-// This covers all possible Tier 1 + Tier 2 coins.
-// The active COINS array is built dynamically from data.json coinOrder.
-const COIN_META = {
-  BTC:  { name:'Bitcoin',       emoji:'₿', color:'#F7931A', tv:'BYBIT:BTCUSDT.P' },
-  ETH:  { name:'Ethereum',      emoji:'Ξ', color:'#627EEA', tv:'BYBIT:ETHUSDT.P' },
-  SOL:  { name:'Solana',        emoji:'◎', color:'#9945FF', tv:'BYBIT:SOLUSDT.P' },
-  XRP:  { name:'Ripple',        emoji:'✕', color:'#00AAE4', tv:'BYBIT:XRPUSDT.P' },
-  BNB:  { name:'BNB',           emoji:'B', color:'#F3BA2F', tv:'BYBIT:BNBUSDT.P' },
-  DOGE: { name:'Dogecoin',      emoji:'Ð', color:'#C2A633', tv:'BYBIT:DOGEUSDT.P' },
-  ADA:  { name:'Cardano',       emoji:'₳', color:'#0033AD', tv:'BYBIT:ADAUSDT.P' },
-  AVAX: { name:'Avalanche',     emoji:'A', color:'#E84142', tv:'BYBIT:AVAXUSDT.P' },
-  LINK: { name:'Chainlink',     emoji:'⬡', color:'#2A5ADA', tv:'BYBIT:LINKUSDT.P' },
-  DOT:  { name:'Polkadot',      emoji:'●', color:'#E6007A', tv:'BYBIT:DOTUSDT.P' },
-  MATIC:{ name:'Polygon',       emoji:'⬟', color:'#8247E5', tv:'BYBIT:MATICUSDT.P' },
-  NEAR: { name:'NEAR',          emoji:'N', color:'#00C08B', tv:'BYBIT:NEARUSDT.P' },
-  SUI:  { name:'Sui',           emoji:'S', color:'#6FBCF0', tv:'BYBIT:SUIUSDT.P' },
-  LTC:  { name:'Litecoin',      emoji:'Ł', color:'#BFBBBB', tv:'BYBIT:LTCUSDT.P' },
-  ATOM: { name:'Cosmos',        emoji:'⚛', color:'#2E3148', tv:'BYBIT:ATOMUSDT.P' },
-  UNI:  { name:'Uniswap',       emoji:'🦄', color:'#FF007A', tv:'BYBIT:UNIUSDT.P' },
-  AAVE: { name:'Aave',          emoji:'A', color:'#B6509E', tv:'BYBIT:AAVEUSDT.P' },
-  TRX:  { name:'TRON',          emoji:'T', color:'#EF0027', tv:'BYBIT:TRXUSDT.P' },
-  HYPE: { name:'Hyperliquid',   emoji:'H', color:'#00E5FF', tv:'BYBIT:HYPEUSDT.P' },
-  ZEC:  { name:'Zcash',         emoji:'Z', color:'#ECB244', tv:'BYBIT:ZECUSDT.P' },
-  ENA:  { name:'Ethena',        emoji:'E', color:'#9B59B6', tv:'BYBIT:ENAUSDT.P' },
-  TAO:  { name:'Bittensor',     emoji:'τ', color:'#808080', tv:'BYBIT:TAOUSDT.P' },
-  ONDO: { name:'Ondo',          emoji:'O', color:'#1A6B3C', tv:'BYBIT:ONDOUSDT.P' },
-  PEPE: { name:'Pepe',          emoji:'🐸', color:'#4CAF50', tv:'BYBIT:PEPEUSDT.P' },
-  WIF:  { name:'Dogwifhat',     emoji:'🐕', color:'#C17A3B', tv:'BYBIT:WIFUSDT.P' },
-  FET:  { name:'Fetch.ai',      emoji:'F', color:'#1B1B2F', tv:'BYBIT:FETUSDT.P' },
-  ARB:  { name:'Arbitrum',      emoji:'A', color:'#12AAFF', tv:'BYBIT:ARBUSDT.P' },
-  OP:   { name:'Optimism',      emoji:'O', color:'#FF0420', tv:'BYBIT:OPUSDT.P' },
-  INJ:  { name:'Injective',     emoji:'I', color:'#00A3FF', tv:'BYBIT:INJUSDT.P' },
-  TIA:  { name:'Celestia',      emoji:'T', color:'#7B2FBE', tv:'BYBIT:TIAUSDT.P' },
-  SEI:  { name:'Sei',           emoji:'S', color:'#9D4EDD', tv:'BYBIT:SEIUSDT.P' },
-  JUP:  { name:'Jupiter',       emoji:'J', color:'#00BFA5', tv:'BYBIT:JUPUSDT.P' },
-  PENDLE:{ name:'Pendle',       emoji:'P', color:'#00B4D8', tv:'BYBIT:PENDLEUSDT.P' },
-  RENDER:{ name:'Render',       emoji:'R', color:'#FF6B35', tv:'BYBIT:RENDERUSDT.P' },
-  WLD:  { name:'Worldcoin',     emoji:'W', color:'#1D1D1B', tv:'BYBIT:WLDUSDT.P' },
-  APT:  { name:'Aptos',         emoji:'A', color:'#2DD4BF', tv:'BYBIT:APTUSDT.P' },
-  STX:  { name:'Stacks',        emoji:'S', color:'#5546FF', tv:'BYBIT:STXUSDT.P' },
-  PYTH: { name:'Pyth',          emoji:'P', color:'#8B5CF6', tv:'BYBIT:PYTHUSDT.P' },
-  JTO:  { name:'Jito',          emoji:'J', color:'#1DB954', tv:'BYBIT:JTOUSDT.P' },
-  STRK: { name:'Starknet',      emoji:'S', color:'#EC796B', tv:'BYBIT:STRKUSDT.P' },
-  ETHFI:{ name:'Ether.fi',      emoji:'E', color:'#627EEA', tv:'BYBIT:ETHFIUSDT.P' },
-  SAFE: { name:'Safe',          emoji:'S', color:'#12FF80', tv:'BYBIT:SAFEUSDT.P' },
-  ZK:   { name:'ZKsync',        emoji:'Z', color:'#8B5CF6', tv:'BYBIT:ZKUSDT.P' },
-  ZRO:  { name:'LayerZero',     emoji:'Z', color:'#A259FF', tv:'BYBIT:ZROUSDT.P' },
-  EIGEN:{ name:'EigenLayer',    emoji:'E', color:'#1565C0', tv:'BYBIT:EIGENUSDT.P' },
-  TURBO:{ name:'Turbo',         emoji:'T', color:'#FF6B00', tv:'BYBIT:TURBOUSDT.P' },
-  BONK: { name:'Bonk',          emoji:'B', color:'#F97316', tv:'BYBIT:BONKUSDT.P' },
-  FLOKI:{ name:'Floki',         emoji:'F', color:'#F5A623', tv:'BYBIT:FLOKIUSDT.P' },
-  JASMY:{ name:'JasmyCoin',     emoji:'J', color:'#FF4B6E', tv:'BYBIT:JASMYUSDT.P' },
-  GMT:  { name:'STEPN',         emoji:'G', color:'#4EC94E', tv:'BYBIT:GMTUSDT.P' },
-  ENS:  { name:'ENS',           emoji:'E', color:'#5298FF', tv:'BYBIT:ENSUSDT.P' },
-  LDO:  { name:'Lido',          emoji:'L', color:'#F0A500', tv:'BYBIT:LDOUSDT.P' },
-  RPL:  { name:'Rocket Pool',   emoji:'R', color:'#FF6B35', tv:'BYBIT:RPLUSDT.P' },
-  SUSHI:{ name:'Sushi',         emoji:'🍣', color:'#FA52A0', tv:'BYBIT:SUSHIUSDT.P' },
-  CRV:  { name:'Curve',         emoji:'C', color:'#FF0000', tv:'BYBIT:CRVUSDT.P' },
-  COMP: { name:'Compound',      emoji:'C', color:'#00D395', tv:'BYBIT:COMPUSDT.P' },
-  MKR:  { name:'Maker',         emoji:'M', color:'#1AAB9B', tv:'BYBIT:MKRUSDT.P' },
-  SNX:  { name:'Synthetix',     emoji:'S', color:'#00D1FF', tv:'BYBIT:SNXUSDT.P' },
-  DYDX: { name:'dYdX',          emoji:'D', color:'#6966FF', tv:'BYBIT:DYDXUSDT.P' },
-  GMX:  { name:'GMX',           emoji:'G', color:'#2D42FC', tv:'BYBIT:GMXUSDT.P' },
-  RUNE: { name:'THORChain',     emoji:'ᚱ', color:'#33FF99', tv:'BYBIT:RUNEUSDT.P' },
-  KAVA: { name:'Kava',          emoji:'K', color:'#FF564F', tv:'BYBIT:KAVAUSDT.P' },
-  OCEAN:{ name:'Ocean',         emoji:'O', color:'#0B85FF', tv:'BYBIT:OCEANUSDT.P' },
-  BAND: { name:'Band',          emoji:'B', color:'#516BF0', tv:'BYBIT:BANDUSDT.P' },
-  VET:  { name:'VeChain',       emoji:'V', color:'#15BDFF', tv:'BYBIT:VETUSDT.P' },
-  HBAR: { name:'Hedera',        emoji:'H', color:'#00BABC', tv:'BYBIT:HBARUSDT.P' },
-  EGLD: { name:'MultiversX',    emoji:'E', color:'#23F7DD', tv:'BYBIT:EGLDUSDT.P' },
-  FLOW: { name:'Flow',          emoji:'F', color:'#00EF8B', tv:'BYBIT:FLOWUSDT.P' },
-  ICP:  { name:'Internet Computer',emoji:'∞', color:'#3B00B9', tv:'BYBIT:ICPUSDT.P' },
-  AR:   { name:'Arweave',       emoji:'A', color:'#222326', tv:'BYBIT:ARUSDT.P' },
-  KSM:  { name:'Kusama',        emoji:'K', color:'#E8026D', tv:'BYBIT:KSMUSDT.P' },
-  XTZ:  { name:'Tezos',         emoji:'ꜩ', color:'#2C7DF7', tv:'BYBIT:XTZUSDT.P' },
-  EOS:  { name:'EOS',           emoji:'E', color:'#000000', tv:'BYBIT:EOSUSDT.P' },
-  BCH:  { name:'Bitcoin Cash',  emoji:'Ƀ', color:'#8DC351', tv:'BYBIT:BCHUSDT.P' },
-  XMR:  { name:'Monero',        emoji:'ɱ', color:'#FF6600', tv:'BYBIT:XMRUSDT.P' },
-  NOT:  { name:'Notcoin',       emoji:'N', color:'#F5A623', tv:'BYBIT:NOTUSDT.P' },
-  DOGS: { name:'Dogs',          emoji:'🐕', color:'#A0522D', tv:'BYBIT:DOGSUSDT.P' },
-  MOODENG:{ name:'Moo Deng',    emoji:'🦛', color:'#FF9800', tv:'BYBIT:MOODENGUSDT.P' },
-  PNUT: { name:'Peanut',        emoji:'🥜', color:'#C8860A', tv:'BYBIT:PNUTUSDT.P' },
-  ACT:  { name:'Act I',         emoji:'A', color:'#FF4081', tv:'BYBIT:ACTUSDT.P' },
-  GOAT: { name:'Goat',          emoji:'🐐', color:'#795548', tv:'BYBIT:GOATUSDT.P' },
-  NEIRO:{ name:'Neiro',         emoji:'N', color:'#FF6D00', tv:'BYBIT:NEIROUSDT.P' },
-  POPCAT:{ name:'Popcat',       emoji:'🐱', color:'#FF7043', tv:'BYBIT:POPCATUSDT.P' },
-  MEW:  { name:'Cat in a Dogs World',emoji:'🐱', color:'#4CAF50', tv:'BYBIT:MEWUSDT.P' },
-  CHILLGUY:{ name:'Chill Guy',  emoji:'😎', color:'#607D8B', tv:'BYBIT:CHILLGUYUSDT.P' },
-  HMSTR:{ name:'Hamster Kombat',emoji:'🐹', color:'#FF9800', tv:'BYBIT:HMSTRUSDT.P' },
-  CATI: { name:'Catizen',       emoji:'🐱', color:'#9C27B0', tv:'BYBIT:CATIUSDT.P' },
-  MAJOR:{ name:'Major',         emoji:'M', color:'#FFD700', tv:'BYBIT:MAJORUSDT.P' },
-  IO:   { name:'io.net',        emoji:'I', color:'#00BCD4', tv:'BYBIT:IOUSDT.P' },
-  LISTA:{ name:'Lista',         emoji:'L', color:'#F1C40F', tv:'BYBIT:LISTAUSDT.P' },
-  GNS:  { name:'Gains Network', emoji:'G', color:'#00E5FF', tv:'BYBIT:GNSUSDT.P' },
-  RDNT: { name:'Radiant',       emoji:'R', color:'#4B0082', tv:'BYBIT:RDNTUSDT.P' },
-  VELO: { name:'Velo',          emoji:'V', color:'#1E90FF', tv:'BYBIT:VELOUSDT.P' },
-  API3: { name:'API3',          emoji:'A', color:'#2E5EAA', tv:'BYBIT:API3USDT.P' },
-  UMA:  { name:'UMA',           emoji:'U', color:'#FF4A4A', tv:'BYBIT:UMAUSDT.P' },
-  BAT:  { name:'Basic Attention',emoji:'B', color:'#FF5000', tv:'BYBIT:BATUSDT.P' },
-  ZIL:  { name:'Zilliqa',       emoji:'Z', color:'#49C1BF', tv:'BYBIT:ZILUSDT.P' },
-  IOTA: { name:'IOTA',          emoji:'I', color:'#242424', tv:'BYBIT:IOTAUSDT.P' },
-  ICX:  { name:'ICON',          emoji:'I', color:'#1FC5C9', tv:'BYBIT:ICXUSDT.P' },
-  ONT:  { name:'Ontology',      emoji:'O', color:'#32A4BE', tv:'BYBIT:ONTUSDT.P' },
-  QTUM: { name:'Qtum',          emoji:'Q', color:'#2E9AD0', tv:'BYBIT:QTUMUSDT.P' },
-  WAVES:{ name:'Waves',         emoji:'W', color:'#0055FF', tv:'BYBIT:WAVESUSDT.P' },
-  '1INCH':{ name:'1inch',       emoji:'1', color:'#D82122', tv:'BYBIT:1INCHUSDT.P' },
-  BAL:  { name:'Balancer',      emoji:'B', color:'#1E1E1E', tv:'BYBIT:BALUSDT.P' },
-  BOME: { name:'Book of Meme',  emoji:'B', color:'#FF6B35', tv:'BYBIT:BOMEUSDT.P' },
-  BLUR: { name:'Blur',          emoji:'B', color:'#FF6600', tv:'BYBIT:BLURUSDT.P' },
-  MANTA:{ name:'Manta',         emoji:'M', color:'#00BFA5', tv:'BYBIT:MANTAUSDT.P' },
-  ALT:  { name:'AltLayer',      emoji:'A', color:'#FF4081', tv:'BYBIT:ALTUSDT.P' },
-  DYM:  { name:'Dymension',     emoji:'D', color:'#FF6D00', tv:'BYBIT:DYMUSDT.P' },
-  PIXEL:{ name:'Pixels',        emoji:'P', color:'#FF5722', tv:'BYBIT:PIXELUSDT.P' },
-  SAGA: { name:'Saga',          emoji:'S', color:'#7C4DFF', tv:'BYBIT:SAGAUSDT.P' },
-  OMNI: { name:'Omni',          emoji:'O', color:'#F59E0B', tv:'BYBIT:OMNIUSDT.P' },
-  TNSR: { name:'Tensor',        emoji:'T', color:'#9C27B0', tv:'BYBIT:TNSRUSDT.P' },
-  W:    { name:'Wormhole',      emoji:'W', color:'#8B5CF6', tv:'BYBIT:WUSDT.P' },
-  AEVO: { name:'Aevo',          emoji:'A', color:'#00B4D8', tv:'BYBIT:AEVOUSDT.P' },
-  MYRO: { name:'Myro',          emoji:'M', color:'#4CAF50', tv:'BYBIT:MYROUSDT.P' },
-  PORTAL:{ name:'Portal',       emoji:'P', color:'#7B2FBE', tv:'BYBIT:PORTALUSDT.P' },
-};
-
-// Fallback metadata for coins not in COIN_META (Tier 2 new additions)
-function getCoinMeta(sym) {
-  return COIN_META[sym] || {
-    name:  sym,
-    emoji: sym.charAt(0),
-    color: '#64748B',
-    tv:    `BYBIT:${sym}USDT.P`,
-  };
-}
-
-// Active COINS list — rebuilt from data.json coinOrder on every refresh.
-// Starts with Tier 1 defaults, gets replaced by real coinOrder once data loads.
-let COINS = [
-  'BTC','ETH','SOL','XRP','BNB','DOGE',
-  'ADA','AVAX','LINK','DOT','MATIC','NEAR',
-  'SUI','LTC','ATOM','UNI','AAVE','TRX',
-].map(sym => ({ sym, ...getCoinMeta(sym) }));
-
+// ── FIXED 53-COIN LIST — never changes automatically ─────────
+// To add/remove a coin, edit this array manually.
+const COINS = [
+  { sym:'BTC',    name:'Bitcoin',          emoji:'₿', color:'#F7931A', tv:'BYBIT:BTCUSDT.P' },
+  { sym:'ETH',    name:'Ethereum',         emoji:'Ξ', color:'#627EEA', tv:'BYBIT:ETHUSDT.P' },
+  { sym:'SOL',    name:'Solana',           emoji:'◎', color:'#9945FF', tv:'BYBIT:SOLUSDT.P' },
+  { sym:'XRP',    name:'Ripple',           emoji:'✕', color:'#00AAE4', tv:'BYBIT:XRPUSDT.P' },
+  { sym:'BNB',    name:'BNB',              emoji:'B', color:'#F3BA2F', tv:'BYBIT:BNBUSDT.P' },
+  { sym:'DOGE',   name:'Dogecoin',         emoji:'Ð', color:'#C2A633', tv:'BYBIT:DOGEUSDT.P' },
+  { sym:'ADA',    name:'Cardano',          emoji:'₳', color:'#0033AD', tv:'BYBIT:ADAUSDT.P' },
+  { sym:'AVAX',   name:'Avalanche',        emoji:'A', color:'#E84142', tv:'BYBIT:AVAXUSDT.P' },
+  { sym:'LINK',   name:'Chainlink',        emoji:'⬡', color:'#2A5ADA', tv:'BYBIT:LINKUSDT.P' },
+  { sym:'DOT',    name:'Polkadot',         emoji:'●', color:'#E6007A', tv:'BYBIT:DOTUSDT.P' },
+  { sym:'MATIC',  name:'Polygon',          emoji:'⬟', color:'#8247E5', tv:'BYBIT:MATICUSDT.P' },
+  { sym:'NEAR',   name:'NEAR',             emoji:'N', color:'#00C08B', tv:'BYBIT:NEARUSDT.P' },
+  { sym:'SUI',    name:'Sui',              emoji:'S', color:'#6FBCF0', tv:'BYBIT:SUIUSDT.P' },
+  { sym:'LTC',    name:'Litecoin',         emoji:'Ł', color:'#BFBBBB', tv:'BYBIT:LTCUSDT.P' },
+  { sym:'ATOM',   name:'Cosmos',           emoji:'⚛', color:'#6F7390', tv:'BYBIT:ATOMUSDT.P' },
+  { sym:'UNI',    name:'Uniswap',          emoji:'🦄', color:'#FF007A', tv:'BYBIT:UNIUSDT.P' },
+  { sym:'AAVE',   name:'Aave',             emoji:'A', color:'#B6509E', tv:'BYBIT:AAVEUSDT.P' },
+  { sym:'TRX',    name:'TRON',             emoji:'T', color:'#EF0027', tv:'BYBIT:TRXUSDT.P' },
+  { sym:'HYPE',   name:'Hyperliquid',      emoji:'H', color:'#00E5FF', tv:'BYBIT:HYPEUSDT.P' },
+  { sym:'ZEC',    name:'Zcash',            emoji:'Z', color:'#ECB244', tv:'BYBIT:ZECUSDT.P' },
+  { sym:'XLM',    name:'Stellar',          emoji:'✦', color:'#7B68EE', tv:'BYBIT:XLMUSDT.P' },
+  { sym:'XMR',    name:'Monero',           emoji:'ɱ', color:'#FF6600', tv:'BYBIT:XMRUSDT.P' },
+  { sym:'BCH',    name:'Bitcoin Cash',     emoji:'Ƀ', color:'#8DC351', tv:'BYBIT:BCHUSDT.P' },
+  { sym:'HBAR',   name:'Hedera',           emoji:'H', color:'#00BABC', tv:'BYBIT:HBARUSDT.P' },
+  { sym:'SHIB',   name:'Shiba Inu',        emoji:'🐕', color:'#FFA409', tv:'BYBIT:SHIBUSDT.P' },
+  { sym:'CRO',    name:'Cronos',           emoji:'C', color:'#002D74', tv:'BYBIT:CROUSDT.P' },
+  { sym:'TAO',    name:'Bittensor',        emoji:'τ', color:'#808080', tv:'BYBIT:TAOUSDT.P' },
+  { sym:'ONDO',   name:'Ondo',             emoji:'O', color:'#1A6B3C', tv:'BYBIT:ONDOUSDT.P' },
+  { sym:'WLD',    name:'Worldcoin',        emoji:'W', color:'#4B9CD3', tv:'BYBIT:WLDUSDT.P' },
+  { sym:'MNT',    name:'Mantle',           emoji:'M', color:'#2E2E2E', tv:'BYBIT:MNTUSDT.P' },
+  { sym:'ICP',    name:'Internet Computer',emoji:'∞', color:'#3B00B9', tv:'BYBIT:ICPUSDT.P' },
+  { sym:'ETC',    name:'Ethereum Classic', emoji:'♦', color:'#328332', tv:'BYBIT:ETCUSDT.P' },
+  { sym:'PEPE',   name:'Pepe',             emoji:'🐸', color:'#4CAF50', tv:'BYBIT:PEPEUSDT.P' },
+  { sym:'KAS',    name:'Kaspa',            emoji:'K', color:'#49EACB', tv:'BYBIT:KASUSDT.P' },
+  { sym:'RENDER', name:'Render',           emoji:'R', color:'#FF6B35', tv:'BYBIT:RENDERUSDT.P' },
+  { sym:'QNT',    name:'Quant',            emoji:'Q', color:'#1A1A2E', tv:'BYBIT:QNTUSDT.P' },
+  { sym:'ALGO',   name:'Algorand',         emoji:'A', color:'#3A3A3A', tv:'BYBIT:ALGOUSDT.P' },
+  { sym:'JUP',    name:'Jupiter',          emoji:'J', color:'#00BFA5', tv:'BYBIT:JUPUSDT.P' },
+  { sym:'ENA',    name:'Ethena',           emoji:'E', color:'#9B59B6', tv:'BYBIT:ENAUSDT.P' },
+  { sym:'PUMP',   name:'PumpBTC',          emoji:'P', color:'#FF4500', tv:'BYBIT:PUMPUSDT.P' },
+  { sym:'FIL',    name:'Filecoin',         emoji:'⨎', color:'#0090FF', tv:'BYBIT:FILUSDT.P' },
+  { sym:'ARB',    name:'Arbitrum',         emoji:'A', color:'#12AAFF', tv:'BYBIT:ARBUSDT.P' },
+  { sym:'APT',    name:'Aptos',            emoji:'A', color:'#2DD4BF', tv:'BYBIT:APTUSDT.P' },
+  { sym:'INJ',    name:'Injective',        emoji:'I', color:'#00A3FF', tv:'BYBIT:INJUSDT.P' },
+  { sym:'CAKE',   name:'PancakeSwap',      emoji:'🥞', color:'#D1884F', tv:'BYBIT:CAKEUSDT.P' },
+  { sym:'DASH',   name:'Dash',             emoji:'D', color:'#008CE7', tv:'BYBIT:DASHUSDT.P' },
+  { sym:'VET',    name:'VeChain',          emoji:'V', color:'#15BDFF', tv:'BYBIT:VETUSDT.P' },
+  { sym:'BONK',   name:'Bonk',             emoji:'B', color:'#F97316', tv:'BYBIT:BONKUSDT.P' },
+  { sym:'JTO',    name:'Jito',             emoji:'J', color:'#1DB954', tv:'BYBIT:JTOUSDT.P' },
+  { sym:'SEI',    name:'Sei',              emoji:'S', color:'#9D4EDD', tv:'BYBIT:SEIUSDT.P' },
+  { sym:'TIA',    name:'Celestia',         emoji:'T', color:'#7B2FBE', tv:'BYBIT:TIAUSDT.P' },
+  { sym:'PYTH',   name:'Pyth',             emoji:'P', color:'#8B5CF6', tv:'BYBIT:PYTHUSDT.P' },
+  { sym:'FET',    name:'Fetch.ai',         emoji:'F', color:'#1B1B2F', tv:'BYBIT:FETUSDT.P' },
+];
 
 // ══════════════════════════════════════════════
 //  MARKET DATA STATE
@@ -1491,17 +1407,6 @@ async function generateMarketData() {
       window._gistFearGreed = json.fearGreed;
     }
 
-    // ── Rebuild COINS from coinOrder in data.json ──
-    // coinOrder is written by the bot as the authoritative ordered list
-    // (Tier 1 first, then Tier 2 sorted by turnover24h).
-    // If coinOrder is missing (old data.json), fall back to current COINS.
-    if (json.coinOrder && json.coinOrder.length > 0) {
-      COINS = json.coinOrder
-        .filter(sym => json.coins[sym]) // only include coins that actually have data
-        .map(sym => ({ sym, ...getCoinMeta(sym) }));
-      console.log(`[COINS] Active list rebuilt: ${COINS.length} coins (Tier1:${(json.tier1||[]).length} + Tier2:${(json.tier2||[]).length})`);
-    }
-
     const data = {};
     Object.entries(json.coins).forEach(([sym, d]) => {
       data[sym] = {
@@ -1511,7 +1416,6 @@ async function generateMarketData() {
         ls:       d.ls       || 1,
         oi:       d.oi       || 0,
         oiChg:    d.oiChg    || 0,
-        tier:     d.tier     || 1,
       };
     });
 
@@ -1658,10 +1562,6 @@ function renderTicker() {
 }
 
 function renderCoins() {
-  // Update section title with live coin count
-  const titleEl = document.getElementById('coins-section-title');
-  if (titleEl) titleEl.textContent = `📊 Market Overview — ${COINS.length} coins`;
-
   const html = COINS.map(c => {
     const d = marketData[c.sym];
     if (!d) return '';
