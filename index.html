@@ -514,7 +514,14 @@
   .ls-grid {
     display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
     margin-bottom: 10px;
+    max-height: 600px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
   }
+  .ls-grid::-webkit-scrollbar { width: 4px; }
+  .ls-grid::-webkit-scrollbar-track { background: transparent; }
+  .ls-grid::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
   .ls-card {
     background: var(--card);
     border: 1px solid var(--border);
@@ -1754,8 +1761,8 @@ function renderCharts() {
     document.getElementById('tv-price').style.color = d.change >= 0 ? 'var(--green)' : 'var(--red)';
   }
 
-  // L/S Ratio cards
-  const lsHTML = COINS.slice(0,8).map(c => {
+  // L/S Ratio cards — all 53 coins, scrollable grid
+  const lsHTML = COINS.map(c => {
     const d = marketData[c.sym];
     if (!d) return '';
     const longPct  = (d.ls / (d.ls+1)) * 100;
