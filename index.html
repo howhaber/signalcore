@@ -2498,11 +2498,35 @@ function renderNewsCard(ev) {
     day: 'numeric', month: 'short', year: evDate.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined,
   });
 
-  // Votes
-  const votes      = ev.vote_count || 0;
-  const positives  = ev.percent_badge_positive || 0;
-  const negatives  = Math.max(0, 100 - positives);
-  const voteColor  = positives >= 60 ? 'var(--green)' : positives >= 40 ? 'var(--amber)' : 'var(--red)';
+  // Votes — smart trust indicator
+  const votes     = ev.vote_count || 0;
+  const positives = ev.percent_badge_positive || 0;
+
+  // Build vote HTML:
+  // - 0 votes → "⚠️ No votes yet" in gray
+  // - 1-4 votes → "⚠️ Low confidence • N votes" in gray
+  // - 5+ votes, ≥60% real → "✅ X% Real • N votes" in green
+  // - 5+ votes, <60% real → "⚠️ X% Real • N votes" in amber
+  // Never show a fake % bar when votes=0 — that's misleading.
+  let voteHtml;
+  if (votes === 0) {
+    voteHtml = `<div style="font-size:11px;color:var(--muted)">⚠️ No votes yet</div>`;
+  } else if (votes < 5) {
+    voteHtml = `<div style="font-size:11px;color:var(--muted)">⚠️ Low confidence • ${votes} vote${votes > 1 ? 's' : ''}</div>`;
+  } else {
+    const isReal   = positives >= 60;
+    const col      = isReal ? 'var(--green)' : 'var(--amber)';
+    const icon     = isReal ? '✅' : '⚠️';
+    const negatives = 100 - positives;
+    voteHtml = `
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:11px;font-weight:700;color:${col}">${icon} ${positives.toFixed(0)}% Real • ${votes} votes</span>
+      </div>
+      <div style="height:4px;background:var(--surface);border-radius:2px;overflow:hidden;display:flex;margin-top:5px">
+        <div style="width:${positives}%;background:var(--green)"></div>
+        <div style="width:${negatives}%;background:var(--red);opacity:0.4"></div>
+      </div>`;
+  }
 
   // Description
   // Extract English text from CoinMarketCal's multilingual format.
@@ -2546,15 +2570,7 @@ function renderNewsCard(ev) {
     <div class="news-body">
       <div class="news-event-title">${title}</div>
       ${desc ? `<div class="news-desc">${desc}</div>` : ''}
-      <div class="news-votes">
-        <span class="news-vote-label" style="color:var(--green)">✓ ${positives.toFixed(0)}%</span>
-        <div class="news-vote-track">
-          <div class="news-vote-real" style="width:${positives}%"></div>
-          <div class="news-vote-fake" style="width:${negatives}%"></div>
-        </div>
-        <span class="news-vote-label" style="color:var(--red)">✗ ${negatives.toFixed(0)}%</span>
-        <span class="news-vote-count">(${votes} votes)</span>
-      </div>
+      <div class="news-votes">${voteHtml}</div>
     </div>
     <div class="news-footer">
       ${proofUrl ? `<a href="${proofUrl}" class="news-btn news-btn-proof" target="_blank">🔗 Proof</a>` : ''}
