@@ -2505,7 +2505,24 @@ function renderNewsCard(ev) {
   const voteColor  = positives >= 60 ? 'var(--green)' : positives >= 40 ? 'var(--amber)' : 'var(--red)';
 
   // Description
-  const desc = ev.description || ev.title || '';
+  // Extract English text from CoinMarketCal's multilingual format.
+  // API returns title/description as: string | {en:'...'} | [{en:'...'}]
+  function extractText(field) {
+    if (!field) return '';
+    if (typeof field === 'string') return field;
+    if (Array.isArray(field)) {
+      const first = field[0];
+      if (typeof first === 'string') return first;
+      return first?.en || first?.title || Object.values(first || {})[0] || '';
+    }
+    if (typeof field === 'object') {
+      return field.en || field.title || Object.values(field)[0] || '';
+    }
+    return String(field);
+  }
+
+  const title = extractText(ev.title) || 'Untitled Event';
+  const desc  = extractText(ev.description);
 
   // Proof/Source URLs
   const proofUrl  = ev.proof || '';
@@ -2527,7 +2544,7 @@ function renderNewsCard(ev) {
       <span class="news-date-badge">${dateStr}</span>
     </div>
     <div class="news-body">
-      <div class="news-event-title">${ev.title || 'Untitled Event'}</div>
+      <div class="news-event-title">${title}</div>
       ${desc ? `<div class="news-desc">${desc}</div>` : ''}
       <div class="news-votes">
         <span class="news-vote-label" style="color:var(--green)">✓ ${positives.toFixed(0)}%</span>
