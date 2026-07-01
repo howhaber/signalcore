@@ -2051,10 +2051,11 @@ function renderSqueeze() {
   html += '<div class="squeeze-mini-cards">';
   rest.forEach(c => {
     const sq     = c.sq;
-    const col    = squeezeColor(sq.score);
     const isDump = sq.dominant === 'dump';
-    // Bar color = direction only: dump=red/orange, pump=green
-    const barColor = isDump
+
+    // FIX 1: Color follows DIRECTION, not just score intensity
+    // DUMP → red scale, PUMP → green scale
+    const pctColor = isDump
       ? (sq.score < 70 ? '#ffaa00' : sq.score < 90 ? '#ff4400' : '#ff0000')
       : (sq.score < 70 ? '#00cc66' : '#00ff88');
     const barGrad = isDump
@@ -2063,19 +2064,81 @@ function renderSqueeze() {
         : 'linear-gradient(90deg,#cc0000,#ff0000)')
       : (sq.score < 70 ? 'linear-gradient(90deg,#009944,#00cc66)'
         : 'linear-gradient(90deg,#00cc66,#00ff88)');
-    html += `<div class="sq-mini">
-      <div style="width:26px;height:26px;border-radius:50%;background:${c.color}22;color:${c.color};border:1px solid ${c.color}44;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0">${c.emoji}</div>
-      <span class="sq-mini-sym">${c.sym}</span>
-      <span class="sq-mini-arrow" style="color:${isDump?'#ff4400':'#00ff88'};font-size:15px;width:20px;text-align:center">${isDump?'↓':'↑'}</span>
-      <div style="flex:1;height:8px;background:rgba(255,255,255,0.05);border-radius:4px;overflow:hidden;margin:0 4px">
-        <div style="height:100%;width:${sq.score}%;background:${barGrad};border-radius:4px;box-shadow:0 0 6px ${barColor}88;animation:bar-grow 1.2s cubic-bezier(0.4,0,0.2,1)"></div>
+
+    // FIX 2: Expandable detail panel — same info as Top 3 cards
+    const badgeCls  = isDump ? 'sq-type-badge sq-type-dump' : 'sq-type-badge sq-type-pump';
+    const badgeTxt  = isDump ? '🔴 DUMP RISK' : '🟢 PUMP RISK';
+    const detailHtml = `
+      <div id="sq-detail-${c.sym}" style="display:none;padding:8px 6px 4px;border-top:1px solid rgba(255,255,255,0.06);margin-top:6px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span class="${badgeCls}" style="font-size:10px">${badgeTxt}</span>
+        </div>
+        <div style="margin-bottom:5px">
+          <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--muted);margin-bottom:3px">
+            <span>🔴 Long Squeeze (Dump Risk)</span>
+            <span style="color:#ff4400;font-weight:700">${sq.longSqueezeRisk}%</span>
+          </div>
+          <div style="height:7px;background:var(--surface);border-radius:4px;overflow:hidden">
+            <div style="height:100%;width:${sq.longSqueezeRisk}%;background:linear-gradient(90deg,#ffaa00,#ff4400);border-radius:4px"></div>
+          </div>
+        </div>
+        <div style="margin-bottom:8px">
+          <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--muted);margin-bottom:3px">
+            <span>🟢 Short Squeeze (Pump Risk)</span>
+            <span style="color:#00ff88;font-weight:700">${sq.shortSqueezeRisk}%</span>
+          </div>
+          <div style="height:7px;background:var(--surface);border-radius:4px;overflow:hidden">
+            <div style="height:100%;width:${sq.shortSqueezeRisk}%;background:linear-gradient(90deg,#00cc66,#00ff88);border-radius:4px"></div>
+          </div>
+        </div>
+        <div style="font-size:10px;color:var(--muted);line-height:1.4">${sq.tooltip}</div>
+      </div>`;
+
+    html += `<div class="sq-mini" id="sq-row-${c.sym}" onclick="toggleSqMini('${c.sym}')" style="flex-direction:column;cursor:pointer;user-select:none">
+      <div style="display:flex;align-items:center;gap:8px;width:100%">
+        <div style="width:26px;height:26px;border-radius:50%;background:${c.color}22;color:${c.color};border:1px solid ${c.color}44;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0">${c.emoji}</div>
+        <span class="sq-mini-sym">${c.sym}</span>
+        <span style="color:${isDump?'#ff4400':'#00ff88'};font-size:15px;width:20px;text-align:center;flex-shrink:0">${isDump?'↓':'↑'}</span>
+        <div style="flex:1;height:8px;background:rgba(255,255,255,0.05);border-radius:4px;overflow:hidden;margin:0 4px">
+          <div style="height:100%;width:${sq.score}%;background:${barGrad};border-radius:4px;box-shadow:0 0 6px ${pctColor}88;animation:bar-grow 1.2s cubic-bezier(0.4,0,0.2,1)"></div>
+        </div>
+        <span style="font-size:13px;font-weight:800;width:40px;text-align:right;color:${pctColor}">${sq.score}%</span>
+        <span id="sq-chevron-${c.sym}" style="font-size:11px;color:var(--muted);flex-shrink:0;transition:transform 0.2s">▸</span>
       </div>
-      <span class="sq-mini-pct" style="color:${col}">${sq.score}%</span>
+      ${detailHtml}
     </div>`;
   });
   html += '</div>';
 
   document.getElementById('squeeze-content').innerHTML = html;
+}
+
+// Expandable squeeze mini cards — only one open at a time
+let _sqOpenSym = null;
+function toggleSqMini(sym) {
+  const detail  = document.getElementById('sq-detail-' + sym);
+  const chevron = document.getElementById('sq-chevron-' + sym);
+  if (!detail) return;
+
+  const isOpen = detail.style.display !== 'none';
+
+  // Close previously open card
+  if (_sqOpenSym && _sqOpenSym !== sym) {
+    const prevDetail  = document.getElementById('sq-detail-'  + _sqOpenSym);
+    const prevChevron = document.getElementById('sq-chevron-' + _sqOpenSym);
+    if (prevDetail)  prevDetail.style.display  = 'none';
+    if (prevChevron) prevChevron.style.transform = 'rotate(0deg)';
+  }
+
+  if (isOpen) {
+    detail.style.display = 'none';
+    chevron.style.transform = 'rotate(0deg)';
+    _sqOpenSym = null;
+  } else {
+    detail.style.display = 'block';
+    chevron.style.transform = 'rotate(90deg)';
+    _sqOpenSym = sym;
+  }
 }
 
 function renderSqueezeWidget() {
