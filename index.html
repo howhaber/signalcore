@@ -1262,7 +1262,7 @@
     </div>
     <div class="stat-card">
       <div class="stat-val" id="stat-pnl" style="color:var(--green)">--</div>
-      <div class="stat-lbl">Total P&L</div>
+      <div class="stat-lbl">Winrate</div>
     </div>
   </div>
 
@@ -1440,10 +1440,16 @@ async function generateMarketData() {
     // Store calendar data for Calendar tab
     if (json.calendar && json.calendar.length > 0) {
       window._gistCalendar = json.calendar;
-      console.log('[✅ Gist] Loaded', Object.keys(data).length, 'coins +', json.calendar.length, 'calendar events');
-    } else {
-      console.log('[✅ Gist] Loaded', Object.keys(data).length, 'coins (no calendar yet)');
     }
+
+    // Store signals for History tab
+    if (json.signals) {
+      window._signalsData = json.signals;
+    }
+
+    console.log('[✅ Gist] Loaded', Object.keys(data).length, 'coins |',
+      (json.calendar||[]).length, 'cal events |',
+      (json.signals||[]).length, 'signals');
     return data;
 
   } catch (err) {
@@ -1786,19 +1792,81 @@ function renderCharts() {
 }
 
 function renderHistory() {
-  // No real trade history data source exists yet. We do not fabricate
-  // wins/losses/P&L — show an honest empty state instead.
-  document.getElementById('stat-win').textContent  = '0';
-  document.getElementById('stat-loss').textContent = '0';
-  document.getElementById('stat-rate').textContent = '—%';
-  document.getElementById('stat-pnl').textContent  = '$0';
+  // Signals come from data.json → window._signalsData (set in generateMarketData)
+  const signals = window._signalsData || [];
 
-  document.getElementById('history-list').innerHTML =
-    `<div style="text-align:center;padding:40px 20px;color:var(--muted)">
-      <div style="font-size:32px;margin-bottom:10px">📋</div>
-      <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px">No Trade History Yet</div>
-      <div style="font-size:12px;line-height:1.5">Closed signal tracking isn't connected to a real data source yet.<br>No simulated trades will ever be shown.</div>
+  const wins   = signals.filter(s => s.status === 'WIN').length;
+  const losses = signals.filter(s => s.status === 'LOSS').length;
+  const total  = wins + losses;
+  const winrate = total > 0 ? Math.round((wins / total) * 100) : 0;
+
+  document.getElementById('stat-win').textContent  = wins;
+  document.getElementById('stat-loss').textContent = losses;
+  document.getElementById('stat-rate').textContent = total > 0 ? winrate + '%' : '—%';
+  document.getElementById('stat-pnl').textContent  = total > 0 ? winrate + '%' : '—';
+
+  if (!signals.length) {
+    document.getElementById('history-list').innerHTML =
+      `<div style="text-align:center;padding:40px 20px;color:var(--muted)">
+        <div style="font-size:32px;margin-bottom:10px">📋</div>
+        <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px">No Signals Yet</div>
+        <div style="font-size:12px;line-height:1.5">Waiting for Squeeze score > 75% with<br>confirmed FR + OI conditions.</div>
+      </div>`;
+    return;
+  }
+
+  document.getElementById('history-list').innerHTML = signals.map(s => {
+    const isBuy  = s.dir === 'BUY';
+    const isWin  = s.status === 'WIN';
+    const isLoss = s.status === 'LOSS';
+    const isOpen = s.status === 'open';
+
+    const typeCls  = isBuy ? 'buy-type' : 'sell-type';
+    const statusCls = isWin ? 'res-win' : isLoss ? 'res-loss' : 'res-open';
+    const statusTxt = isWin ? '✅ WIN' : isLoss ? '❌ LOSS' : '🔵 OPEN';
+
+    const entryTime = new Date(s.ts).toLocaleString('en-GB', {
+      day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'
+    });
+    const resolveTime = s.resolvePrice
+      ? new Date(s.resolveAt).toLocaleString('en-GB', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' })
+      : '4h after entry';
+
+    const pctStr = s.pctChange !== undefined && s.pctChange !== null
+      ? `${s.pctChange >= 0 ? '+' : ''}${s.pctChange.toFixed(2)}%`
+      : '—';
+
+    return `<div class="hist-item" style="flex-direction:column;gap:6px;align-items:stretch">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="hist-badge ${typeCls}">${s.dir}</span>
+        <div class="hist-info">
+          <div class="hist-pair">${s.sym}/USDT</div>
+          <div class="hist-meta">${entryTime}</div>
+        </div>
+        <span class="signal-result ${statusCls}" style="font-size:11px;font-weight:700;padding:3px 8px;border-radius:5px;margin-left:auto">${statusTxt}</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px">
+        <div style="background:var(--surface);border-radius:5px;padding:5px 7px">
+          <div style="font-size:9px;color:var(--muted);text-transform:uppercase">Entry</div>
+          <div style="font-size:12px;font-weight:700;color:var(--accent)">$${s.price}</div>
+        </div>
+        <div style="background:var(--surface);border-radius:5px;padding:5px 7px">
+          <div style="font-size:9px;color:var(--muted);text-transform:uppercase">Exit ${isOpen ? '(pending)' : ''}</div>
+          <div style="font-size:12px;font-weight:700;color:${isWin?'var(--green)':isLoss?'var(--red)':'var(--muted)'}">${s.resolvePrice ? '$'+s.resolvePrice : resolveTime}</div>
+        </div>
+        <div style="background:var(--surface);border-radius:5px;padding:5px 7px">
+          <div style="font-size:9px;color:var(--muted);text-transform:uppercase">Result</div>
+          <div style="font-size:12px;font-weight:700;color:${isWin?'var(--green)':isLoss?'var(--red)':'var(--muted)'}">${isOpen ? '—' : pctStr}</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <span class="sig-tag">⚡ Squeeze ${s.score}%</span>
+        <span class="sig-tag">FR ${s.fr >= 0 ? '+' : ''}${s.fr.toFixed(4)}%</span>
+        <span class="sig-tag">OI ${s.oiChg >= 0 ? '+' : ''}${s.oiChg.toFixed(2)}%</span>
+        <span class="sig-tag">L ${s.longs}%</span>
+      </div>
     </div>`;
+  }).join('');
 }
 
 // ══════════════════════════════════════════════
@@ -1920,9 +1988,12 @@ async function refreshData() {
   renderSentiment(fg, marketData);
   renderSignals(signalsData);
 
-  // Update charts if on that tab
+  // Update active tabs
   if (document.getElementById('page-charts').classList.contains('active')) {
     renderCharts();
+  }
+  if (document.getElementById('page-history').classList.contains('active')) {
+    renderHistory();
   }
 
   setTimeout(() => btn.classList.remove('spinning'), 700);
