@@ -2373,28 +2373,30 @@ async function fetchNewsEvents(forceRefresh = false) {
     }
     if (!res) throw lastErr || new Error('All proxies failed');
     const json = await res.json();
-    const body = json.body ?? json;
-    const rawEvents = Array.isArray(body) ? body : (body.events ?? []);
 
-    // Filter to our 53 coins only
+    // ── DIAGNOSTIC: log full raw response to see exact coin identifier format ──
+    console.log('[NEWS RAW] Top-level keys:', Object.keys(json));
+    const body = json.body ?? json;
+    const rawEvents = Array.isArray(body) ? body : (body.events ?? body.data ?? []);
+    console.log('[NEWS RAW] Total events from API:', rawEvents.length);
+    if (rawEvents.length > 0) {
+      console.log('[NEWS RAW] First event structure:', JSON.stringify(rawEvents[0], null, 2));
+      // Log all coin objects across first 10 events to see format
+      const sampleCoins = rawEvents.slice(0, 10).flatMap(ev => ev.coins ?? []);
+      console.log('[NEWS RAW] Sample coin objects (first 10 events):', JSON.stringify(sampleCoins, null, 2));
+    }
+
+    // NO COIN FILTER for now — show all future events to diagnose
+    const todayDate = new Date(new Date().toDateString());
     const filtered = rawEvents
-      .filter(ev => {
-        const coins = ev.coins ?? [];
-        return coins.some(c => {
-          const sym = (c.symbol || c.fullname || '').toUpperCase();
-          return NEWS_COINS_SET.has(sym);
-        });
-      })
-      .filter(ev => {
-        // Future events only (today and forward)
-        const evDate = new Date(ev.date_event || ev.created_at);
-        return evDate >= new Date(new Date().toDateString());
-      })
-      .sort((a, b) => new Date(a.date_event) - new Date(b.date_event));
+      .filter(ev => new Date(ev.date_event || ev.date || ev.created_at) >= todayDate)
+      .sort((a, b) => new Date(a.date_event || a.date) - new Date(b.date_event || b.date))
+      .slice(0, 30);
+
+    console.log('[NEWS] Events after date filter (no coin filter):', filtered.length);
 
     _newsCache     = filtered;
     _newsCacheTime = now;
-    console.log(`[NEWS] Fetched ${rawEvents.length} total → ${filtered.length} for our 53 coins`);
     return { events: filtered, fromCache: false, cacheAge: 0 };
 
   } catch(e) {
@@ -2468,15 +2470,13 @@ async function renderNews(forceRefresh = false) {
 }
 
 function renderNewsCard(ev) {
-  // Collect matching coins from our list
-  const matchedCoins = (ev.coins ?? []).filter(c => {
-    const sym = (c.symbol || c.fullname || '').toUpperCase();
-    return NEWS_COINS_SET.has(sym);
-  });
-
-  const firstCoin = matchedCoins[0] || {};
-  const sym   = (firstCoin.symbol || '').toUpperCase();
-  const cname = firstCoin.fullname || sym;
+  // Use all coins from the event (no filter during diagnostic)
+  const allCoins    = ev.coins ?? [];
+  const matchedCoins = allCoins.length > 0 ? allCoins : [];
+  const firstCoin   = matchedCoins[0] || {};
+  // Try multiple field names — we don't yet know the exact format
+  const sym   = (firstCoin.symbol || firstCoin.abbr || firstCoin.code || '').toUpperCase();
+  const cname = firstCoin.fullname || firstCoin.name || sym;
   const coinObj = COINS.find(c => c.sym === sym);
 
   const evDate = new Date(ev.date_event);
