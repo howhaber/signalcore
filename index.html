@@ -2343,9 +2343,18 @@ async function fetchNewsEvents(forceRefresh = false) {
   _newsFetching = true;
 
   try {
-    const today = new Date().toISOString().split('T')[0];
+    const today  = new Date().toISOString().split('T')[0];
     const future = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-    const targetUrl = `${CMC_API_URL}?dateRangeStart=${today}&dateRangeEnd=${future}&sortBy=date_event&page=1&max=150`;
+
+    // Exact params per CoinMarketCal docs — no extra/invalid params
+    const params = new URLSearchParams({
+      page:           '1',
+      max:            '50',
+      dateRangeStart: today,
+      dateRangeEnd:   future,
+    });
+    const targetUrl = `${CMC_API_URL}?${params.toString()}`;
+    console.log('[NEWS] Calling URL (before proxy):', targetUrl);
 
     const proxies = [
       `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`,
@@ -2356,17 +2365,21 @@ async function fetchNewsEvents(forceRefresh = false) {
     let lastErr = null;
     for (const proxyUrl of proxies) {
       try {
+        console.log('[NEWS] Trying proxy:', proxyUrl.split('?')[0]);
         res = await fetch(proxyUrl, {
           headers: {
-            'x-api-key': CMC_API_KEY,
-            'Accept': 'application/json',
+            'x-api-key':       CMC_API_KEY,
+            'Accept':          'application/json',
+            'Accept-Encoding': 'deflate',
           },
           cache: 'no-store',
         });
-        if (res.ok) break;
-        lastErr = new Error(`${res.status} from ${proxyUrl}`);
+        if (res.ok) { console.log('[NEWS] Proxy success:', proxyUrl.split('?')[0]); break; }
+        console.warn('[NEWS] Proxy failed:', res.status, proxyUrl.split('?')[0]);
+        lastErr = new Error(`HTTP ${res.status}`);
         res = null;
       } catch(e) {
+        console.warn('[NEWS] Proxy error:', e.message);
         lastErr = e;
         res = null;
       }
