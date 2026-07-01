@@ -970,30 +970,117 @@
   .cal-leg-item { display:flex; align-items:center; gap:4px; font-size:10px; font-weight:600; color:var(--muted); }
   .cal-leg-dot  { width:8px; height:8px; border-radius:50%; }
 
-  /* ─── NEWS TAB ─── */
-  .news-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; padding:0 2px; }
+  /* ─── NEWS TAB — Redesigned ─── */
+  @keyframes newsCardIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .news-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; padding:0 2px; }
   .news-title  { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; color:var(--muted); }
   .news-live   { font-size:10px; color:var(--cyan); font-weight:600; display:flex; align-items:center; gap:4px; }
-  .news-card   { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; margin-bottom:10px; transition:border-color 0.2s; }
-  .news-card:active { opacity:0.92; }
-  .news-card-header { padding:11px 13px 9px; display:flex; align-items:center; gap:10px; }
-  .news-coin-icon { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; flex-shrink:0; border:1.5px solid var(--border); }
-  .news-coin-sym  { font-size:13px; font-weight:800; }
-  .news-coin-name { font-size:10px; color:var(--muted); margin-top:1px; }
-  .news-date-badge { font-size:10px; font-weight:700; padding:3px 8px; border-radius:5px; background:rgba(6,182,212,0.12); color:var(--cyan); border:1px solid rgba(6,182,212,0.25); flex-shrink:0; }
-  .news-body  { padding:0 13px 10px; }
-  .news-event-title { font-size:13px; font-weight:700; line-height:1.35; margin-bottom:6px; color:var(--text); }
-  .news-desc  { font-size:11px; color:var(--muted); line-height:1.5; margin-bottom:10px; }
-  .news-votes { display:flex; gap:8px; align-items:center; margin-bottom:10px; }
-  .news-vote-track { flex:1; height:5px; background:var(--surface); border-radius:3px; overflow:hidden; display:flex; }
-  .news-vote-real  { height:100%; background:var(--green); }
-  .news-vote-fake  { height:100%; background:var(--red); }
-  .news-vote-label { font-size:10px; font-weight:700; }
-  .news-vote-count { font-size:10px; color:var(--muted); }
-  .news-footer { padding:8px 13px; background:var(--surface); border-top:1px solid var(--border); display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
-  .news-btn   { font-size:11px; font-weight:600; padding:4px 10px; border-radius:6px; border:1px solid var(--border); background:var(--card); color:var(--text); cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:4px; transition:all 0.15s; }
-  .news-btn-proof { border-color:rgba(6,182,212,0.4); color:var(--cyan); background:rgba(6,182,212,0.08); }
-  .news-cache-info { font-size:10px; color:var(--muted); margin-left:auto; }
+
+  /* Card container */
+  .news-card {
+    background: #1a2035;
+    border: 1px solid #2a3a5c;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    transition: border-color 0.2s;
+  }
+  .news-card:active { opacity: 0.93; }
+
+  /* Header row */
+  .news-card-header {
+    padding: 12px 14px 8px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+  .news-coin-icon {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: 800;
+    flex-shrink: 0;
+    border: 1.5px solid rgba(255,255,255,0.1);
+  }
+  .news-coin-info { flex: 1; min-width: 0; }
+  .news-coin-sym  { font-size: 13px; font-weight: 800; color: var(--text); }
+  .news-coin-name { font-size: 10px; color: var(--muted); margin-top: 1px; }
+
+  .news-header-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+
+  /* Category badge — color by type */
+  .news-cat-badge {
+    font-size: 9px; font-weight: 700;
+    padding: 2px 7px; border-radius: 4px;
+    text-transform: uppercase; letter-spacing: 0.3px;
+    color: #fff;
+  }
+
+  /* Date badge */
+  .news-date-badge {
+    font-size: 10px; font-weight: 700;
+    padding: 3px 8px; border-radius: 5px;
+    background: rgba(6,182,212,0.12); color: var(--cyan);
+    border: 1px solid rgba(6,182,212,0.25);
+    white-space: nowrap;
+  }
+
+  /* Body */
+  .news-body  { padding: 0 14px 12px; }
+  .news-event-title {
+    font-size: 14px; font-weight: 700;
+    line-height: 1.3; margin-bottom: 7px;
+    color: #ffffff;
+  }
+  .news-desc {
+    font-size: 12px; color: #aaaaaa;
+    line-height: 1.5; margin-bottom: 10px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Metrics row */
+  .news-metrics {
+    display: flex; gap: 10px; flex-wrap: wrap;
+    margin-bottom: 4px;
+  }
+  .news-metric {
+    display: flex; align-items: center; gap: 4px;
+    font-size: 11px; font-weight: 600;
+    padding: 4px 8px; border-radius: 6px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    white-space: nowrap;
+  }
+  .nm-green { color: #22c55e; }
+  .nm-yellow{ color: #eab308; }
+  .nm-red   { color: #ef4444; }
+  .nm-muted { color: #94a3b8; }
+
+  /* Footer */
+  .news-footer {
+    padding: 9px 14px;
+    background: rgba(255,255,255,0.03);
+    border-top: 1px solid #2a3a5c;
+    display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+  }
+  .news-btn {
+    font-size: 11px; font-weight: 600;
+    padding: 5px 11px; border-radius: 6px;
+    border: 1px solid #2a3a5c;
+    background: rgba(255,255,255,0.05);
+    color: var(--text); cursor: pointer;
+    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 4px;
+    transition: all 0.15s;
+  }
+  .news-btn:active { opacity: 0.7; }
+  .news-btn-proof  { border-color: rgba(6,182,212,0.4); color: var(--cyan); background: rgba(6,182,212,0.08); }
 
 
   /* ── 3D Flip Card ── */
@@ -2465,13 +2552,13 @@ async function renderNews(forceRefresh = false) {
   const nextRefresh = Math.round((NEWS_CACHE_MS - (Date.now() - _newsCacheTime)) / 60000);
 
   const html = `
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding:6px 10px;background:var(--surface);border-radius:8px;border:1px solid var(--border)">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:7px 11px;background:rgba(255,255,255,0.04);border-radius:8px;border:1px solid rgba(255,255,255,0.08)">
       <span style="font-size:10px;color:var(--muted)">${cacheLabel}</span>
-      <span style="font-size:10px;color:var(--muted)">🔄 refresh in ${nextRefresh}m</span>
-      <button onclick="renderNews(true)" style="font-size:10px;color:var(--accent);background:none;border:none;cursor:pointer;font-weight:600;padding:0">Refresh ↺</button>
+      <span style="font-size:10px;color:var(--muted)">Next: ${nextRefresh}m</span>
+      <button onclick="window._newsRawLogged=false;window._newsVoteLogged=false;renderNews(true)" style="font-size:10px;color:var(--accent);background:none;border:none;cursor:pointer;font-weight:600;padding:0">↺ Refresh</button>
     </div>
-    <div style="font-size:10px;color:var(--muted);margin-bottom:8px;padding-left:2px">${events.length} events for our coins</div>
-    ${events.map(ev => renderNewsCard(ev)).join('')}
+    <div style="font-size:10px;color:var(--muted);margin-bottom:10px;padding-left:2px">${events.length} upcoming events</div>
+    ${events.map((ev,i) => renderNewsCard(ev, i)).join('')}
   `;
 
   el.innerHTML = html;
@@ -2485,102 +2572,22 @@ async function renderNews(forceRefresh = false) {
   }, 30 * 60 * 1000);
 }
 
-function renderNewsCard(ev) {
-  // Use all coins from the event (no filter during diagnostic)
-  const allCoins    = ev.coins ?? [];
-  const matchedCoins = allCoins.length > 0 ? allCoins : [];
-  const firstCoin   = matchedCoins[0] || {};
-  // Try multiple field names — we don't yet know the exact format
-  const sym   = (firstCoin.symbol || firstCoin.abbr || firstCoin.code || '').toUpperCase();
-  const cname = firstCoin.fullname || firstCoin.name || sym;
-  const coinObj = COINS.find(c => c.sym === sym);
-
-  const evDate = new Date(ev.date_event);
-  const isToday = evDate.toDateString() === new Date().toDateString();
-  const dateStr = isToday ? 'Today' : evDate.toLocaleDateString('en-GB', {
-    day: 'numeric', month: 'short', year: evDate.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined,
-  });
-
-  // ── Vote extraction — CoinMarketCal returns votes in multiple possible structures ──
-  // Defensive lookup across all known field name variants from the API.
-  const votes = ev.vote_count
-    ?? ev.votes
-    ?? ev.total_votes
-    ?? ev.num_votes
-    ?? ev.badge_vote_count
-    ?? ev.rating?.vote_count
-    ?? 0;
-
-  const positives = ev.percent_badge_positive
-    ?? ev.percent_positive
-    ?? ev.confidence
-    ?? ev.confidence_rating
-    ?? ev.rating?.confidence
-    ?? ev.badge_confidence_count
-    ?? ev.badge?.confidence
-    ?? 0;
-
-  const influential = ev.influential
-    ?? ev.influential_score
-    ?? ev.rating?.influential
-    ?? ev.badge_influential_count
-    ?? null;
-
-  const catalyst = ev.catalyst
-    ?? ev.catalyst_score
-    ?? ev.rating?.catalyst
-    ?? ev.badge_catalyst_count
-    ?? null;
-
-  // Log first event's full vote-related fields for debugging
-  if (ev === (window._newsDebugLogged === true ? null : ev)) {
-    window._newsDebugLogged = true;
-    const voteFields = {};
-    Object.keys(ev).forEach(k => {
-      if (/vote|percent|confidence|badge|influential|catalyst|rating/i.test(k)) {
-        voteFields[k] = ev[k];
-      }
-    });
-    console.log('[NEWS VOTE FIELDS] Raw vote-related fields:', JSON.stringify(voteFields, null, 2));
+function renderNewsCard(ev, idx = 0) {
+  // ── Step 1: log FULL raw event on first render ──
+  if (!window._newsRawLogged) {
+    window._newsRawLogged = true;
+    console.log('NEWS RAW:', JSON.stringify(ev, null, 2));
   }
 
-  // Build vote HTML
-  let voteHtml;
-  if (!votes || votes === 0) {
-    voteHtml = ''; // Show nothing — no "No votes yet" warning
-  } else if (votes < 5) {
-    voteHtml = `<span style="font-size:11px;color:var(--muted)">🗳️ ${votes} vote${votes > 1 ? 's' : ''}</span>`;
-  } else {
-    const isReal    = positives >= 60;
-    const col       = isReal ? 'var(--green)' : 'var(--amber)';
-    const icon      = isReal ? '✅' : '⚠️';
-    const negatives = 100 - positives;
-    const extraScores = [
-      influential !== null ? `Influential: ${parseFloat(influential).toFixed(1)}` : '',
-      catalyst    !== null ? `Catalyst: ${parseFloat(catalyst).toFixed(1)}`    : '',
-    ].filter(Boolean).join(' • ');
-
-    voteHtml = `
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
-        <span style="font-size:11px;font-weight:700;color:${col}">${icon} ${positives.toFixed(0)}% Real • ${votes} votes</span>
-        ${extraScores ? `<span style="font-size:10px;color:var(--muted)">${extraScores}</span>` : ''}
-      </div>
-      <div style="height:4px;background:var(--surface);border-radius:2px;overflow:hidden;display:flex">
-        <div style="width:${positives}%;background:var(--green)"></div>
-        <div style="width:${negatives}%;background:var(--red);opacity:0.35"></div>
-      </div>`;
-  }
-
-  // Description
-  // Extract English text from CoinMarketCal's multilingual format.
-  // API returns title/description as: string | {en:'...'} | [{en:'...'}]
+  // ── extractText helper ──
   function extractText(field) {
     if (!field) return '';
     if (typeof field === 'string') return field;
     if (Array.isArray(field)) {
-      const first = field[0];
-      if (typeof first === 'string') return first;
-      return first?.en || first?.title || Object.values(first || {})[0] || '';
+      const f = field[0];
+      if (!f) return '';
+      if (typeof f === 'string') return f;
+      return f.en || f.title || Object.values(f)[0] || '';
     }
     if (typeof field === 'object') {
       return field.en || field.title || Object.values(field)[0] || '';
@@ -2588,37 +2595,109 @@ function renderNewsCard(ev) {
     return String(field);
   }
 
+  // ── Coin info ──
+  const allCoins  = ev.coins ?? [];
+  const firstCoin = allCoins[0] || {};
+  const sym       = (firstCoin.symbol || firstCoin.abbr || firstCoin.code || '?').toUpperCase();
+  const cname     = firstCoin.fullname || firstCoin.name || sym;
+  const coinObj   = COINS.find(c => c.sym === sym);
+  const coinColor = coinObj?.color || '#64748B';
+  const coinLetter = sym.charAt(0) || '?';
+  const extraTxt  = allCoins.length > 1 ? ` +${allCoins.length-1}` : '';
+
+  // ── Date ──
+  const evDate  = new Date(ev.date_event || ev.date || '');
+  const isToday = evDate.toDateString() === new Date().toDateString();
+  const dateStr = isToday ? 'Today' : evDate.toLocaleDateString('en-GB', {
+    day:'numeric', month:'short'
+  });
+  const dateBg  = isToday ? '#ff9800' : '#1565c0';
+
+  // ── Category ──
+  const catName = ev.category?.name || extractText(ev.category) || '';
+  const catColors = {
+    list:'#00bcd4', unlock:'#ff9800', partner:'#9c27b0',
+    burn:'#f44336', release:'#2196f3', airdrop:'#00bcd4',
+    update:'#4caf50', upgrade:'#4caf50', conference:'#ff5722', summit:'#ff5722'
+  };
+  const catColor = Object.entries(catColors).find(([k])=>catName.toLowerCase().includes(k))?.[1] || '#455a64';
+
+  // ── Title + desc ──
   const title = extractText(ev.title) || 'Untitled Event';
   const desc  = extractText(ev.description);
 
-  // Proof/Source URLs
-  const proofUrl  = ev.proof || '';
-  const sourceUrl = ev.source || '';
+  // ── Vote fields — log first event's raw fields ──
+  if (!window._newsVoteLogged) {
+    window._newsVoteLogged = true;
+    const vf = {};
+    Object.keys(ev).forEach(k => {
+      if (/vote|percent|confid|badge|influen|catalyst|rating|score/i.test(k)) vf[k] = ev[k];
+    });
+    console.log('[NEWS VOTE FIELDS]', JSON.stringify(vf, null, 2));
+  }
 
-  const coinColor  = coinObj?.color || '#64748B';
-  const coinEmoji  = coinObj?.emoji || sym.charAt(0);
-  const extraCoins = matchedCoins.length > 1
-    ? `<span style="font-size:10px;color:var(--muted);margin-left:4px">+${matchedCoins.length - 1} more</span>`
-    : '';
+  const votes      = ev.vote_count ?? ev.votes ?? ev.total_votes ?? ev.num_votes ?? ev.badge_vote_count ?? ev.rating?.vote_count ?? 0;
+  const confidence = ev.percent_badge_positive ?? ev.percent_positive ?? ev.confidence ?? ev.confidence_rating ?? ev.badge_confidence_count ?? ev.badge?.confidence ?? ev.rating?.confidence ?? 0;
+  const catalyst   = ev.catalyst ?? ev.catalyst_score ?? ev.badge_catalyst_count ?? ev.rating?.catalyst ?? ev.badge?.catalyst ?? 0;
 
-  return `<div class="news-card" style="border-color:${coinColor}33">
-    <div class="news-card-header">
-      <div class="news-coin-icon" style="background:${coinColor}22;color:${coinColor};border-color:${coinColor}44">${coinEmoji}</div>
-      <div class="news-coin-info">
-        <div class="news-coin-sym">${sym}/USDT ${extraCoins}</div>
-        <div class="news-coin-name">${cname}</div>
+  // ── Confidence bar ──
+  const confPct   = parseFloat(confidence) || 0;
+  const confColor = confPct >= 70 ? '#22c55e' : confPct >= 40 ? '#eab308' : '#ef4444';
+  const confBar   = (votes > 0 || confPct > 0) ? `
+    <div style="margin:10px 0 0">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+        <span style="font-size:11px;font-weight:700;color:${confColor}">${confPct.toFixed(0)}% Confidence${votes > 0 ? ` • ${votes} vote${votes!==1?'s':''}` : ''}</span>
+        ${catalyst > 0 ? `<span style="font-size:10px;color:#94a3b8">📈 ${parseFloat(catalyst).toFixed(1)}/10</span>` : ''}
       </div>
-      <span class="news-date-badge">${dateStr}</span>
+      <div style="height:5px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden">
+        <div style="height:100%;width:${Math.min(100,confPct)}%;background:${confColor};border-radius:3px;transition:width 0.8s ease"></div>
+      </div>
+    </div>` : '';
+
+  // ── URLs ──
+  const proofUrl  = ev.proof  || ev.proof_url  || '';
+  const sourceUrl = ev.source || ev.source_url || '';
+
+  // ── Fade-in delay per card ──
+  const delay = `${idx * 60}ms`;
+
+  return `<div style="
+      background:rgba(255,255,255,0.05);
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:14px;
+      padding:14px;
+      margin-bottom:10px;
+      animation:newsCardIn 0.4s ease both;
+      animation-delay:${delay};
+    ">
+    <!-- HEADER -->
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:11px">
+      <div style="
+        width:36px;height:36px;border-radius:50%;flex-shrink:0;
+        background:${coinColor}22;border:1.5px solid ${coinColor}66;
+        display:flex;align-items:center;justify-content:center;
+        font-size:15px;font-weight:800;color:${coinColor}">
+        ${coinObj?.emoji || coinLetter}
+      </div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:800;color:#fff;line-height:1.2">${sym}/USDT<span style="font-size:10px;color:#64748b;font-weight:400;margin-left:4px">${extraTxt}</span></div>
+        <div style="font-size:10px;color:#64748b;margin-top:1px">${cname}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:5px;flex-shrink:0">
+        ${catName ? `<span style="font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;background:${catColor};color:#fff;text-transform:uppercase;letter-spacing:0.3px">${catName}</span>` : ''}
+        <span style="font-size:10px;font-weight:700;padding:3px 9px;border-radius:5px;background:${dateBg}22;color:${dateBg};border:1px solid ${dateBg}44">${dateStr}</span>
+      </div>
     </div>
-    <div class="news-body">
-      <div class="news-event-title">${title}</div>
-      ${desc ? `<div class="news-desc">${desc}</div>` : ''}
-      <div class="news-votes">${voteHtml}</div>
-    </div>
-    <div class="news-footer">
-      ${proofUrl ? `<a href="${proofUrl}" class="news-btn news-btn-proof" target="_blank">🔗 Proof</a>` : ''}
-      ${sourceUrl ? `<a href="${sourceUrl}" class="news-btn" target="_blank">📄 Source</a>` : ''}
-      <span style="font-size:10px;color:var(--muted);margin-left:auto">${ev.category?.name || ''}</span>
+    <!-- TITLE -->
+    <div style="font-size:14px;font-weight:700;color:#ffffff;line-height:1.3;margin-bottom:${desc?'7px':'0'}">${title}</div>
+    <!-- DESC -->
+    ${desc ? `<div style="font-size:12px;color:#aaaaaa;line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">${desc}</div>` : ''}
+    <!-- CONFIDENCE BAR -->
+    ${confBar}
+    <!-- FOOTER -->
+    <div style="display:flex;gap:8px;margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.07)">
+      ${proofUrl  ? `<a href="${proofUrl}"  target="_blank" style="font-size:11px;font-weight:600;padding:5px 12px;border-radius:7px;border:1px solid rgba(6,182,212,0.4);background:rgba(6,182,212,0.08);color:#06b6d4;text-decoration:none;display:inline-flex;align-items:center;gap:4px">🔗 Proof</a>` : ''}
+      ${sourceUrl ? `<a href="${sourceUrl}" target="_blank" style="font-size:11px;font-weight:600;padding:5px 12px;border-radius:7px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);color:#cbd5e1;text-decoration:none;display:inline-flex;align-items:center;gap:4px">📄 Source</a>` : ''}
     </div>
   </div>`;
 }
