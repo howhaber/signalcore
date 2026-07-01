@@ -2408,6 +2408,9 @@ async function fetchNewsEvents(forceRefresh = false) {
 
     console.log('[NEWS] Events after date filter (no coin filter):', filtered.length);
 
+    // ── STEP 1 DEBUG: full raw JSON of all events to identify vote fields ──
+    console.log('FULL EVENT OBJECT:', JSON.stringify(filtered, null, 2));
+
     _newsCache     = filtered;
     _newsCacheTime = now;
     return { events: filtered, fromCache: false, cacheAge: 0 };
