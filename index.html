@@ -2501,33 +2501,73 @@ function renderNewsCard(ev) {
     day: 'numeric', month: 'short', year: evDate.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined,
   });
 
-  // Votes — smart trust indicator
-  const votes     = ev.vote_count || 0;
-  const positives = ev.percent_badge_positive || 0;
+  // ── Vote extraction — CoinMarketCal returns votes in multiple possible structures ──
+  // Defensive lookup across all known field name variants from the API.
+  const votes = ev.vote_count
+    ?? ev.votes
+    ?? ev.total_votes
+    ?? ev.num_votes
+    ?? ev.badge_vote_count
+    ?? ev.rating?.vote_count
+    ?? 0;
 
-  // Build vote HTML:
-  // - 0 votes → "⚠️ No votes yet" in gray
-  // - 1-4 votes → "⚠️ Low confidence • N votes" in gray
-  // - 5+ votes, ≥60% real → "✅ X% Real • N votes" in green
-  // - 5+ votes, <60% real → "⚠️ X% Real • N votes" in amber
-  // Never show a fake % bar when votes=0 — that's misleading.
+  const positives = ev.percent_badge_positive
+    ?? ev.percent_positive
+    ?? ev.confidence
+    ?? ev.confidence_rating
+    ?? ev.rating?.confidence
+    ?? ev.badge_confidence_count
+    ?? ev.badge?.confidence
+    ?? 0;
+
+  const influential = ev.influential
+    ?? ev.influential_score
+    ?? ev.rating?.influential
+    ?? ev.badge_influential_count
+    ?? null;
+
+  const catalyst = ev.catalyst
+    ?? ev.catalyst_score
+    ?? ev.rating?.catalyst
+    ?? ev.badge_catalyst_count
+    ?? null;
+
+  // Log first event's full vote-related fields for debugging
+  if (ev === (window._newsDebugLogged === true ? null : ev)) {
+    window._newsDebugLogged = true;
+    const voteFields = {};
+    Object.keys(ev).forEach(k => {
+      if (/vote|percent|confidence|badge|influential|catalyst|rating/i.test(k)) {
+        voteFields[k] = ev[k];
+      }
+    });
+    console.log('[NEWS VOTE FIELDS] Raw vote-related fields:', JSON.stringify(voteFields, null, 2));
+  }
+
+  // Build vote HTML
   let voteHtml;
-  if (votes === 0) {
-    voteHtml = `<div style="font-size:11px;color:var(--muted)">⚠️ No votes yet</div>`;
+  if (!votes || votes === 0) {
+    voteHtml = ''; // Show nothing — no "No votes yet" warning
   } else if (votes < 5) {
-    voteHtml = `<div style="font-size:11px;color:var(--muted)">⚠️ Low confidence • ${votes} vote${votes > 1 ? 's' : ''}</div>`;
+    voteHtml = `<span style="font-size:11px;color:var(--muted)">🗳️ ${votes} vote${votes > 1 ? 's' : ''}</span>`;
   } else {
-    const isReal   = positives >= 60;
-    const col      = isReal ? 'var(--green)' : 'var(--amber)';
-    const icon     = isReal ? '✅' : '⚠️';
+    const isReal    = positives >= 60;
+    const col       = isReal ? 'var(--green)' : 'var(--amber)';
+    const icon      = isReal ? '✅' : '⚠️';
     const negatives = 100 - positives;
+    const extraScores = [
+      influential !== null ? `Influential: ${parseFloat(influential).toFixed(1)}` : '',
+      catalyst    !== null ? `Catalyst: ${parseFloat(catalyst).toFixed(1)}`    : '',
+    ].filter(Boolean).join(' • ');
+
     voteHtml = `
-      <div style="display:flex;align-items:center;gap:8px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
         <span style="font-size:11px;font-weight:700;color:${col}">${icon} ${positives.toFixed(0)}% Real • ${votes} votes</span>
+        ${extraScores ? `<span style="font-size:10px;color:var(--muted)">${extraScores}</span>` : ''}
       </div>
-      <div style="height:4px;background:var(--surface);border-radius:2px;overflow:hidden;display:flex;margin-top:5px">
+      <div style="height:4px;background:var(--surface);border-radius:2px;overflow:hidden;display:flex">
         <div style="width:${positives}%;background:var(--green)"></div>
-        <div style="width:${negatives}%;background:var(--red);opacity:0.4"></div>
+        <div style="width:${negatives}%;background:var(--red);opacity:0.35"></div>
       </div>`;
   }
 
