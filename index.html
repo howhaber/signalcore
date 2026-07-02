@@ -1552,6 +1552,8 @@ async function generateMarketData() {
         ls:       d.ls       || 1,
         oi:       d.oi       || 0,
         oiChg:    d.oiChg    || 0,
+        longs:    d.longs    ?? 50,
+        shorts:   d.shorts   ?? 50,
       };
     });
 
