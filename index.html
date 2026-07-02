@@ -1763,19 +1763,62 @@ function renderFearGreed(fg) {
 }
 
 function renderSentiment(fg, data) {
-  const frAvg  = COINS.reduce((a,c)=> a+(data[c.sym]?.fr||0), 0) / COINS.length;
-  const lsAvg  = COINS.reduce((a,c)=> a+(data[c.sym]?.ls||0), 0) / COINS.length;
-  const oiAvg  = COINS.reduce((a,c)=> a+(data[c.sym]?.oiChg||0), 0) / COINS.length;
+  const frAvg = COINS.reduce((a,c) => a + (data[c.sym]?.fr || 0), 0) / COINS.length;
+  const oiAvg = COINS.reduce((a,c) => a + (data[c.sym]?.oiChg || 0), 0) / COINS.length;
 
-  // Normalize to 0-100
-  const frScore  = Math.min(100, Math.max(0, 50 - frAvg*200));
-  const lsScore  = Math.min(100, Math.max(0, (2-lsAvg)*50));
-  const oiScore  = Math.min(100, Math.max(0, 50 + oiAvg*5));
-  const total    = Math.round((frScore + lsScore + oiScore + fg.val) / 4);
+  // ── L/S Ratio score fix ──────────────────────────────────────
+  // data.json stores `ls` as a ratio (longs/shorts), e.g. 1.81 means
+  // 64.4% longs. Convert to buyRatio (0–1) = ls / (ls + 1).
+  // Alternatively use `longs` field if available (already in %).
+  //
+  // Sentiment interpretation (per spec):
+  //   buyRatio > 0.65  → too many longs → bearish signal → score 0-30
+  //   buyRatio 0.45–0.65 → neutral                       → score 40-60
+  //   buyRatio < 0.35  → too many shorts → squeeze up    → score 70-100
+  //
+  // We average buyRatio across all coins with data.
+  const lsValues = COINS
+    .map(c => {
+      const d = data[c.sym];
+      if (!d) return null;
+      // Prefer longs % field (already as %, e.g. 64.4)
+      if (d.longs > 0) return d.longs / 100;
+      // Fallback: derive from ls ratio
+      if (d.ls > 0) return d.ls / (d.ls + 1);
+      return null;
+    })
+    .filter(v => v !== null);
 
-  const scoreEl  = document.getElementById('sent-score');
-  const fillEl   = document.getElementById('sent-fill');
-  const color    = total < 30 ? '#EF4444' : total < 50 ? '#F59E0B' : total < 70 ? '#10B981' : '#059669';
+  const buyRatioAvg = lsValues.length > 0
+    ? lsValues.reduce((a, v) => a + v, 0) / lsValues.length
+    : 0.5;
+
+  // Map buyRatio to 0-100 sentiment score (inverted — more shorts = bullish)
+  let lsScore;
+  if (buyRatioAvg > 0.65) {
+    // Too many longs → bearish → 0-30
+    lsScore = Math.round(Math.max(0, 30 * (1 - (buyRatioAvg - 0.65) / 0.35)));
+  } else if (buyRatioAvg < 0.35) {
+    // Too many shorts → bullish squeeze potential → 70-100
+    lsScore = Math.round(Math.min(100, 70 + 30 * (0.35 - buyRatioAvg) / 0.35));
+  } else {
+    // Neutral zone 0.35–0.65 → 40-60
+    const mid = (buyRatioAvg - 0.35) / 0.30; // 0=bearish side, 1=bullish side
+    lsScore = Math.round(60 - mid * 20); // 0.35→60, 0.65→40
+  }
+  lsScore = Math.min(100, Math.max(0, lsScore));
+
+  // FR score: negative FR (shorts paying longs) = bullish = high score
+  const frScore = Math.min(100, Math.max(0, 50 - frAvg * 200));
+
+  // OI score: rising OI = momentum = neutral-positive
+  const oiScore = Math.min(100, Math.max(0, 50 + oiAvg * 5));
+
+  const total = Math.round((frScore + lsScore + oiScore + fg.val) / 4);
+
+  const scoreEl = document.getElementById('sent-score');
+  const fillEl  = document.getElementById('sent-fill');
+  const color   = total < 30 ? '#EF4444' : total < 50 ? '#F59E0B' : total < 70 ? '#10B981' : '#059669';
 
   scoreEl.textContent = total + '/100';
   scoreEl.style.color = color;
