@@ -1552,8 +1552,6 @@ async function generateMarketData() {
         ls:       d.ls       || 1,
         oi:       d.oi       || 0,
         oiChg:    d.oiChg    || 0,
-        longs:    d.longs    ?? 50,
-        shorts:   d.shorts   ?? 50,
       };
     });
 
@@ -1851,7 +1849,11 @@ function renderSentiment(fg, data) {
 function renderSignals(signals) {
   if (!signals.length) {
     document.getElementById('signals-list').innerHTML =
-      '<div style="text-align:center;padding:30px;color:var(--muted)">Няма активни сигнали в момента</div>';
+      `<div style="text-align:center;padding:48px 24px">
+        <div style="font-size:40px;margin-bottom:14px;filter:drop-shadow(0 0 12px #F59E0B88)">⚡</div>
+        <div style="font-size:17px;font-weight:800;color:var(--text);margin-bottom:8px;letter-spacing:-0.3px">Signals — Coming Soon</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6;max-width:240px;margin:0 auto">Real trading signals via TradingView integration — launching soon.</div>
+      </div>`;
     return;
   }
 
@@ -1981,10 +1983,10 @@ function renderHistory() {
 
   if (!signals.length) {
     document.getElementById('history-list').innerHTML =
-      `<div style="text-align:center;padding:40px 20px;color:var(--muted)">
-        <div style="font-size:32px;margin-bottom:10px">📋</div>
-        <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px">No Signals Yet</div>
-        <div style="font-size:12px;line-height:1.5">Waiting for Squeeze score > 75% with<br>confirmed FR + OI conditions.</div>
+      `<div style="text-align:center;padding:48px 24px">
+        <div style="font-size:40px;margin-bottom:14px;filter:drop-shadow(0 0 12px #8B5CF688)">📋</div>
+        <div style="font-size:17px;font-weight:800;color:var(--text);margin-bottom:8px;letter-spacing:-0.3px">History — Coming Soon</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6;max-width:240px;margin:0 auto">Full trade history and performance tracking — launching soon.</div>
       </div>`;
     return;
   }
