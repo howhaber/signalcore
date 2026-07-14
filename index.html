@@ -2583,4 +2583,758 @@ async function fetchNewsEvents(forceRefresh = false) {
       dateRangeStart: today,
       dateRangeEnd:   future,
     });
-    const targetUrl = `${CMC_API_URL}?${params.toString(
+    const targetUrl = `${CMC_API_URL}?${params.toString()}`;
+    console.log('[NEWS] Calling URL (before proxy):', targetUrl);
+
+    const proxies = [
+      `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`,
+      `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`,
+    ];
+
+    let res = null;
+    let lastErr = null;
+    for (const proxyUrl of proxies) {
+      try {
+        console.log('[NEWS] Trying proxy:', proxyUrl.split('?')[0]);
+        res = await fetch(proxyUrl, {
+          headers: {
+            'x-api-key':       CMC_API_KEY,
+            'Accept':          'application/json',
+            'Accept-Encoding': 'deflate',
+          },
+          cache: 'no-store',
+        });
+        if (res.ok) { console.log('[NEWS] Proxy success:', proxyUrl.split('?')[0]); break; }
+        console.warn('[NEWS] Proxy failed:', res.status, proxyUrl.split('?')[0]);
+        lastErr = new Error(`HTTP ${res.status}`);
+        res = null;
+      } catch(e) {
+        console.warn('[NEWS] Proxy error:', e.message);
+        lastErr = e;
+        res = null;
+      }
+    }
+    if (!res) throw lastErr || new Error('All proxies failed');
+    const json = await res.json();
+
+    // ── DIAGNOSTIC: log full raw response to see exact coin identifier format ──
+    console.log('[NEWS RAW] Top-level keys:', Object.keys(json));
+    const body = json.body ?? json;
+    const rawEvents = Array.isArray(body) ? body : (body.events ?? body.data ?? []);
+    console.log('[NEWS RAW] Total events from API:', rawEvents.length);
+    if (rawEvents.length > 0) {
+      console.log('[NEWS RAW] First event structure:', JSON.stringify(rawEvents[0], null, 2));
+      // Log all coin objects across first 10 events to see format
+      const sampleCoins = rawEvents.slice(0, 10).flatMap(ev => ev.coins ?? []);
+      console.log('[NEWS RAW] Sample coin objects (first 10 events):', JSON.stringify(sampleCoins, null, 2));
+    }
+
+    // NO COIN FILTER for now — show all future events to diagnose
+    const todayDate = new Date(new Date().toDateString());
+    const filtered = rawEvents
+      .filter(ev => new Date(ev.date_event || ev.date || ev.created_at) >= todayDate)
+      .sort((a, b) => new Date(a.date_event || a.date) - new Date(b.date_event || b.date))
+      .slice(0, 30);
+
+    console.log('[NEWS] Events after date filter (no coin filter):', filtered.length);
+
+    // ── STEP 1 DEBUG: full raw JSON of all events to identify vote fields ──
+    console.log('FULL EVENT OBJECT:', JSON.stringify(filtered, null, 2));
+
+    _newsCache     = filtered;
+    _newsCacheTime = now;
+    return { events: filtered, fromCache: false, cacheAge: 0 };
+
+  } catch(e) {
+    console.error('[NEWS ERROR]', e.message);
+    return { events: null, error: e.message, fromCache: false };
+  } finally {
+    _newsFetching = false;
+  }
+}
+
+let _newsAutoRefreshTimer = null;
+
+async function renderNews(forceRefresh = false) {
+  const el = document.getElementById('news-list');
+  if (!el) return;
+
+  // Show loading only on first load (no cache) or force refresh
+  if (!_newsCache || forceRefresh) {
+    el.innerHTML = `<div style="text-align:center;padding:40px;color:var(--muted)">
+      <div style="font-size:24px;margin-bottom:8px">📡</div>
+      <div style="font-size:12px">Fetching events from CoinMarketCal...</div>
+    </div>`;
+  }
+
+  const { events, error, fromCache, cacheAge } = await fetchNewsEvents(forceRefresh);
+
+  if (error && !events) {
+    el.innerHTML = `<div style="text-align:center;padding:40px;color:var(--muted)">
+      <div style="font-size:28px;margin-bottom:10px">⚠️</div>
+      <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px">Unable to load events</div>
+      <div style="font-size:11px">${error}</div>
+      <button onclick="renderNews(true)" style="margin-top:14px;padding:8px 18px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer">Retry</button>
+    </div>`;
+    return;
+  }
+
+  if (!events || events.length === 0) {
+    el.innerHTML = `<div style="text-align:center;padding:40px;color:var(--muted)">
+      <div style="font-size:28px;margin-bottom:10px">📭</div>
+      <div style="font-size:13px;font-weight:600;color:var(--text)">No upcoming events found</div>
+      <div style="font-size:11px;margin-top:4px">for our 53 coins in the next 90 days</div>
+    </div>`;
+    return;
+  }
+
+  // Cache status bar
+  const cacheLabel = fromCache
+    ? `⚡ Cached · ${cacheAge}m ago`
+    : `✅ Live · just fetched`;
+  const nextRefresh = Math.round((NEWS_CACHE_MS - (Date.now() - _newsCacheTime)) / 60000);
+
+  const html = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:7px 11px;background:rgba(255,255,255,0.04);border-radius:8px;border:1px solid rgba(255,255,255,0.08)">
+      <span style="font-size:10px;color:var(--muted)">${cacheLabel}</span>
+      <span style="font-size:10px;color:var(--muted)">Next: ${nextRefresh}m</span>
+      <button onclick="window._newsRawLogged=false;window._newsVoteLogged=false;renderNews(true)" style="font-size:10px;color:var(--accent);background:none;border:none;cursor:pointer;font-weight:600;padding:0">↺ Refresh</button>
+    </div>
+    <div style="font-size:10px;color:var(--muted);margin-bottom:10px;padding-left:2px">${events.length} upcoming events</div>
+    ${events.map((ev,i) => renderNewsCard(ev, i)).join('')}
+  `;
+
+  el.innerHTML = html;
+
+  // Auto-refresh every 30 min when tab is active
+  clearInterval(_newsAutoRefreshTimer);
+  _newsAutoRefreshTimer = setInterval(() => {
+    if (document.getElementById('page-news').classList.contains('active')) {
+      renderNews(false); // use cache if still fresh
+    }
+  }, 30 * 60 * 1000);
+}
+
+function renderNewsCard(ev, idx = 0) {
+  // ── Step 1: log FULL raw event on first render ──
+  if (!window._newsRawLogged) {
+    window._newsRawLogged = true;
+    console.log('NEWS RAW:', JSON.stringify(ev, null, 2));
+  }
+
+  // ── extractText helper ──
+  function extractText(field) {
+    if (!field) return '';
+    if (typeof field === 'string') return field;
+    if (Array.isArray(field)) {
+      const f = field[0];
+      if (!f) return '';
+      if (typeof f === 'string') return f;
+      return f.en || f.title || Object.values(f)[0] || '';
+    }
+    if (typeof field === 'object') {
+      return field.en || field.title || Object.values(field)[0] || '';
+    }
+    return String(field);
+  }
+
+  // ── Coin info ──
+  const allCoins  = ev.coins ?? [];
+  const firstCoin = allCoins[0] || {};
+  const sym       = (firstCoin.symbol || firstCoin.abbr || firstCoin.code || '?').toUpperCase();
+  const cname     = firstCoin.fullname || firstCoin.name || sym;
+  const coinObj   = COINS.find(c => c.sym === sym);
+  const coinColor = coinObj?.color || '#64748B';
+  const coinLetter = sym.charAt(0) || '?';
+  const extraTxt  = allCoins.length > 1 ? ` +${allCoins.length-1}` : '';
+
+  // ── Date ──
+  const evDate  = new Date(ev.date_event || ev.date || '');
+  const isToday = evDate.toDateString() === new Date().toDateString();
+  const dateStr = isToday ? 'Today' : evDate.toLocaleDateString('en-GB', {
+    day:'numeric', month:'short'
+  });
+  const dateBg  = isToday ? '#ff9800' : '#1565c0';
+
+  // ── Category ──
+  const catName = ev.category?.name || extractText(ev.category) || '';
+  const catColors = {
+    list:'#00bcd4', unlock:'#ff9800', partner:'#9c27b0',
+    burn:'#f44336', release:'#2196f3', airdrop:'#00bcd4',
+    update:'#4caf50', upgrade:'#4caf50', conference:'#ff5722', summit:'#ff5722'
+  };
+  const catColor = Object.entries(catColors).find(([k])=>catName.toLowerCase().includes(k))?.[1] || '#455a64';
+
+  // ── Title + desc ──
+  const title = extractText(ev.title) || 'Untitled Event';
+  const desc  = extractText(ev.description);
+
+  // ── Vote fields — log first event's raw fields ──
+  if (!window._newsVoteLogged) {
+    window._newsVoteLogged = true;
+    const vf = {};
+    Object.keys(ev).forEach(k => {
+      if (/vote|percent|confid|badge|influen|catalyst|rating|score/i.test(k)) vf[k] = ev[k];
+    });
+    console.log('[NEWS VOTE FIELDS]', JSON.stringify(vf, null, 2));
+  }
+
+  const votes      = ev.vote_count ?? ev.votes ?? ev.total_votes ?? ev.num_votes ?? ev.badge_vote_count ?? ev.rating?.vote_count ?? 0;
+  const confidence = ev.percent_badge_positive ?? ev.percent_positive ?? ev.confidence ?? ev.confidence_rating ?? ev.badge_confidence_count ?? ev.badge?.confidence ?? ev.rating?.confidence ?? 0;
+  const catalyst   = ev.catalyst ?? ev.catalyst_score ?? ev.badge_catalyst_count ?? ev.rating?.catalyst ?? ev.badge?.catalyst ?? 0;
+
+  // ── Confidence bar ──
+  const confPct   = parseFloat(confidence) || 0;
+  const confColor = confPct >= 70 ? '#22c55e' : confPct >= 40 ? '#eab308' : '#ef4444';
+  const confBar   = (votes > 0 || confPct > 0) ? `
+    <div style="margin:10px 0 0">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+        <span style="font-size:11px;font-weight:700;color:${confColor}">${confPct.toFixed(0)}% Confidence${votes > 0 ? ` • ${votes} vote${votes!==1?'s':''}` : ''}</span>
+        ${catalyst > 0 ? `<span style="font-size:10px;color:#94a3b8">📈 ${parseFloat(catalyst).toFixed(1)}/10</span>` : ''}
+      </div>
+      <div style="height:5px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden">
+        <div style="height:100%;width:${Math.min(100,confPct)}%;background:${confColor};border-radius:3px;transition:width 0.8s ease"></div>
+      </div>
+    </div>` : '';
+
+  // ── URLs ──
+  const proofUrl  = ev.proof  || ev.proof_url  || '';
+  const sourceUrl = ev.source || ev.source_url || '';
+
+  // ── Fade-in delay per card ──
+  const delay = `${idx * 60}ms`;
+
+  return `<div style="
+      background:rgba(255,255,255,0.05);
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:14px;
+      padding:14px;
+      margin-bottom:10px;
+      animation:newsCardIn 0.4s ease both;
+      animation-delay:${delay};
+    ">
+    <!-- HEADER -->
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:11px">
+      <div style="
+        width:36px;height:36px;border-radius:50%;flex-shrink:0;
+        background:${coinColor}22;border:1.5px solid ${coinColor}66;
+        display:flex;align-items:center;justify-content:center;
+        font-size:15px;font-weight:800;color:${coinColor}">
+        ${coinObj?.emoji || coinLetter}
+      </div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:800;color:#fff;line-height:1.2">${sym}/USDT<span style="font-size:10px;color:#64748b;font-weight:400;margin-left:4px">${extraTxt}</span></div>
+        <div style="font-size:10px;color:#64748b;margin-top:1px">${cname}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:5px;flex-shrink:0">
+        ${catName ? `<span style="font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;background:${catColor};color:#fff;text-transform:uppercase;letter-spacing:0.3px">${catName}</span>` : ''}
+        <span style="font-size:10px;font-weight:700;padding:3px 9px;border-radius:5px;background:${dateBg}22;color:${dateBg};border:1px solid ${dateBg}44">${dateStr}</span>
+      </div>
+    </div>
+    <!-- TITLE -->
+    <div style="font-size:14px;font-weight:700;color:#ffffff;line-height:1.3;margin-bottom:${desc?'7px':'0'}">${title}</div>
+    <!-- DESC -->
+    ${desc ? `<div style="font-size:12px;color:#aaaaaa;line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">${desc}</div>` : ''}
+    <!-- CONFIDENCE BAR -->
+    ${confBar}
+    <!-- FOOTER -->
+    <div style="display:flex;gap:8px;margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.07)">
+      ${proofUrl  ? `<a href="${proofUrl}"  target="_blank" style="font-size:11px;font-weight:600;padding:5px 12px;border-radius:7px;border:1px solid rgba(6,182,212,0.4);background:rgba(6,182,212,0.08);color:#06b6d4;text-decoration:none;display:inline-flex;align-items:center;gap:4px">🔗 Proof</a>` : ''}
+      ${sourceUrl ? `<a href="${sourceUrl}" target="_blank" style="font-size:11px;font-weight:600;padding:5px 12px;border-radius:7px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);color:#cbd5e1;text-decoration:none;display:inline-flex;align-items:center;gap:4px">📄 Source</a>` : ''}
+    </div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════
+//  ECONOMIC CALENDAR — ForexFactory PRIMARY (live upcoming events) +
+//  FRED historical SECONDARY (shown only when a card is tapped/flipped)
+// ══════════════════════════════════════════════
+
+const FF_CALENDAR_URL = 'https://nfs.faireconomy.media/ff_calendar_thisweek.json';
+const FF_CACHE_MS = 5 * 60 * 1000; // 5 min in-memory cache
+let _ffCache = null;
+let _ffCacheTime = 0;
+
+async function fetchForexFactoryEvents(forceRefresh = false) {
+  const now = Date.now();
+  if (!forceRefresh && _ffCache && (now - _ffCacheTime) < FF_CACHE_MS) {
+    return _ffCache;
+  }
+
+  const targetUrl = `${FF_CALENDAR_URL}?t=${now}`;
+  const attempts = [
+    targetUrl, // try direct first — ForexFactory's public feed often allows CORS
+    `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`,
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`,
+  ];
+
+  for (const url of attempts) {
+    try {
+      const res = await fetch(url, { cache: 'no-store' });
+      if (!res.ok) continue;
+      const json = await res.json();
+      if (Array.isArray(json) && json.length > 0) {
+        _ffCache = json;
+        _ffCacheTime = now;
+        console.log(`[✅ FF CALENDAR] Loaded ${json.length} events`);
+        return json;
+      }
+    } catch (e) {
+      console.warn('[FF CALENDAR] attempt failed:', url.split('?')[0], e.message);
+    }
+  }
+  console.error('[FF CALENDAR ERROR] All fetch attempts failed');
+  return _ffCache || [];
+}
+
+function renderCalendar() {
+  // PRIMARY = live ForexFactory high-impact events (fetched in switchTab).
+  // Real data only — if not loaded yet, show an honest loading state.
+  const ffEvents = window._ffEvents;
+
+  if (ffEvents && ffEvents.length > 0) {
+    renderCalendarFF(ffEvents);
+  } else {
+    document.getElementById('cal-events-list').innerHTML =
+      '<div style="text-align:center;padding:40px;color:var(--muted)">Loading live economic calendar (ForexFactory)...</div>';
+  }
+}
+
+function renderCalendarFF(rawEvents) {
+  const now = Date.now();
+  const todayStr = new Date().toDateString();
+  const startOfToday = new Date(); startOfToday.setHours(0, 0, 0, 0);
+
+  // PRIMARY view spec: upcoming HIGH impact macro events, sorted ascending
+  // by date, today's events first (naturally satisfied by ascending sort
+  // once we drop anything before today).
+  const filtered = rawEvents
+    .filter(e => e.impact === 'High')
+    .filter(e => new Date(e.date).getTime() >= startOfToday.getTime())
+    .sort((a, b) => new Date(a.date) - new Date(b.date))
+    .slice(0, 25);
+
+  Object.values(calCountdownTimers).forEach(t => clearInterval(t));
+  calCountdownTimers = {};
+
+  if (!filtered.length) {
+    document.getElementById('cal-events-list').innerHTML =
+      '<div style="text-align:center;padding:40px;color:var(--muted)">No upcoming high-impact events this week</div>';
+    return;
+  }
+
+  const col = '#ff4400'; // High impact — consistent accent color
+
+  const html = filtered.map((ev, idx) => {
+    const id = 'ff-' + idx + '-' + ev.date.replace(/[^0-9]/g, '');
+    const evDate  = new Date(ev.date);
+    const isToday = evDate.toDateString() === todayStr;
+    const diff    = evDate.getTime() - now;
+    const isPast  = diff <= 0;
+    const cd      = formatCountdown(Math.max(0, diff));
+    const notify  = notifiedEvents.has(id);
+
+    const dateStr = evDate.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })
+                  + ' · ' + evDate.toLocaleTimeString('en', { hour: '2-digit', minute: '2-digit' });
+
+    // ── Actual vs Forecast vs Previous — shown only when the ForexFactory
+    // feed actually provides a value. "Actual" is typically empty until
+    // the event releases; we never fabricate a placeholder number.
+    const hasActual   = ev.actual   !== undefined && ev.actual   !== null && ev.actual   !== '';
+    const hasForecast = ev.forecast !== undefined && ev.forecast !== null && ev.forecast !== '';
+    const hasPrevious = ev.previous !== undefined && ev.previous !== null && ev.previous !== '';
+
+    let readingRow = '';
+    if (hasActual || hasForecast || hasPrevious) {
+      readingRow = `
+        <div style="display:flex;gap:6px;margin-bottom:10px">
+          <div style="flex:1;background:rgba(0,0,0,0.25);border-radius:6px;padding:6px 4px;text-align:center">
+            <div style="font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:0.4px">Actual</div>
+            <div style="font-size:12px;font-weight:800;color:${hasActual ? 'var(--text)' : 'var(--muted)'}">${hasActual ? ev.actual : '—'}</div>
+          </div>
+          <div style="flex:1;background:rgba(0,0,0,0.25);border-radius:6px;padding:6px 4px;text-align:center">
+            <div style="font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:0.4px">Forecast</div>
+            <div style="font-size:12px;font-weight:800;color:var(--text)">${hasForecast ? ev.forecast : '—'}</div>
+          </div>
+          <div style="flex:1;background:rgba(0,0,0,0.25);border-radius:6px;padding:6px 4px;text-align:center">
+            <div style="font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:0.4px">Previous</div>
+            <div style="font-size:12px;font-weight:800;color:var(--text)">${hasPrevious ? ev.previous : '—'}</div>
+          </div>
+        </div>`;
+    }
+
+    // ── SECONDARY view (shown only on flip/tap) ──
+    // Real FRED historical BTC-reaction data if we can match this event
+    // type to a tracked FRED series; otherwise an honest "no source" card.
+    const bucket    = classifyEventBucket(ev.title);
+    const fredMatch = findFredHistoryForBucket(bucket);
+
+    let backContent;
+    if (fredMatch) {
+      const avgChange = fredMatch.hist.reduce((s, h) => s + h.btcChange, 0) / fredMatch.hist.length;
+      const avgCol    = avgChange >= 0 ? '#10B981' : '#EF4444';
+      const unitLbl   = fredMatch.calcMode === 'diffK' ? 'K jobs' : '%';
+      backContent = `
+        <div class="cal-back-name">${ev.title}</div>
+        <div style="font-size:9px;color:#00ff88;text-align:center;margin-bottom:6px">✅ Real historical data — FRED + Bybit · values in ${unitLbl}</div>
+        <div class="cal-candle-chart">${realCandleSVG(fredMatch.hist, col, fredMatch.calcMode)}</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding:0 2px">
+          <span style="font-size:10px;color:var(--muted)">Avg BTC Reaction (24h)</span>
+          <span style="font-size:13px;font-weight:800;color:${avgCol}">${avgChange >= 0 ? '+' : ''}${avgChange.toFixed(2)}%</span>
+        </div>`;
+    } else {
+      backContent = `
+        <div class="cal-back-name">${ev.title}</div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:10px 6px;gap:10px">
+          <div style="font-size:28px">📡</div>
+          <div style="font-size:13px;font-weight:800;color:var(--text)">No Historical Data Source</div>
+          <div style="font-size:11px;color:var(--muted);line-height:1.5">
+            No matching FRED series is tracked for this event type yet.
+          </div>
+          <div style="font-size:10px;color:var(--muted2);background:var(--surface);border-radius:6px;padding:6px 10px;border:1px solid var(--border)">
+            No simulated or fake data will ever be shown
+          </div>
+        </div>`;
+    }
+
+    const todayBadge = isToday
+      ? `<span style="font-size:9px;font-weight:800;letter-spacing:0.5px;padding:2px 7px;border-radius:4px;background:#ff4400;color:#fff;margin-left:6px">TODAY</span>`
+      : '';
+    const glowStyle = isToday
+      ? `box-shadow:0 0 0 1.5px ${col},0 0 24px ${col}77`
+      : `box-shadow:0 0 0 1.5px ${col},0 0 20px ${col}44`;
+
+    const countdownOrReleased = isPast
+      ? `<div style="text-align:center;padding:10px 0;font-size:12px;font-weight:800;color:${col};letter-spacing:0.4px">✅ RELEASED</div>`
+      : `<div class="cal-cd-row">
+          <div class="cal-cd-box"><div class="cal-cd-num" style="color:${col}" id="cd-d-${id}">${pad2(cd.d)}</div><div class="cal-cd-lbl">days</div></div>
+          <div class="cal-cd-box"><div class="cal-cd-num" style="color:${col}" id="cd-h-${id}">${pad2(cd.h)}</div><div class="cal-cd-lbl">hrs</div></div>
+          <div class="cal-cd-box"><div class="cal-cd-num" style="color:${col}" id="cd-m-${id}">${pad2(cd.m)}</div><div class="cal-cd-lbl">min</div></div>
+          <div class="cal-cd-box"><div class="cal-cd-num" style="color:${col}" id="cd-s-${id}">${pad2(cd.s)}</div><div class="cal-cd-lbl">sec</div></div>
+        </div>`;
+
+    return `
+    <div class="cal-flip-wrap" id="flip-wrap-${id}" style="${glowStyle}">
+      <div class="cal-flip-inner" id="flip-${id}" onclick="flipCard('${id}')">
+        <!-- FRONT — live ForexFactory data -->
+        <div class="cal-face cal-face-front">
+          <div class="cal-front-top">
+            <div class="cal-front-name">${ev.title}${todayBadge}</div>
+            <span class="cal-front-cat" style="background:rgba(255,68,0,0.15);color:${col}">🔴 HIGH · ${ev.country}</span>
+          </div>
+          <div class="cal-front-date">📅 ${dateStr}</div>
+          <div style="margin-bottom:6px"><span style="font-size:9px;color:#00ff88;background:rgba(0,255,136,0.1);padding:2px 5px;border-radius:3px;border:1px solid rgba(0,255,136,0.2)">✅ ForexFactory LIVE</span></div>
+          ${readingRow}
+          ${countdownOrReleased}
+          <div class="cal-flip-hint"><span style="font-size:14px">↩️</span> ${fredMatch ? 'Tap to see real BTC reaction' : 'Tap to flip'}</div>
+        </div>
+        <!-- BACK — SECONDARY: FRED historical (only rendered when flipped) -->
+        <div class="cal-face cal-face-back">
+          ${backContent}
+          <button class="cal-notify-btn ${notify ? 'notified' : ''}" id="notify-btn-${id}" onclick="event.stopPropagation();toggleNotify('${id}')">
+            ${notify ? '✅ Notification Set' : '🔔 Notify Me 15 min Before'}
+          </button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('cal-events-list').innerHTML = html;
+
+  filtered.forEach((ev, idx) => {
+    const id = 'ff-' + idx + '-' + ev.date.replace(/[^0-9]/g, '');
+    const evMs = new Date(ev.date).getTime();
+    calCountdownTimers[id] = setInterval(() => {
+      const diff = evMs - Date.now();
+      if (diff <= 0) { clearInterval(calCountdownTimers[id]); return; }
+      const cd = formatCountdown(diff);
+      const d = document.getElementById('cd-d-' + id);
+      const h = document.getElementById('cd-h-' + id);
+      const m = document.getElementById('cd-m-' + id);
+      const s = document.getElementById('cd-s-' + id);
+      if (d) d.textContent = pad2(cd.d);
+      if (h) h.textContent = pad2(cd.h);
+      if (m) m.textContent = pad2(cd.m);
+      if (s) s.textContent = pad2(cd.s);
+    }, 1000);
+  });
+}
+
+// ══════════════════════════════════════════════
+//  LEGACY — FRED-only calendar renderer (kept for reference / fallback;
+//  no longer called directly from switchTab, superseded by renderCalendarFF)
+// ══════════════════════════════════════════════
+function renderCalendarLegacyFred(events) {
+  const now = Date.now();
+
+  // ── Frontend dedup safety net ──
+  // The bot (gist-update.js) already dedupes by event id before writing
+  // data.json, but we dedupe again here defensively — each event.id
+  // ("fred-{seriesId}-{date}") should appear exactly once. We do NOT
+  // re-sort: the bot's CPI-priority order (CPI m/m → CPI y/y → Core CPI
+  // m/m → Core CPI y/y → other MACRO by date → CRYPTO by date) must be
+  // preserved exactly as received.
+  const seenIds = new Set();
+  const deduped = [];
+  for (const e of events) {
+    if (seenIds.has(e.id)) continue;
+    seenIds.add(e.id);
+    deduped.push(e);
+  }
+
+  const future = deduped.filter(e => new Date(e.date).getTime() > now - 3600000);
+
+  Object.values(calCountdownTimers).forEach(t => clearInterval(t));
+  calCountdownTimers = {};
+
+  function impactColor(impact) {
+    return { high:'#ff4400', med:'#ffaa00', low:'#64748B', crypto:'#8B5CF6' }[impact] || '#64748B';
+  }
+
+  // Real candlestick SVG built from actual FRED release dates + actual
+  // Bybit BTC close-price reactions. No randomness, no simulation.
+  function realCandleSVG(hist, col, calcMode) {
+    const W = 280, H = 110;
+    const n = hist.length;
+    const colW = W / n;
+    const barW = Math.max(10, Math.floor(colW * 0.45));
+    const maxV = Math.max(...hist.map(h => Math.abs(h.btcChange)), 0.5);
+    const chartTop = 18, chartH = 58;
+    const mid   = chartTop + chartH / 2;
+    const scale = (chartH / 2 - 6) / maxV;
+
+    let rects = '';
+    hist.forEach((h, i) => {
+      const cx   = colW * i + colW / 2;
+      const x    = Math.round(cx - barW / 2);
+      const isUp = h.btcChange >= 0;
+      const c    = isUp ? '#10B981' : '#EF4444';
+      const barH = Math.max(5, Math.abs(h.btcChange) * scale);
+      const y    = isUp ? mid - barH : mid;
+      const wick = Math.max(3, barH * 0.35);
+
+      rects += `<line x1="${cx}" y1="${isUp ? y-wick : y+barH}" x2="${cx}" y2="${isUp ? y : y+barH+wick}" stroke="${c}" stroke-width="1.5" opacity="0.5"/>`;
+      rects += `<rect x="${x}" y="${y}" width="${barW}" height="${barH}" rx="2" fill="${c}" opacity="0.88"/>`;
+
+      const btcLbl = (h.btcChange >= 0 ? '+' : '') + h.btcChange.toFixed(1) + '%';
+      rects += `<text x="${cx}" y="${chartTop - 4}" text-anchor="middle" font-size="10" fill="${c}" font-weight="900">${btcLbl}</text>`;
+
+      const d = new Date(h.date);
+      const dateLbl = d.toLocaleDateString('en-GB', { month:'short', year:'2-digit' });
+      const dateY = chartTop + chartH + 12;
+      rects += `<text x="${cx}" y="${dateY}" text-anchor="middle" font-size="9.5" fill="#94A3B8" font-weight="600">${dateLbl}</text>`;
+
+      // Value shown in the SAME unit as the headline reading (% or K jobs),
+      // never the raw FRED index number.
+      const unit = (calcMode === 'diffK') ? 'K' : '%';
+      const vNum = typeof h.value === 'number' ? h.value : parseFloat(h.value);
+      const valLbl = (vNum >= 0 ? '+' : '') + vNum.toFixed(unit === 'K' ? 0 : 1) + unit;
+      rects += `<text x="${cx}" y="${dateY + 12}" text-anchor="middle" font-size="9" fill="#7C88A8" font-weight="600">${valLbl}</text>`;
+    });
+
+    rects += `<line x1="0" y1="${mid}" x2="${W}" y2="${mid}" stroke="rgba(255,255,255,0.1)" stroke-width="1" stroke-dasharray="4,3"/>`;
+
+    return `<svg viewBox="0 0 ${W} ${H}" width="100%" height="110" style="overflow:visible">${rects}</svg>`;
+  }
+
+  const html = future.slice(0, 20).map(ev => {
+    const evMs   = new Date(ev.date).getTime();
+    const diff   = evMs - now;
+    const col    = impactColor(ev.impact);
+    const cd     = formatCountdown(diff);
+    const notify = notifiedEvents.has(ev.id);
+    const catLbl = ev.cat === 'MACRO' ? '🏛️ MACRO' : '₿ CRYPTO';
+    const catBg  = ev.cat === 'MACRO' ? 'rgba(255,68,0,0.15)' : 'rgba(139,92,246,0.15)';
+
+    const evDate  = new Date(ev.date);
+    const dateStr = evDate.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})
+                  + ' · ' + evDate.toLocaleTimeString('en',{hour:'2-digit',minute:'2-digit'}) + ' UTC';
+
+    const sourceTag = ev.fredId ? `<span style="font-size:9px;color:#00ff88;background:rgba(0,255,136,0.1);padding:2px 5px;border-radius:3px;border:1px solid rgba(0,255,136,0.2)">✅ FRED API</span>` : '';
+
+    // ── Actual vs Previous + real Trend indicator ──
+    // No "Forecast" column — FRED publishes no consensus forecasts, so we
+    // don't fake one. Trend is computed from the last 3 REAL published
+    // readings (rising/falling/flat), not a prediction of anything future.
+    function fmtReading(val, calcMode) {
+      if (val === null || val === undefined) return '—';
+      if (calcMode === 'diffK') return (val >= 0 ? '+' : '') + val + 'K';
+      return (val >= 0 ? '+' : '') + val.toFixed(1) + '%';
+    }
+    let readingRow = '';
+    if (ev.reading) {
+      const actualStr   = fmtReading(ev.reading.actual, ev.calcMode);
+      const previousStr = fmtReading(ev.reading.previous, ev.calcMode);
+      const actualCol   = ev.reading.actual === null ? 'var(--muted)'
+                         : ev.reading.actual >= (ev.reading.previous ?? ev.reading.actual) ? '#10B981' : '#EF4444';
+
+      const trend    = ev.reading.trend;
+      const trendCol = !trend ? 'var(--muted)'
+                      : trend.direction === 'rising'  ? '#EF4444'  // rising inflation/jobs growth = often hawkish/risk-off cue
+                      : trend.direction === 'falling' ? '#10B981'
+                      : 'var(--muted)';
+      const trendLbl = trend ? trend.label : '➡️ N/A';
+
+      readingRow = `
+        <div style="display:flex;gap:6px;margin-bottom:8px">
+          <div style="flex:1;background:rgba(0,0,0,0.25);border-radius:6px;padding:6px 8px;text-align:center">
+            <div style="font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:0.4px">Actual</div>
+            <div style="font-size:13px;font-weight:800;color:${actualCol}">${actualStr}</div>
+          </div>
+          <div style="flex:1;background:rgba(0,0,0,0.25);border-radius:6px;padding:6px 8px;text-align:center">
+            <div style="font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:0.4px">Previous</div>
+            <div style="font-size:13px;font-weight:800;color:var(--text)">${previousStr}</div>
+          </div>
+        </div>
+        <div style="background:rgba(0,0,0,0.2);border-radius:6px;padding:5px 8px;text-align:center;margin-bottom:10px">
+          <span style="font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:0.4px;margin-right:6px">Trend</span>
+          <span style="font-size:11px;font-weight:700;color:${trendCol}">${trendLbl}</span>
+        </div>`;
+    }
+
+    // Decide back-face content: real chart if we have hist[], honest
+    // "no data source" message otherwise (e.g. BTC ETF Flow, Funding Rate,
+    // Options Expiry — these have no FRED equivalent, would need CoinGlass/Bybit).
+    const hasRealHist = ev.hist && ev.hist.length > 0;
+    let backContent;
+    if (hasRealHist) {
+      const avgChange = ev.hist.reduce((s,h)=>s+h.btcChange,0) / ev.hist.length;
+      const avgCol    = avgChange >= 0 ? '#10B981' : '#EF4444';
+      const unitLbl   = ev.calcMode === 'diffK' ? 'K jobs' : '%';
+      backContent = `
+        <div class="cal-back-name">${ev.name}</div>
+        <div style="font-size:9px;color:#00ff88;text-align:center;margin-bottom:6px">✅ Real historical data — FRED + Bybit · values in ${unitLbl}</div>
+        <div class="cal-candle-chart">${realCandleSVG(ev.hist, col, ev.calcMode)}</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding:0 2px">
+          <span style="font-size:10px;color:var(--muted)">Avg BTC Reaction (24h)</span>
+          <span style="font-size:13px;font-weight:800;color:${avgCol}">${avgChange>=0?'+':''}${avgChange.toFixed(2)}%</span>
+        </div>`;
+    } else {
+      backContent = `
+        <div class="cal-back-name">${ev.name}</div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:10px 6px;gap:10px">
+          <div style="font-size:28px">📡</div>
+          <div style="font-size:13px;font-weight:800;color:var(--text)">No Historical Data Source</div>
+          <div style="font-size:11px;color:var(--muted);line-height:1.5">
+            FRED API has no series for this event type.<br>
+            Would require <span style="color:${col}">CoinGlass</span> or <span style="color:${col}">Bybit</span> historical endpoints (not yet integrated).
+          </div>
+          <div style="font-size:10px;color:var(--muted2);background:var(--surface);border-radius:6px;padding:6px 10px;border:1px solid var(--border)">
+            No simulated or fake data will ever be shown
+          </div>
+        </div>`;
+    }
+
+    return `
+    <div class="cal-flip-wrap" id="flip-wrap-${ev.id}" style="box-shadow:0 0 0 1.5px ${col},0 0 20px ${col}44">
+      <div class="cal-flip-inner" id="flip-${ev.id}" onclick="flipCard('${ev.id}')">
+        <!-- FRONT -->
+        <div class="cal-face cal-face-front">
+          <div class="cal-front-top">
+            <div class="cal-front-name">${ev.name}</div>
+            <span class="cal-front-cat" style="background:${catBg};color:${col}">${catLbl}</span>
+          </div>
+          <div class="cal-front-date">📅 ${dateStr}</div>
+          <div style="margin-bottom:6px">${sourceTag}</div>
+          ${readingRow}
+          <div class="cal-cd-row">
+            <div class="cal-cd-box"><div class="cal-cd-num" style="color:${col}" id="cd-d-${ev.id}">${pad2(cd.d)}</div><div class="cal-cd-lbl">days</div></div>
+            <div class="cal-cd-box"><div class="cal-cd-num" style="color:${col}" id="cd-h-${ev.id}">${pad2(cd.h)}</div><div class="cal-cd-lbl">hrs</div></div>
+            <div class="cal-cd-box"><div class="cal-cd-num" style="color:${col}" id="cd-m-${ev.id}">${pad2(cd.m)}</div><div class="cal-cd-lbl">min</div></div>
+            <div class="cal-cd-box"><div class="cal-cd-num" style="color:${col}" id="cd-s-${ev.id}">${pad2(cd.s)}</div><div class="cal-cd-lbl">sec</div></div>
+          </div>
+          <div class="cal-flip-hint"><span style="font-size:14px">↩️</span> ${hasRealHist ? 'Tap to see real BTC reaction' : 'Tap to flip'}</div>
+        </div>
+        <!-- BACK -->
+        <div class="cal-face cal-face-back">
+          ${backContent}
+          <button class="cal-notify-btn ${notify?'notified':''}" id="notify-btn-${ev.id}" onclick="event.stopPropagation();toggleNotify('${ev.id}')">
+            ${notify ? '✅ Notification Set' : '🔔 Notify Me 15 min Before'}
+          </button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('cal-events-list').innerHTML = html ||
+    '<div style="text-align:center;padding:40px;color:var(--muted)">No upcoming events</div>';
+
+  future.slice(0, 20).forEach(ev => {
+    const evMs = new Date(ev.date).getTime();
+    calCountdownTimers[ev.id] = setInterval(() => {
+      const diff = evMs - Date.now();
+      if (diff <= 0) { clearInterval(calCountdownTimers[ev.id]); return; }
+      const cd = formatCountdown(diff);
+      const d = document.getElementById('cd-d-'+ev.id);
+      const h = document.getElementById('cd-h-'+ev.id);
+      const m = document.getElementById('cd-m-'+ev.id);
+      const s = document.getElementById('cd-s-'+ev.id);
+      if(d) d.textContent=pad2(cd.d);
+      if(h) h.textContent=pad2(cd.h);
+      if(m) m.textContent=pad2(cd.m);
+      if(s) s.textContent=pad2(cd.s);
+    }, 1000);
+  });
+}
+
+function flipCard(id) {
+  const inner = document.getElementById('flip-'+id);
+  if (!inner) return;
+  inner.classList.toggle('flipped');
+  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+}
+
+
+function toggleNotify(id) {
+  const btn = document.getElementById('notify-btn-'+id);
+  if (!btn) return;
+  if (notifiedEvents.has(id)) {
+    notifiedEvents.delete(id);
+    btn.className = 'cal-notify-btn';
+    btn.textContent = '🔔 Notify Me 15 min Before';
+    btn.nextElementSibling?.remove();
+  } else {
+    notifiedEvents.add(id);
+    btn.className = 'cal-notify-btn notified';
+    btn.textContent = '✅ Notification Set';
+    if (!btn.nextElementSibling) {
+      const msg = document.createElement('div');
+      msg.style.cssText = 'text-align:center;font-size:10px;color:var(--green);margin-top:6px';
+      msg.textContent = 'You will be notified 15 min before this event.';
+      btn.after(msg);
+    }
+    if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+  }
+}
+
+</script>
+
+<!-- ─── CALENDAR ─── -->
+<div class="page" id="page-calendar">
+  <div class="cal-header">
+    <span class="cal-title">📅 Economic Calendar</span>
+    <div class="cal-live"><div class="squeeze-live-dot"></div>ForexFactory Live</div>
+  </div>
+  <div style="font-size:10.5px;color:var(--muted);margin-bottom:12px;line-height:1.5">
+    Showing upcoming <b style="color:#ff4400">HIGH impact</b> events, today first · Tap any card to see real historical BTC reaction (FRED + Bybit)
+  </div>
+  <div id="cal-events-list">
+    <div style="text-align:center;padding:40px;color:var(--muted)">Loading events...</div>
+  </div>
+</div>
+
+<!-- ─── NEWS ─── -->
+<div class="page" id="page-news">
+  <div class="news-header">
+    <span class="news-title">📰 Crypto Events</span>
+    <div class="news-live">
+      <div class="squeeze-live-dot"></div>CoinMarketCal
+    </div>
+  </div>
+  <div id="news-list">
+    <div style="text-align:center;padding:40px;color:var(--muted)">Loading events...</div>
+  </div>
+</div>
+
+</body>
+</html>
