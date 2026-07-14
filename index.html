@@ -2114,27 +2114,18 @@ async function switchTab(tab) {
   if (tab === 'history') renderHistory();
   if (tab === 'squeeze') renderSqueeze();
   if (tab === 'calendar') {
-    document.getElementById('cal-events-list').innerHTML =
-      '<div style="text-align:center;padding:40px;color:var(--muted)">Loading live economic calendar (ForexFactory)...</div>';
-
-    // PRIMARY — live ForexFactory high-impact events (fetched fresh every
-    // tab open, 5-min in-memory cache to avoid hammering on quick re-taps)
-    try {
-      window._ffEvents = await fetchForexFactoryEvents();
-    } catch (e) { console.error('[FF Calendar fetch]', e.message); }
-
-    // SECONDARY (background) — FRED historical data, only used when a
-    // card is flipped. Not required for the primary view to render.
+    // If calendar data not loaded yet, fetch it directly before rendering
     if (!window._gistCalendar || window._gistCalendar.length === 0) {
+      document.getElementById('cal-events-list').innerHTML =
+        '<div style="text-align:center;padding:40px;color:var(--muted)">Loading real calendar data...</div>';
       try {
         const res = await fetchWithRetry(DATA_URL, 3, 1500);
         const json = await res.json();
         if (json.calendar && json.calendar.length > 0) {
           window._gistCalendar = json.calendar;
         }
-      } catch (e) { console.error('[Calendar fetch]', e.message); }
+      } catch(e) { console.error('[Calendar fetch]', e.message); }
     }
-
     renderCalendar();
   }
   if (tab === 'news') renderNews();
@@ -2460,81 +2451,6 @@ function impactColor(impact) {
   return { high:'#ff4400', med:'#ffaa00', low:'#64748B', crypto:'#8B5CF6' }[impact] || '#64748B';
 }
 
-// Real candlestick SVG built from actual FRED release dates + actual
-// Bybit BTC close-price reactions. No randomness, no simulation.
-// (Global version — reused by both the FRED-only render and the
-// ForexFactory-primary render's flip-to-see-history back face.)
-function realCandleSVG(hist, col, calcMode) {
-  const W = 280, H = 110;
-  const n = hist.length;
-  const colW = W / n;
-  const barW = Math.max(10, Math.floor(colW * 0.45));
-  const maxV = Math.max(...hist.map(h => Math.abs(h.btcChange)), 0.5);
-  const chartTop = 18, chartH = 58;
-  const mid   = chartTop + chartH / 2;
-  const scale = (chartH / 2 - 6) / maxV;
-
-  let rects = '';
-  hist.forEach((h, i) => {
-    const cx   = colW * i + colW / 2;
-    const x    = Math.round(cx - barW / 2);
-    const isUp = h.btcChange >= 0;
-    const c    = isUp ? '#10B981' : '#EF4444';
-    const barH = Math.max(5, Math.abs(h.btcChange) * scale);
-    const y    = isUp ? mid - barH : mid;
-    const wick = Math.max(3, barH * 0.35);
-
-    rects += `<line x1="${cx}" y1="${isUp ? y-wick : y+barH}" x2="${cx}" y2="${isUp ? y : y+barH+wick}" stroke="${c}" stroke-width="1.5" opacity="0.5"/>`;
-    rects += `<rect x="${x}" y="${y}" width="${barW}" height="${barH}" rx="2" fill="${c}" opacity="0.88"/>`;
-
-    const btcLbl = (h.btcChange >= 0 ? '+' : '') + h.btcChange.toFixed(1) + '%';
-    rects += `<text x="${cx}" y="${chartTop - 4}" text-anchor="middle" font-size="10" fill="${c}" font-weight="900">${btcLbl}</text>`;
-
-    const d = new Date(h.date);
-    const dateLbl = d.toLocaleDateString('en-GB', { month:'short', year:'2-digit' });
-    const dateY = chartTop + chartH + 12;
-    rects += `<text x="${cx}" y="${dateY}" text-anchor="middle" font-size="9.5" fill="#94A3B8" font-weight="600">${dateLbl}</text>`;
-
-    const unit = (calcMode === 'diffK') ? 'K' : '%';
-    const vNum = typeof h.value === 'number' ? h.value : parseFloat(h.value);
-    const valLbl = (vNum >= 0 ? '+' : '') + vNum.toFixed(unit === 'K' ? 0 : 1) + unit;
-    rects += `<text x="${cx}" y="${dateY + 12}" text-anchor="middle" font-size="9" fill="#7C88A8" font-weight="600">${valLbl}</text>`;
-  });
-
-  rects += `<line x1="0" y1="${mid}" x2="${W}" y2="${mid}" stroke="rgba(255,255,255,0.1)" stroke-width="1" stroke-dasharray="4,3"/>`;
-
-  return `<svg viewBox="0 0 ${W} ${H}" width="100%" height="110" style="overflow:visible">${rects}</svg>`;
-}
-
-// ── Classifies an event title (from either ForexFactory or FRED) into a
-// canonical bucket, so we can match a live ForexFactory event to the
-// matching FRED historical series for the flip-to-see-history back face.
-// Keyword-based (not exact-string) because ForexFactory and FRED naming
-// differs slightly (e.g. "Core CPI m/m" vs whatever gist-update.js names it).
-function classifyEventBucket(title) {
-  const t = (title || '').toLowerCase();
-  if (t.includes('core') && t.includes('cpi') && t.includes('m/m')) return 'core_cpi_mm';
-  if (t.includes('core') && t.includes('cpi') && t.includes('y/y')) return 'core_cpi_yy';
-  if (t.includes('cpi') && !t.includes('core') && t.includes('m/m')) return 'cpi_mm';
-  if (t.includes('cpi') && !t.includes('core') && t.includes('y/y')) return 'cpi_yy';
-  if (t.includes('non-farm') || t.includes('nfp') || (t.includes('employment') && t.includes('change') && !t.includes('adp'))) return 'nfp';
-  if (t.includes('unemployment rate')) return 'unemployment_rate';
-  if ((t.includes('fed') || t.includes('fomc')) && (t.includes('rate') || t.includes('interest')) && !t.includes('speak')) return 'fed_rate';
-  if (t.includes('gdp')) return 'gdp';
-  if (t.includes('average hourly earnings')) return 'avg_hourly_earnings';
-  return null;
-}
-
-// Finds a FRED calendar event (from window._gistCalendar, which carries
-// real hist[] BTC-reaction data) whose category matches the given
-// ForexFactory event's bucket. Returns null if no real historical source
-// exists for this event type — in which case we show an honest
-// "No Historical Data Source" message, never fabricated data.
-function findFredHistoryForBucket(bucket) {
-  if (!bucket || !window._gistCalendar) return null;
-  return window._gistCalendar.find(e => classifyEventBucket(e.name) === bucket && e.hist && e.hist.length > 0) || null;
-}
-
 // ══════════════════════════════════════════════
 //  NEWS TAB — CoinMarketCal API
 // ══════════════════════════════════════════════
@@ -2845,226 +2761,21 @@ function renderNewsCard(ev, idx = 0) {
   </div>`;
 }
 
-// ══════════════════════════════════════════════
-//  ECONOMIC CALENDAR — ForexFactory PRIMARY (live upcoming events) +
-//  FRED historical SECONDARY (shown only when a card is tapped/flipped)
-// ══════════════════════════════════════════════
-
-const FF_CALENDAR_URL = 'https://nfs.faireconomy.media/ff_calendar_thisweek.json';
-const FF_CACHE_MS = 5 * 60 * 1000; // 5 min in-memory cache
-let _ffCache = null;
-let _ffCacheTime = 0;
-
-async function fetchForexFactoryEvents(forceRefresh = false) {
-  const now = Date.now();
-  if (!forceRefresh && _ffCache && (now - _ffCacheTime) < FF_CACHE_MS) {
-    return _ffCache;
-  }
-
-  const targetUrl = `${FF_CALENDAR_URL}?t=${now}`;
-  const attempts = [
-    targetUrl, // try direct first — ForexFactory's public feed often allows CORS
-    `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`,
-    `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`,
-  ];
-
-  for (const url of attempts) {
-    try {
-      const res = await fetch(url, { cache: 'no-store' });
-      if (!res.ok) continue;
-      const json = await res.json();
-      if (Array.isArray(json) && json.length > 0) {
-        _ffCache = json;
-        _ffCacheTime = now;
-        console.log(`[✅ FF CALENDAR] Loaded ${json.length} events`);
-        return json;
-      }
-    } catch (e) {
-      console.warn('[FF CALENDAR] attempt failed:', url.split('?')[0], e.message);
-    }
-  }
-  console.error('[FF CALENDAR ERROR] All fetch attempts failed');
-  return _ffCache || [];
-}
-
 function renderCalendar() {
-  // PRIMARY = live ForexFactory high-impact events (fetched in switchTab).
-  // Real data only — if not loaded yet, show an honest loading state.
-  const ffEvents = window._ffEvents;
+  // Calendar data ONLY comes from the bot's real FRED fetch (window._gistCalendar).
+  // There is no hardcoded fallback — if real data hasn't loaded yet, we show
+  // an honest loading state, never fabricated events.
+  const gistCal = window._gistCalendar;
 
-  if (ffEvents && ffEvents.length > 0) {
-    renderCalendarFF(ffEvents);
+  if (gistCal && gistCal.length > 0) {
+    renderCalendarFromGist(gistCal);
   } else {
     document.getElementById('cal-events-list').innerHTML =
-      '<div style="text-align:center;padding:40px;color:var(--muted)">Loading live economic calendar (ForexFactory)...</div>';
+      '<div style="text-align:center;padding:40px;color:var(--muted)">Loading real calendar data from FRED API...</div>';
   }
 }
 
-function renderCalendarFF(rawEvents) {
-  const now = Date.now();
-  const todayStr = new Date().toDateString();
-  const startOfToday = new Date(); startOfToday.setHours(0, 0, 0, 0);
-
-  // PRIMARY view spec: upcoming HIGH impact macro events, sorted ascending
-  // by date, today's events first (naturally satisfied by ascending sort
-  // once we drop anything before today).
-  const filtered = rawEvents
-    .filter(e => e.impact === 'High')
-    .filter(e => new Date(e.date).getTime() >= startOfToday.getTime())
-    .sort((a, b) => new Date(a.date) - new Date(b.date))
-    .slice(0, 25);
-
-  Object.values(calCountdownTimers).forEach(t => clearInterval(t));
-  calCountdownTimers = {};
-
-  if (!filtered.length) {
-    document.getElementById('cal-events-list').innerHTML =
-      '<div style="text-align:center;padding:40px;color:var(--muted)">No upcoming high-impact events this week</div>';
-    return;
-  }
-
-  const col = '#ff4400'; // High impact — consistent accent color
-
-  const html = filtered.map((ev, idx) => {
-    const id = 'ff-' + idx + '-' + ev.date.replace(/[^0-9]/g, '');
-    const evDate  = new Date(ev.date);
-    const isToday = evDate.toDateString() === todayStr;
-    const diff    = evDate.getTime() - now;
-    const isPast  = diff <= 0;
-    const cd      = formatCountdown(Math.max(0, diff));
-    const notify  = notifiedEvents.has(id);
-
-    const dateStr = evDate.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })
-                  + ' · ' + evDate.toLocaleTimeString('en', { hour: '2-digit', minute: '2-digit' });
-
-    // ── Actual vs Forecast vs Previous — shown only when the ForexFactory
-    // feed actually provides a value. "Actual" is typically empty until
-    // the event releases; we never fabricate a placeholder number.
-    const hasActual   = ev.actual   !== undefined && ev.actual   !== null && ev.actual   !== '';
-    const hasForecast = ev.forecast !== undefined && ev.forecast !== null && ev.forecast !== '';
-    const hasPrevious = ev.previous !== undefined && ev.previous !== null && ev.previous !== '';
-
-    let readingRow = '';
-    if (hasActual || hasForecast || hasPrevious) {
-      readingRow = `
-        <div style="display:flex;gap:6px;margin-bottom:10px">
-          <div style="flex:1;background:rgba(0,0,0,0.25);border-radius:6px;padding:6px 4px;text-align:center">
-            <div style="font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:0.4px">Actual</div>
-            <div style="font-size:12px;font-weight:800;color:${hasActual ? 'var(--text)' : 'var(--muted)'}">${hasActual ? ev.actual : '—'}</div>
-          </div>
-          <div style="flex:1;background:rgba(0,0,0,0.25);border-radius:6px;padding:6px 4px;text-align:center">
-            <div style="font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:0.4px">Forecast</div>
-            <div style="font-size:12px;font-weight:800;color:var(--text)">${hasForecast ? ev.forecast : '—'}</div>
-          </div>
-          <div style="flex:1;background:rgba(0,0,0,0.25);border-radius:6px;padding:6px 4px;text-align:center">
-            <div style="font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:0.4px">Previous</div>
-            <div style="font-size:12px;font-weight:800;color:var(--text)">${hasPrevious ? ev.previous : '—'}</div>
-          </div>
-        </div>`;
-    }
-
-    // ── SECONDARY view (shown only on flip/tap) ──
-    // Real FRED historical BTC-reaction data if we can match this event
-    // type to a tracked FRED series; otherwise an honest "no source" card.
-    const bucket    = classifyEventBucket(ev.title);
-    const fredMatch = findFredHistoryForBucket(bucket);
-
-    let backContent;
-    if (fredMatch) {
-      const avgChange = fredMatch.hist.reduce((s, h) => s + h.btcChange, 0) / fredMatch.hist.length;
-      const avgCol    = avgChange >= 0 ? '#10B981' : '#EF4444';
-      const unitLbl   = fredMatch.calcMode === 'diffK' ? 'K jobs' : '%';
-      backContent = `
-        <div class="cal-back-name">${ev.title}</div>
-        <div style="font-size:9px;color:#00ff88;text-align:center;margin-bottom:6px">✅ Real historical data — FRED + Bybit · values in ${unitLbl}</div>
-        <div class="cal-candle-chart">${realCandleSVG(fredMatch.hist, col, fredMatch.calcMode)}</div>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding:0 2px">
-          <span style="font-size:10px;color:var(--muted)">Avg BTC Reaction (24h)</span>
-          <span style="font-size:13px;font-weight:800;color:${avgCol}">${avgChange >= 0 ? '+' : ''}${avgChange.toFixed(2)}%</span>
-        </div>`;
-    } else {
-      backContent = `
-        <div class="cal-back-name">${ev.title}</div>
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:10px 6px;gap:10px">
-          <div style="font-size:28px">📡</div>
-          <div style="font-size:13px;font-weight:800;color:var(--text)">No Historical Data Source</div>
-          <div style="font-size:11px;color:var(--muted);line-height:1.5">
-            No matching FRED series is tracked for this event type yet.
-          </div>
-          <div style="font-size:10px;color:var(--muted2);background:var(--surface);border-radius:6px;padding:6px 10px;border:1px solid var(--border)">
-            No simulated or fake data will ever be shown
-          </div>
-        </div>`;
-    }
-
-    const todayBadge = isToday
-      ? `<span style="font-size:9px;font-weight:800;letter-spacing:0.5px;padding:2px 7px;border-radius:4px;background:#ff4400;color:#fff;margin-left:6px">TODAY</span>`
-      : '';
-    const glowStyle = isToday
-      ? `box-shadow:0 0 0 1.5px ${col},0 0 24px ${col}77`
-      : `box-shadow:0 0 0 1.5px ${col},0 0 20px ${col}44`;
-
-    const countdownOrReleased = isPast
-      ? `<div style="text-align:center;padding:10px 0;font-size:12px;font-weight:800;color:${col};letter-spacing:0.4px">✅ RELEASED</div>`
-      : `<div class="cal-cd-row">
-          <div class="cal-cd-box"><div class="cal-cd-num" style="color:${col}" id="cd-d-${id}">${pad2(cd.d)}</div><div class="cal-cd-lbl">days</div></div>
-          <div class="cal-cd-box"><div class="cal-cd-num" style="color:${col}" id="cd-h-${id}">${pad2(cd.h)}</div><div class="cal-cd-lbl">hrs</div></div>
-          <div class="cal-cd-box"><div class="cal-cd-num" style="color:${col}" id="cd-m-${id}">${pad2(cd.m)}</div><div class="cal-cd-lbl">min</div></div>
-          <div class="cal-cd-box"><div class="cal-cd-num" style="color:${col}" id="cd-s-${id}">${pad2(cd.s)}</div><div class="cal-cd-lbl">sec</div></div>
-        </div>`;
-
-    return `
-    <div class="cal-flip-wrap" id="flip-wrap-${id}" style="${glowStyle}">
-      <div class="cal-flip-inner" id="flip-${id}" onclick="flipCard('${id}')">
-        <!-- FRONT — live ForexFactory data -->
-        <div class="cal-face cal-face-front">
-          <div class="cal-front-top">
-            <div class="cal-front-name">${ev.title}${todayBadge}</div>
-            <span class="cal-front-cat" style="background:rgba(255,68,0,0.15);color:${col}">🔴 HIGH · ${ev.country}</span>
-          </div>
-          <div class="cal-front-date">📅 ${dateStr}</div>
-          <div style="margin-bottom:6px"><span style="font-size:9px;color:#00ff88;background:rgba(0,255,136,0.1);padding:2px 5px;border-radius:3px;border:1px solid rgba(0,255,136,0.2)">✅ ForexFactory LIVE</span></div>
-          ${readingRow}
-          ${countdownOrReleased}
-          <div class="cal-flip-hint"><span style="font-size:14px">↩️</span> ${fredMatch ? 'Tap to see real BTC reaction' : 'Tap to flip'}</div>
-        </div>
-        <!-- BACK — SECONDARY: FRED historical (only rendered when flipped) -->
-        <div class="cal-face cal-face-back">
-          ${backContent}
-          <button class="cal-notify-btn ${notify ? 'notified' : ''}" id="notify-btn-${id}" onclick="event.stopPropagation();toggleNotify('${id}')">
-            ${notify ? '✅ Notification Set' : '🔔 Notify Me 15 min Before'}
-          </button>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-
-  document.getElementById('cal-events-list').innerHTML = html;
-
-  filtered.forEach((ev, idx) => {
-    const id = 'ff-' + idx + '-' + ev.date.replace(/[^0-9]/g, '');
-    const evMs = new Date(ev.date).getTime();
-    calCountdownTimers[id] = setInterval(() => {
-      const diff = evMs - Date.now();
-      if (diff <= 0) { clearInterval(calCountdownTimers[id]); return; }
-      const cd = formatCountdown(diff);
-      const d = document.getElementById('cd-d-' + id);
-      const h = document.getElementById('cd-h-' + id);
-      const m = document.getElementById('cd-m-' + id);
-      const s = document.getElementById('cd-s-' + id);
-      if (d) d.textContent = pad2(cd.d);
-      if (h) h.textContent = pad2(cd.h);
-      if (m) m.textContent = pad2(cd.m);
-      if (s) s.textContent = pad2(cd.s);
-    }, 1000);
-  });
-}
-
-// ══════════════════════════════════════════════
-//  LEGACY — FRED-only calendar renderer (kept for reference / fallback;
-//  no longer called directly from switchTab, superseded by renderCalendarFF)
-// ══════════════════════════════════════════════
-function renderCalendarLegacyFred(events) {
+function renderCalendarFromGist(events) {
   const now = Date.now();
 
   // ── Frontend dedup safety net ──
@@ -3313,10 +3024,13 @@ function toggleNotify(id) {
 <div class="page" id="page-calendar">
   <div class="cal-header">
     <span class="cal-title">📅 Economic Calendar</span>
-    <div class="cal-live"><div class="squeeze-live-dot"></div>ForexFactory Live</div>
+    <div class="cal-live"><div class="squeeze-live-dot"></div>Live</div>
   </div>
-  <div style="font-size:10.5px;color:var(--muted);margin-bottom:12px;line-height:1.5">
-    Showing upcoming <b style="color:#ff4400">HIGH impact</b> events, today first · Tap any card to see real historical BTC reaction (FRED + Bybit)
+  <div class="cal-legend">
+    <div class="cal-leg-item"><div class="cal-leg-dot bg-impact-high"></div>High Impact</div>
+    <div class="cal-leg-item"><div class="cal-leg-dot bg-impact-med"></div>Medium</div>
+    <div class="cal-leg-item"><div class="cal-leg-dot bg-impact-crypto"></div>Crypto</div>
+    <div class="cal-leg-item"><div class="cal-leg-dot bg-impact-low"></div>Low</div>
   </div>
   <div id="cal-events-list">
     <div style="text-align:center;padding:40px;color:var(--muted)">Loading events...</div>
