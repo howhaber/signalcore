@@ -1,105 +1,95 @@
 {
-  "timestamp": "2026-08-22T06:30:00.078Z",
+  "timestamp": "2026-08-22T06:32:00.013Z",
   "coins": {
-    "SOL": {
-      "price": 93.77,
-      "change": 4.154100000000001,
+    "ETH": {
+      "price": 2420.96,
+      "change": 2.4853,
       "fr": 0.01,
-      "ls": 2.577817531305903,
-      "oi": 540.924078774,
-      "oiChg": -4.737311431150332,
-      "longs": 72.05,
-      "shorts": 27.950000000000003
-    },
-    "ATOM": {
-      "price": 1.602,
-      "change": 4.0259,
-      "fr": 0.01,
-      "ls": 2.467406380027739,
-      "oi": 14.9155954578,
-      "oiChg": 0.20603963327719463,
-      "longs": 71.16,
-      "shorts": 28.84
-    },
-    "AAVE": {
-      "price": 119.55,
-      "change": 19.3232,
-      "fr": 0.01,
-      "ls": 1.5926886180969664,
-      "oi": 57.905649251999996,
-      "oiChg": -2.517212072443869,
-      "longs": 61.42999999999999,
-      "shorts": 38.57
+      "ls": 1.8843380444188058,
+      "oi": 1834.8901054544,
+      "oiChg": -3.940056653079018,
+      "longs": 65.33,
+      "shorts": 34.67
     },
     "XRP": {
-      "price": 1.5547,
-      "change": 19.134,
+      "price": 1.5401,
+      "change": 18.196399999999997,
       "fr": 0.01,
       "ls": 3.0966816878328554,
-      "oi": 332.11437050967,
+      "oi": 328.99552455261,
       "oiChg": -6.36767320094975,
       "longs": 75.59,
       "shorts": 24.41
     },
-    "NEAR": {
-      "price": 1.933,
-      "change": 5.8018,
+    "BTC": {
+      "price": 77137.7,
+      "change": 2.2731000000000003,
       "fr": 0.01,
-      "ls": 2.3500837520938025,
-      "oi": 75.5282537817,
-      "oiChg": -8.677869675700443,
-      "longs": 70.15,
-      "shorts": 29.849999999999998
-    },
-    "DOGE": {
-      "price": 0.09222,
-      "change": 10.655100000000001,
-      "fr": 0.01,
-      "ls": 3.332755632582322,
-      "oi": 138.88769371794,
-      "oiChg": -6.775177846189355,
-      "longs": 76.92,
-      "shorts": 23.080000000000002
+      "ls": 1.1399529210357373,
+      "oi": 3690.8131629521,
+      "oiChg": -1.2288196140475625,
+      "longs": 53.269999999999996,
+      "shorts": 46.73
     },
     "BNB": {
-      "price": 695.6,
-      "change": 4.538600000000001,
+      "price": 694.4,
+      "change": 4.1547,
       "fr": 0.01,
       "ls": 2.374957813027337,
-      "oi": 107.764480536,
+      "oi": 107.578572864,
       "oiChg": -0.40973142014769603,
       "longs": 70.37,
       "shorts": 29.630000000000003
     },
-    "SHIB": {
-      "price": 0,
-      "change": 0,
-      "fr": 0,
-      "ls": 1,
-      "oi": 0,
-      "oiChg": 0,
-      "longs": 50,
-      "shorts": 50
-    },
-    "XMR": {
-      "price": 432.25,
-      "change": 3.6247000000000003,
-      "fr": 0.18631399999999998,
-      "ls": 1.6917900403768504,
-      "oi": 27.4352835575,
-      "oiChg": -6.203988381690005,
-      "longs": 62.849999999999994,
-      "shorts": 37.15
-    },
-    "DOT": {
-      "price": 0.9548,
-      "change": 12.4352,
+    "DOGE": {
+      "price": 0.09193,
+      "change": 10.254199999999999,
       "fr": 0.01,
-      "ls": 2.6114120621162877,
-      "oi": 18.619566735,
-      "oiChg": -3.1052282509139046,
-      "longs": 72.31,
-      "shorts": 27.689999999999998
+      "ls": 3.332755632582322,
+      "oi": 138.45093996410998,
+      "oiChg": -6.775177846189355,
+      "longs": 76.92,
+      "shorts": 23.080000000000002
+    },
+    "AVAX": {
+      "price": 7.603,
+      "change": 2.6045,
+      "fr": 0.01,
+      "ls": 2.9920159680638725,
+      "oi": 50.1548408716,
+      "oiChg": -2.5244573325925077,
+      "longs": 74.95,
+      "shorts": 25.05
+    },
+    "ADA": {
+      "price": 0.231,
+      "change": 10.5792,
+      "fr": 0.01,
+      "ls": 2.61271676300578,
+      "oi": 64.399782447,
+      "oiChg": -9.412120999987314,
+      "longs": 72.32,
+      "shorts": 27.68
+    },
+    "LINK": {
+      "price": 11.773,
+      "change": 6.6201,
+      "fr": 0.01,
+      "ls": 2.227888960619755,
+      "oi": 76.5390137544,
+      "oiChg": -5.974325792371149,
+      "longs": 69.02000000000001,
+      "shorts": 30.98
+    },
+    "UNI": {
+      "price": 4.104,
+      "change": 7.0142999999999995,
+      "fr": 0.01,
+      "ls": 2.0646644192460926,
+      "oi": 40.2917542056,
+      "oiChg": -5.776522818470886,
+      "longs": 67.36999999999999,
+      "shorts": 32.629999999999995
     },
     "MATIC": {
       "price": 0,
@@ -111,235 +101,125 @@
       "longs": 50,
       "shorts": 50
     },
-    "AVAX": {
-      "price": 7.635,
-      "change": 2.9947,
-      "fr": 0.01,
-      "ls": 2.9920159680638725,
-      "oi": 50.365935822,
-      "oiChg": -2.5244573325925077,
-      "longs": 74.95,
-      "shorts": 25.05
-    },
-    "VET": {
-      "price": 0.005931,
-      "change": 12.692300000000001,
-      "fr": 0.01,
-      "ls": 1.9299736302373274,
-      "oi": 2.9876220962099995,
-      "oiChg": -1.0460664146397882,
-      "longs": 65.86999999999999,
-      "shorts": 34.13
-    },
-    "INJ": {
-      "price": 4.905,
-      "change": 2.23,
-      "fr": 0.000728,
-      "ls": 1.954209748892171,
-      "oi": 9.386965332,
-      "oiChg": -2.9014280395575827,
-      "longs": 66.14999999999999,
-      "shorts": 33.85
-    },
-    "BONK": {
-      "price": 0,
-      "change": 0,
-      "fr": 0,
-      "ls": 1,
-      "oi": 0,
-      "oiChg": 0,
-      "longs": 50,
-      "shorts": 50
-    },
-    "QNT": {
-      "price": 64.64,
-      "change": 3.8726999999999996,
-      "fr": 0.01,
-      "ls": 1.473410833539451,
-      "oi": 1.7799806912000002,
-      "oiChg": 0.18405573115857296,
-      "longs": 59.57,
-      "shorts": 40.43
-    },
-    "WLD": {
-      "price": 0.4099,
-      "change": 10.1585,
-      "fr": 0.01,
-      "ls": 2.3112582781456954,
-      "oi": 53.21300591773999,
-      "oiChg": -6.479664131188098,
-      "longs": 69.8,
-      "shorts": 30.2
-    },
-    "SEI": {
-      "price": 0.04723,
-      "change": 6.2064,
-      "fr": 0.01,
-      "ls": 2.7383177570093458,
-      "oi": 7.81073266176,
-      "oiChg": -1.258177546831333,
-      "longs": 73.25,
-      "shorts": 26.75
-    },
-    "JUP": {
-      "price": 0.2074,
-      "change": 6.962300000000001,
-      "fr": 0.005,
-      "ls": 2.219575016097875,
-      "oi": 9.83048001,
-      "oiChg": -4.440910583902021,
-      "longs": 68.94,
-      "shorts": 31.06
-    },
-    "ENA": {
-      "price": 0.14847,
-      "change": 14.2956,
-      "fr": 0.005,
-      "ls": 1.6867275658248255,
-      "oi": 73.97796428189999,
-      "oiChg": -6.141240668104148,
-      "longs": 62.78,
-      "shorts": 37.22
-    },
-    "ETC": {
-      "price": 8.248,
-      "change": 16.4149,
-      "fr": 0.01,
-      "ls": 2.017501508750754,
-      "oi": 9.298399296,
-      "oiChg": -3.5944947153868423,
-      "longs": 66.86,
-      "shorts": 33.14
-    },
-    "ICP": {
-      "price": 2.442,
-      "change": 1.0761,
-      "fr": 0.01,
-      "ls": 2.943217665615142,
-      "oi": 13.634424460800002,
-      "oiChg": -5.246326690866034,
-      "longs": 74.64,
-      "shorts": 25.36
-    },
-    "HBAR": {
-      "price": 0.07895,
-      "change": 4.8472,
-      "fr": 0.009039,
-      "ls": 2.796507213363705,
-      "oi": 17.1402017947,
-      "oiChg": -5.411400028351922,
-      "longs": 73.66,
-      "shorts": 26.340000000000003
-    },
-    "TAO": {
-      "price": 229.75,
-      "change": 4.9037999999999995,
-      "fr": 0.005,
-      "ls": 3.336513443191674,
-      "oi": 34.859629307999995,
-      "oiChg": -9.394657703603633,
-      "longs": 76.94,
-      "shorts": 23.06
-    },
-    "PYTH": {
-      "price": 0.05122,
-      "change": 7.1323,
-      "fr": 0.005,
-      "ls": 2.779289493575208,
-      "oi": 7.371173561960001,
-      "oiChg": 0.39740798470436833,
-      "longs": 73.54,
-      "shorts": 26.46
-    },
-    "ZEC": {
-      "price": 785.58,
-      "change": 31.28,
-      "fr": 0.043082,
-      "ls": 0.8779342723004695,
-      "oi": 159.4601078736,
-      "oiChg": -4.668817658800041,
-      "longs": 46.75,
-      "shorts": 53.25
-    },
-    "TRX": {
-      "price": 0.3456,
-      "change": 2.2182,
-      "fr": 0.01,
-      "ls": 1.9868578255675031,
-      "oi": 48.5772840576,
-      "oiChg": -2.3881471984652247,
-      "longs": 66.52,
-      "shorts": 33.48
-    },
-    "CAKE": {
-      "price": 1.765,
-      "change": 5.122,
-      "fr": 0.005,
-      "ls": 1.4213075060532687,
-      "oi": 3.099656994,
-      "oiChg": -4.399867305779277,
-      "longs": 58.699999999999996,
-      "shorts": 41.3
-    },
-    "FET": {
-      "price": 0,
-      "change": 0,
-      "fr": 0,
-      "ls": 1,
-      "oi": 0,
-      "oiChg": 0,
-      "longs": 50,
-      "shorts": 50
-    },
     "LTC": {
-      "price": 51.78,
-      "change": 6.4993,
+      "price": 51.58,
+      "change": 6.0008,
       "fr": 0.01,
       "ls": 3.1135335252982306,
-      "oi": 63.119421294000006,
+      "oi": 62.875622834,
       "oiChg": -0.05246663707303783,
       "longs": 75.69,
       "shorts": 24.310000000000002
     },
-    "ETH": {
-      "price": 2427.92,
-      "change": 2.7856,
+    "SOL": {
+      "price": 93.53,
+      "change": 3.7493,
       "fr": 0.01,
-      "ls": 1.8843380444188058,
-      "oi": 1840.1652174488001,
-      "oiChg": -3.940056653079018,
-      "longs": 65.33,
-      "shorts": 34.67
+      "ls": 2.577817531305903,
+      "oi": 539.539608486,
+      "oiChg": -4.737311431150332,
+      "longs": 72.05,
+      "shorts": 27.950000000000003
     },
-    "RENDER": {
-      "price": 1.505,
-      "change": 5.9859,
+    "AAVE": {
+      "price": 119.11,
+      "change": 18.706300000000002,
+      "fr": 0.01,
+      "ls": 1.5926886180969664,
+      "oi": 57.6925293384,
+      "oiChg": -2.517212072443869,
+      "longs": 61.42999999999999,
+      "shorts": 38.57
+    },
+    "HYPE": {
+      "price": 78.88,
+      "change": 7.8627,
+      "fr": 0.01,
+      "ls": 1.5087807325639742,
+      "oi": 298.92694991679997,
+      "oiChg": -1.1528467060556922,
+      "longs": 60.14000000000001,
+      "shorts": 39.86
+    },
+    "XMR": {
+      "price": 429.78,
+      "change": 3.0178,
+      "fr": 0.18516,
+      "ls": 1.6917900403768504,
+      "oi": 27.2785105086,
+      "oiChg": -6.203988381690005,
+      "longs": 62.849999999999994,
+      "shorts": 37.15
+    },
+    "BCH": {
+      "price": 277.9,
+      "change": 11.651200000000001,
+      "fr": 0.01,
+      "ls": 1.708559046587216,
+      "oi": 37.84891008499999,
+      "oiChg": -2.5917060286209685,
+      "longs": 63.080000000000005,
+      "shorts": 36.919999999999995
+    },
+    "XLM": {
+      "price": 0.208,
+      "change": 11.767800000000001,
+      "fr": 0.01,
+      "ls": 2.2164683177870703,
+      "oi": 31.080633375999998,
+      "oiChg": -7.903409068777051,
+      "longs": 68.91000000000001,
+      "shorts": 31.09
+    },
+    "SUI": {
+      "price": 0.8408,
+      "change": 8.602400000000001,
+      "fr": 0.01,
+      "ls": 3.7014574518100614,
+      "oi": 62.279266752,
+      "oiChg": -5.312314362629529,
+      "longs": 78.73,
+      "shorts": 21.27
+    },
+    "ZEC": {
+      "price": 779.1,
+      "change": 29.7483,
+      "fr": 0.042749999999999996,
+      "ls": 0.8779342723004695,
+      "oi": 158.14477207200002,
+      "oiChg": -4.668817658800041,
+      "longs": 46.75,
+      "shorts": 53.25
+    },
+    "TAO": {
+      "price": 228.62,
+      "change": 4.2736,
       "fr": 0.005,
-      "ls": 2.0627871362940273,
-      "oi": 8.391700002,
-      "oiChg": -1.3071280437916757,
-      "longs": 67.35,
-      "shorts": 32.65
+      "ls": 3.336513443191674,
+      "oi": 34.68817607136,
+      "oiChg": -9.394657703603633,
+      "longs": 76.94,
+      "shorts": 23.06
     },
-    "PUMP": {
-      "price": 0,
-      "change": 0,
-      "fr": 0,
-      "ls": 1,
-      "oi": 0,
-      "oiChg": 0,
-      "longs": 50,
-      "shorts": 50
-    },
-    "ADA": {
-      "price": 0.2313,
-      "change": 10.9352,
+    "WLD": {
+      "price": 0.4069,
+      "change": 9.3523,
       "fr": 0.01,
-      "ls": 2.61271676300578,
-      "oi": 64.4834185281,
-      "oiChg": -9.412120999987314,
-      "longs": 72.32,
-      "shorts": 27.68
+      "ls": 2.3112582781456954,
+      "oi": 52.82354746993999,
+      "oiChg": -6.479664131188098,
+      "longs": 69.8,
+      "shorts": 30.2
+    },
+    "HBAR": {
+      "price": 0.07876,
+      "change": 4.734,
+      "fr": 0.009456,
+      "ls": 2.796507213363705,
+      "oi": 17.09895241736,
+      "oiChg": -5.411400028351922,
+      "longs": 73.66,
+      "shorts": 26.340000000000003
     },
     "PEPE": {
       "price": 0,
@@ -351,188 +231,777 @@
       "longs": 50,
       "shorts": 50
     },
-    "APT": {
-      "price": 0.6473,
-      "change": 10.3854,
+    "ATOM": {
+      "price": 1.592,
+      "change": 3.3766,
       "fr": 0.01,
-      "ls": 2.9277297721916726,
-      "oi": 17.225132966477,
-      "oiChg": -2.3542007110977394,
-      "longs": 74.53999999999999,
-      "shorts": 25.46
+      "ls": 2.467406380027739,
+      "oi": 14.822489368800001,
+      "oiChg": 0.20603963327719463,
+      "longs": 71.16,
+      "shorts": 28.84
     },
-    "LINK": {
-      "price": 11.813,
-      "change": 7.4202,
-      "fr": 0.01,
-      "ls": 2.227888960619755,
-      "oi": 76.79906306640001,
-      "oiChg": -5.974325792371149,
-      "longs": 69.02000000000001,
-      "shorts": 30.98
-    },
-    "TIA": {
-      "price": 0.3815,
-      "change": 9.532,
+    "RENDER": {
+      "price": 1.494,
+      "change": 5.2112,
       "fr": 0.005,
-      "ls": 2.4435261707988984,
-      "oi": 8.253089834499999,
-      "oiChg": 1.702834905848397,
-      "longs": 70.96000000000001,
-      "shorts": 29.04
+      "ls": 2.0627871362940273,
+      "oi": 8.3303653176,
+      "oiChg": -1.3071280437916757,
+      "longs": 67.35,
+      "shorts": 32.65
     },
     "ALGO": {
-      "price": 0.09604,
-      "change": 7.523499999999999,
+      "price": 0.09564,
+      "change": 7.195600000000001,
       "fr": 0.01,
       "ls": 2.2776138970829236,
-      "oi": 7.129950804312,
+      "oi": 7.1002550491920005,
       "oiChg": 1.0426148591865232,
       "longs": 69.49,
       "shorts": 30.509999999999998
     },
-    "UNI": {
-      "price": 4.124,
-      "change": 7.62,
-      "fr": 0.01,
-      "ls": 2.0646644192460926,
-      "oi": 40.48810778359999,
-      "oiChg": -5.776522818470886,
-      "longs": 67.36999999999999,
-      "shorts": 32.629999999999995
+    "JUP": {
+      "price": 0.2069,
+      "change": 6.7595,
+      "fr": 0.005,
+      "ls": 2.219575016097875,
+      "oi": 9.806780685,
+      "oiChg": -4.440910583902021,
+      "longs": 68.94,
+      "shorts": 31.06
     },
-    "CRO": {
-      "price": 0.06295,
-      "change": 15.2086,
-      "fr": 0.01,
-      "ls": 2.095017022593624,
-      "oi": 3.5685281073,
-      "oiChg": 2.35315707693986,
-      "longs": 67.69,
-      "shorts": 32.31
+    "PUMP": {
+      "price": 0,
+      "change": 0,
+      "fr": 0,
+      "ls": 1,
+      "oi": 0,
+      "oiChg": 0,
+      "longs": 50,
+      "shorts": 50
     },
-    "HYPE": {
-      "price": 79.05,
-      "change": 8.258000000000001,
+    "ETC": {
+      "price": 8.22,
+      "change": 15.9706,
       "fr": 0.01,
-      "ls": 1.5087807325639742,
-      "oi": 299.571189033,
-      "oiChg": -1.1528467060556922,
-      "longs": 60.14000000000001,
-      "shorts": 39.86
+      "ls": 2.017501508750754,
+      "oi": 9.266833440000001,
+      "oiChg": -3.5944947153868423,
+      "longs": 66.86,
+      "shorts": 33.14
+    },
+    "TRX": {
+      "price": 0.3453,
+      "change": 2.1597,
+      "fr": 0.01,
+      "ls": 1.9868578255675031,
+      "oi": 48.535116276299995,
+      "oiChg": -2.3881471984652247,
+      "longs": 66.52,
+      "shorts": 33.48
+    },
+    "MNT": {
+      "price": 0.4983,
+      "change": -3.5983,
+      "fr": 0.01,
+      "ls": 3.9236829148202865,
+      "oi": 30.889000852050003,
+      "oiChg": -7.997769877261991,
+      "longs": 79.69000000000001,
+      "shorts": 20.31
+    },
+    "SEI": {
+      "price": 0.04708,
+      "change": 5.7977,
+      "fr": 0.01,
+      "ls": 2.7383177570093458,
+      "oi": 7.785926184959999,
+      "oiChg": -1.258177546831333,
+      "longs": 73.25,
+      "shorts": 26.75
+    },
+    "FET": {
+      "price": 0,
+      "change": 0,
+      "fr": 0,
+      "ls": 1,
+      "oi": 0,
+      "oiChg": 0,
+      "longs": 50,
+      "shorts": 50
+    },
+    "NEAR": {
+      "price": 1.925,
+      "change": 5.3639,
+      "fr": 0.01,
+      "ls": 2.3500837520938025,
+      "oi": 75.21566918250001,
+      "oiChg": -8.677869675700443,
+      "longs": 70.15,
+      "shorts": 29.849999999999998
+    },
+    "ICP": {
+      "price": 2.432,
+      "change": 0.45430000000000004,
+      "fr": 0.01,
+      "ls": 2.943217665615142,
+      "oi": 13.578591436800002,
+      "oiChg": -5.246326690866034,
+      "longs": 74.64,
+      "shorts": 25.36
+    },
+    "SHIB": {
+      "price": 0,
+      "change": 0,
+      "fr": 0,
+      "ls": 1,
+      "oi": 0,
+      "oiChg": 0,
+      "longs": 50,
+      "shorts": 50
     },
     "JTO": {
-      "price": 0.6145,
-      "change": 6.2046,
-      "fr": -0.005009,
+      "price": 0.6131,
+      "change": 5.926,
+      "fr": -0.003576,
       "ls": 1.6824034334763949,
-      "oi": 4.1369343191,
+      "oi": 4.12750924498,
       "oiChg": -11.944653356901277,
       "longs": 62.72,
       "shorts": 37.28
     },
-    "ONDO": {
-      "price": 0.3897,
-      "change": 7.2077,
+    "TIA": {
+      "price": 0.3801,
+      "change": 9.2555,
       "fr": 0.005,
-      "ls": 4.393743257820928,
-      "oi": 39.78841247729999,
-      "oiChg": -13.835695615374973,
-      "longs": 81.46,
-      "shorts": 18.54
+      "ls": 2.4435261707988984,
+      "oi": 8.2228032663,
+      "oiChg": 1.702834905848397,
+      "longs": 70.96000000000001,
+      "shorts": 29.04
     },
-    "DASH": {
-      "price": 40.91,
-      "change": 21.2866,
+    "DOT": {
+      "price": 0.9513,
+      "change": 11.9703,
       "fr": 0.01,
-      "ls": 2.8895371450797356,
-      "oi": 6.192803205699591,
-      "oiChg": -9.71813567472177,
-      "longs": 74.29,
-      "shorts": 25.71
+      "ls": 2.6114120621162877,
+      "oi": 18.55131319125,
+      "oiChg": -3.1052282509139046,
+      "longs": 72.31,
+      "shorts": 27.689999999999998
     },
-    "ARB": {
-      "price": 0.09863,
-      "change": 7.101699999999999,
+    "CRO": {
+      "price": 0.06248,
+      "change": 14.222999999999999,
       "fr": 0.01,
-      "ls": 2.7188545927854224,
-      "oi": 17.997815338342,
-      "oiChg": -8.349417203416289,
-      "longs": 73.11,
-      "shorts": 26.889999999999997
+      "ls": 2.095017022593624,
+      "oi": 3.5418846091200002,
+      "oiChg": 2.35315707693986,
+      "longs": 67.69,
+      "shorts": 32.31
     },
     "KAS": {
-      "price": 0.03069,
-      "change": 5.7181999999999995,
+      "price": 0.03057,
+      "change": 5.3411,
       "fr": 0.005,
       "ls": 2.5511363636363638,
-      "oi": 5.7484972512,
+      "oi": 5.7260202336,
       "oiChg": -2.5278895256466236,
       "longs": 71.84,
       "shorts": 28.16
     },
     "FIL": {
-      "price": 0.7844,
-      "change": 3.9353,
+      "price": 0.7804,
+      "change": 3.3916000000000004,
       "fr": 0.01,
       "ls": 2.343363423604146,
-      "oi": 10.61545557168,
+      "oi": 10.561322702879998,
       "oiChg": 3.3042612037581387,
       "longs": 70.09,
       "shorts": 29.909999999999997
     },
-    "BTC": {
-      "price": 77208,
-      "change": 2.5218000000000003,
-      "fr": 0.01,
-      "ls": 1.1399529210357373,
-      "oi": 3694.1768121839996,
-      "oiChg": -1.2288196140475625,
-      "longs": 53.269999999999996,
-      "shorts": 46.73
+    "ONDO": {
+      "price": 0.3876,
+      "change": 6.600599999999999,
+      "fr": 0.005,
+      "ls": 4.393743257820928,
+      "oi": 39.5740022484,
+      "oiChg": -13.835695615374973,
+      "longs": 81.46,
+      "shorts": 18.54
     },
-    "SUI": {
-      "price": 0.8448,
-      "change": 9.3309,
+    "VET": {
+      "price": 0.005925,
+      "change": 12.7497,
       "fr": 0.01,
-      "ls": 3.7014574518100614,
-      "oi": 62.575552512,
-      "oiChg": -5.312314362629529,
-      "longs": 78.73,
-      "shorts": 21.27
+      "ls": 1.9299736302373274,
+      "oi": 2.9845997167499996,
+      "oiChg": -1.0460664146397882,
+      "longs": 65.86999999999999,
+      "shorts": 34.13
     },
-    "MNT": {
-      "price": 0.497,
-      "change": -3.6821,
-      "fr": 0.01,
-      "ls": 3.9236829148202865,
-      "oi": 30.8084154595,
-      "oiChg": -7.997769877261991,
-      "longs": 79.69000000000001,
-      "shorts": 20.31
+    "PYTH": {
+      "price": 0.05053,
+      "change": 5.073799999999999,
+      "fr": 0.005,
+      "ls": 2.779289493575208,
+      "oi": 7.27187426954,
+      "oiChg": 0.39740798470436833,
+      "longs": 73.54,
+      "shorts": 26.46
     },
-    "XLM": {
-      "price": 0.2087,
-      "change": 12.144,
+    "QNT": {
+      "price": 64.37,
+      "change": 3.5886,
       "fr": 0.01,
-      "ls": 2.2164683177870703,
-      "oi": 31.185231661399996,
-      "oiChg": -7.903409068777051,
-      "longs": 68.91000000000001,
-      "shorts": 31.09
+      "ls": 1.473410833539451,
+      "oi": 1.7725457471000003,
+      "oiChg": 0.18405573115857296,
+      "longs": 59.57,
+      "shorts": 40.43
     },
-    "BCH": {
-      "price": 279.1,
-      "change": 12.6311,
+    "ENA": {
+      "price": 0.14851,
+      "change": 14.9636,
+      "fr": 0.005,
+      "ls": 1.6867275658248255,
+      "oi": 73.9978950327,
+      "oiChg": -6.141240668104148,
+      "longs": 62.78,
+      "shorts": 37.22
+    },
+    "APT": {
+      "price": 0.6453,
+      "change": 10.0068,
       "fr": 0.01,
-      "ls": 1.708559046587216,
-      "oi": 38.012345465,
-      "oiChg": -2.5917060286209685,
-      "longs": 63.080000000000005,
-      "shorts": 36.919999999999995
+      "ls": 2.9277297721916726,
+      "oi": 17.171911483497,
+      "oiChg": -2.3542007110977394,
+      "longs": 74.53999999999999,
+      "shorts": 25.46
+    },
+    "ARB": {
+      "price": 0.09852,
+      "change": 6.9126,
+      "fr": 0.01,
+      "ls": 2.7188545927854224,
+      "oi": 17.977742746968,
+      "oiChg": -8.349417203416289,
+      "longs": 73.11,
+      "shorts": 26.889999999999997
+    },
+    "CAKE": {
+      "price": 1.76,
+      "change": 4.6373,
+      "fr": 0.005,
+      "ls": 1.4213075060532687,
+      "oi": 3.0908760960000006,
+      "oiChg": -4.399867305779277,
+      "longs": 58.699999999999996,
+      "shorts": 41.3
+    },
+    "INJ": {
+      "price": 4.888,
+      "change": 1.7909000000000002,
+      "fr": 0.000401,
+      "ls": 1.954209748892171,
+      "oi": 9.3544315072,
+      "oiChg": -2.9014280395575827,
+      "longs": 66.14999999999999,
+      "shorts": 33.85
+    },
+    "DASH": {
+      "price": 40.74,
+      "change": 20.639599999999998,
+      "fr": 0.01,
+      "ls": 2.8895371450797356,
+      "oi": 6.167069239799593,
+      "oiChg": -9.71813567472177,
+      "longs": 74.29,
+      "shorts": 25.71
+    },
+    "BONK": {
+      "price": 0,
+      "change": 0,
+      "fr": 0,
+      "ls": 1,
+      "oi": 0,
+      "oiChg": 0,
+      "longs": 50,
+      "shorts": 50
     }
   },
-  "calendar": [],
+  "calendar": [
+    {
+      "id": "fred-CPIAUCSL-2026-09-11",
+      "name": "US CPI m/m",
+      "cat": "MACRO",
+      "impact": "high",
+      "date": "2026-09-11T13:30:00Z",
+      "desc": "US CPI m/m — FRED API (Consumer Price Index for All Urban Consumers: All Items in U.S. City Average)",
+      "fredId": "CPIAUCSL",
+      "calcMode": "mom",
+      "hasHistory": true,
+      "reading": {
+        "actual": 0.07,
+        "previous": -0.42,
+        "trend": {
+          "direction": "rising",
+          "label": "📈 Rising",
+          "months": 1
+        }
+      },
+      "hist": [
+        {
+          "date": "2026-03-01",
+          "value": 0.87,
+          "calcMode": "mom",
+          "btcChange": 3.88
+        },
+        {
+          "date": "2026-04-01",
+          "value": 0.64,
+          "calcMode": "mom",
+          "btcChange": -1.69
+        },
+        {
+          "date": "2026-05-01",
+          "value": 0.47,
+          "calcMode": "mom",
+          "btcChange": 0.44
+        },
+        {
+          "date": "2026-06-01",
+          "value": -0.42,
+          "calcMode": "mom",
+          "btcChange": -10.19
+        },
+        {
+          "date": "2026-07-01",
+          "value": 0.07,
+          "calcMode": "mom",
+          "btcChange": 4.26
+        }
+      ]
+    },
+    {
+      "id": "fred-CPIAUCSL_YOY-2026-09-11",
+      "name": "US CPI y/y",
+      "cat": "MACRO",
+      "impact": "high",
+      "date": "2026-09-11T13:30:00Z",
+      "desc": "US CPI y/y — FRED API (Consumer Price Index for All Urban Consumers: All Items in U.S. City Average)",
+      "fredId": "CPIAUCSL",
+      "calcMode": "yoy",
+      "hasHistory": true,
+      "reading": {
+        "actual": 3.54,
+        "previous": 3.73,
+        "trend": {
+          "direction": "falling",
+          "label": "📉 Falling 2nd month",
+          "months": 2
+        }
+      },
+      "hist": [
+        {
+          "date": "2026-03-01",
+          "value": 3.32,
+          "calcMode": "yoy",
+          "btcChange": 3.88
+        },
+        {
+          "date": "2026-04-01",
+          "value": 3.95,
+          "calcMode": "yoy",
+          "btcChange": -1.69
+        },
+        {
+          "date": "2026-05-01",
+          "value": 4.27,
+          "calcMode": "yoy",
+          "btcChange": 0.44
+        },
+        {
+          "date": "2026-06-01",
+          "value": 3.73,
+          "calcMode": "yoy",
+          "btcChange": -10.19
+        },
+        {
+          "date": "2026-07-01",
+          "value": 3.54,
+          "calcMode": "yoy",
+          "btcChange": 4.26
+        }
+      ]
+    },
+    {
+      "id": "fred-CPILFESL-2026-09-11",
+      "name": "US Core CPI m/m",
+      "cat": "MACRO",
+      "impact": "high",
+      "date": "2026-09-11T13:30:00Z",
+      "desc": "US Core CPI m/m — FRED API (Consumer Price Index for All Urban Consumers: All Items Less Food and Energy in U.S. City Average)",
+      "fredId": "CPILFESL",
+      "calcMode": "mom",
+      "hasHistory": true,
+      "reading": {
+        "actual": 0.22,
+        "previous": -0.02,
+        "trend": {
+          "direction": "rising",
+          "label": "📈 Rising",
+          "months": 1
+        }
+      },
+      "hist": [
+        {
+          "date": "2026-03-01",
+          "value": 0.2,
+          "calcMode": "mom",
+          "btcChange": 3.88
+        },
+        {
+          "date": "2026-04-01",
+          "value": 0.38,
+          "calcMode": "mom",
+          "btcChange": -1.69
+        },
+        {
+          "date": "2026-05-01",
+          "value": 0.21,
+          "calcMode": "mom",
+          "btcChange": 0.44
+        },
+        {
+          "date": "2026-06-01",
+          "value": -0.02,
+          "calcMode": "mom",
+          "btcChange": -10.19
+        },
+        {
+          "date": "2026-07-01",
+          "value": 0.22,
+          "calcMode": "mom",
+          "btcChange": 4.26
+        }
+      ]
+    },
+    {
+      "id": "fred-CPILFESL_YOY-2026-09-11",
+      "name": "US Core CPI y/y",
+      "cat": "MACRO",
+      "impact": "high",
+      "date": "2026-09-11T13:30:00Z",
+      "desc": "US Core CPI y/y — FRED API (Consumer Price Index for All Urban Consumers: All Items Less Food and Energy in U.S. City Average)",
+      "fredId": "CPILFESL",
+      "calcMode": "yoy",
+      "hasHistory": true,
+      "reading": {
+        "actual": 2.79,
+        "previous": 2.81,
+        "trend": {
+          "direction": "flat",
+          "label": "➡️ Flat",
+          "months": 1
+        }
+      },
+      "hist": [
+        {
+          "date": "2026-03-01",
+          "value": 2.67,
+          "calcMode": "yoy",
+          "btcChange": 3.88
+        },
+        {
+          "date": "2026-04-01",
+          "value": 2.99,
+          "calcMode": "yoy",
+          "btcChange": -1.69
+        },
+        {
+          "date": "2026-05-01",
+          "value": 2.96,
+          "calcMode": "yoy",
+          "btcChange": 0.44
+        },
+        {
+          "date": "2026-06-01",
+          "value": 2.81,
+          "calcMode": "yoy",
+          "btcChange": -10.19
+        },
+        {
+          "date": "2026-07-01",
+          "value": 2.79,
+          "calcMode": "yoy",
+          "btcChange": 4.26
+        }
+      ]
+    },
+    {
+      "id": "fred-FEDFUNDS-2026-09-02",
+      "name": "Fed Rate Decision",
+      "cat": "MACRO",
+      "impact": "high",
+      "date": "2026-09-02T13:30:00Z",
+      "desc": "Fed Rate Decision — FRED API (Federal Funds Effective Rate)",
+      "fredId": "FEDFUNDS",
+      "calcMode": "level",
+      "hasHistory": true,
+      "reading": {
+        "actual": 3.63,
+        "previous": 3.63,
+        "trend": {
+          "direction": "flat",
+          "label": "➡️ Flat",
+          "months": 1
+        }
+      },
+      "hist": [
+        {
+          "date": "2026-03-01",
+          "value": 3.64,
+          "calcMode": "level",
+          "btcChange": 3.88
+        },
+        {
+          "date": "2026-04-01",
+          "value": 3.64,
+          "calcMode": "level",
+          "btcChange": -1.69
+        },
+        {
+          "date": "2026-05-01",
+          "value": 3.63,
+          "calcMode": "level",
+          "btcChange": 0.44
+        },
+        {
+          "date": "2026-06-01",
+          "value": 3.63,
+          "calcMode": "level",
+          "btcChange": -10.19
+        },
+        {
+          "date": "2026-07-01",
+          "value": 3.63,
+          "calcMode": "level",
+          "btcChange": 4.26
+        }
+      ]
+    },
+    {
+      "id": "fred-CES0500000003-2026-09-04",
+      "name": "Avg Hourly Earnings m/m",
+      "cat": "MACRO",
+      "impact": "med",
+      "date": "2026-09-04T13:30:00Z",
+      "desc": "Avg Hourly Earnings m/m — FRED API (Average Hourly Earnings of All Employees, Total Private)",
+      "fredId": "CES0500000003",
+      "calcMode": "mom",
+      "hasHistory": true,
+      "reading": {
+        "actual": 0.05,
+        "previous": 0.29,
+        "trend": {
+          "direction": "falling",
+          "label": "📉 Falling",
+          "months": 1
+        }
+      },
+      "hist": [
+        {
+          "date": "2026-03-01",
+          "value": 0.21,
+          "calcMode": "mom",
+          "btcChange": 3.88
+        },
+        {
+          "date": "2026-04-01",
+          "value": 0.16,
+          "calcMode": "mom",
+          "btcChange": -1.69
+        },
+        {
+          "date": "2026-05-01",
+          "value": 0.21,
+          "calcMode": "mom",
+          "btcChange": 0.44
+        },
+        {
+          "date": "2026-06-01",
+          "value": 0.29,
+          "calcMode": "mom",
+          "btcChange": -10.19
+        },
+        {
+          "date": "2026-07-01",
+          "value": 0.05,
+          "calcMode": "mom",
+          "btcChange": 4.26
+        }
+      ]
+    },
+    {
+      "id": "fred-UNRATE-2026-09-04",
+      "name": "Unemployment Rate",
+      "cat": "MACRO",
+      "impact": "high",
+      "date": "2026-09-04T13:30:00Z",
+      "desc": "Unemployment Rate — FRED API (Unemployment Rate)",
+      "fredId": "UNRATE",
+      "calcMode": "level",
+      "hasHistory": true,
+      "reading": {
+        "actual": 4.1,
+        "previous": 4.2,
+        "trend": {
+          "direction": "falling",
+          "label": "📉 Falling 2nd month",
+          "months": 2
+        }
+      },
+      "hist": [
+        {
+          "date": "2026-03-01",
+          "value": 4.3,
+          "calcMode": "level",
+          "btcChange": 3.88
+        },
+        {
+          "date": "2026-04-01",
+          "value": 4.3,
+          "calcMode": "level",
+          "btcChange": -1.69
+        },
+        {
+          "date": "2026-05-01",
+          "value": 4.3,
+          "calcMode": "level",
+          "btcChange": 0.44
+        },
+        {
+          "date": "2026-06-01",
+          "value": 4.2,
+          "calcMode": "level",
+          "btcChange": -10.19
+        },
+        {
+          "date": "2026-07-01",
+          "value": 4.1,
+          "calcMode": "level",
+          "btcChange": 4.26
+        }
+      ]
+    },
+    {
+      "id": "fred-PAYEMS-2026-09-04",
+      "name": "Non-Farm Payrolls",
+      "cat": "MACRO",
+      "impact": "high",
+      "date": "2026-09-04T13:30:00Z",
+      "desc": "Non-Farm Payrolls — FRED API (All Employees, Total Nonfarm)",
+      "fredId": "PAYEMS",
+      "calcMode": "diffK",
+      "hasHistory": true,
+      "reading": {
+        "actual": -23,
+        "previous": 20,
+        "trend": {
+          "direction": "falling",
+          "label": "📉 Falling 2nd month",
+          "months": 2
+        }
+      },
+      "hist": [
+        {
+          "date": "2026-03-01",
+          "value": 214,
+          "calcMode": "diffK",
+          "btcChange": 3.88
+        },
+        {
+          "date": "2026-04-01",
+          "value": 148,
+          "calcMode": "diffK",
+          "btcChange": -1.69
+        },
+        {
+          "date": "2026-05-01",
+          "value": 63,
+          "calcMode": "diffK",
+          "btcChange": 0.44
+        },
+        {
+          "date": "2026-06-01",
+          "value": 20,
+          "calcMode": "diffK",
+          "btcChange": -10.19
+        },
+        {
+          "date": "2026-07-01",
+          "value": -23,
+          "calcMode": "diffK",
+          "btcChange": 4.26
+        }
+      ]
+    },
+    {
+      "id": "fred-GDP-2026-10-18",
+      "name": "US GDP Release",
+      "cat": "MACRO",
+      "impact": "high",
+      "date": "2026-10-18T13:30:00Z",
+      "desc": "US GDP Release — FRED API (Gross Domestic Product)",
+      "fredId": "GDP",
+      "calcMode": "qoq",
+      "hasHistory": true,
+      "reading": {
+        "actual": 1.91,
+        "previous": 1.41,
+        "trend": {
+          "direction": "rising",
+          "label": "📈 Rising 2nd month",
+          "months": 2
+        }
+      },
+      "hist": [
+        {
+          "date": "2025-04-01",
+          "value": 1.48,
+          "calcMode": "qoq",
+          "btcChange": -2.3
+        },
+        {
+          "date": "2025-07-01",
+          "value": 2.01,
+          "calcMode": "qoq",
+          "btcChange": 3.7
+        },
+        {
+          "date": "2025-10-01",
+          "value": 1.04,
+          "calcMode": "qoq",
+          "btcChange": 3.06
+        },
+        {
+          "date": "2026-01-01",
+          "value": 1.41,
+          "calcMode": "qoq",
+          "btcChange": 2.02
+        },
+        {
+          "date": "2026-04-01",
+          "value": 1.91,
+          "calcMode": "qoq",
+          "btcChange": -1.69
+        }
+      ]
+    }
+  ],
   "fearGreed": {
     "value": 71,
     "label": "Greed"
@@ -593,6 +1062,13 @@
     "FET"
   ],
   "hotLiquidations": [],
-  "smartMoney": [],
+  "smartMoney": [
+    {
+      "coin": "ZEC",
+      "crowdLong": 37,
+      "topLong": 52,
+      "diff": 14.2
+    }
+  ],
   "signals": []
 }
