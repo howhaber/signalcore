@@ -1,16 +1,16 @@
 {
-  "rsi15m": 57.7,
-  "stoch15m": 47.24,
-  "macdHist15m": -19.9,
-  "emaPrice15m": 66592.01,
-  "rsi1h": 50.5,
-  "stoch1h": 84.12,
-  "macdHist1h": 284.79,
-  "emaPrice1h": 71265.15,
-  "rsi4h": 30.89,
-  "stoch4h": 30.31,
-  "macdHist4h": -217.61,
-  "emaPrice4h": 76759.82,
+  "rsi15m": 41.85,
+  "stoch15m": 32.07,
+  "macdHist15m": -52.15,
+  "emaPrice15m": 66347.78,
+  "rsi1h": 43.86,
+  "stoch1h": 56.08,
+  "macdHist1h": 136.21,
+  "emaPrice1h": 71016.06,
+  "rsi4h": 29.04,
+  "stoch4h": 31.8,
+  "macdHist4h": -142.7,
+  "emaPrice4h": 76640.31,
   "rsiDaily": 19.72,
   "stochDaily": 4.53,
   "macdHistDaily": -1077.1,
@@ -23,27 +23,27 @@
   "r3": 86745.27,
   "levelsByTimeframe": {
     "15m": {
-      "s1": 65318.56,
+      "s1": 64537.15,
       "s2": null,
       "s3": null,
-      "r1": 66119.14,
-      "r2": 67383.04,
-      "r3": 69060.84
+      "r1": 65807.95,
+      "r2": 66115.65,
+      "r3": 67379.55
     },
     "1h": {
-      "s1": 63975.04,
+      "s1": 63965.53,
       "s2": null,
       "s3": null,
-      "r1": 74647.56,
-      "r2": 75378.86,
-      "r3": 75804.16
+      "r1": 74657.07,
+      "r2": 75388.37,
+      "r3": null
     },
     "4h": {
-      "s1": null,
+      "s1": 62380.01,
       "s2": null,
       "s3": null,
-      "r1": 75857.28,
-      "r2": 81911.18,
+      "r1": 75860.59,
+      "r2": 81914.49,
       "r3": null
     },
     "daily": {
@@ -56,10 +56,10 @@
     }
   },
   "source": "bybit",
-  "rsi": 57.7,
-  "stoch": 47.24,
+  "rsi": 41.85,
+  "stoch": 32.07,
   "macd": "bearish",
   "ema": "price below",
-  "bias": "neutral",
-  "updated": "2026-11-15T13:07:24.805Z"
+  "bias": "bearish",
+  "updated": "2026-11-15T17:00:03.151Z"
 }
